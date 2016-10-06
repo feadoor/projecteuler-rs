@@ -1,4 +1,4 @@
-//! [Problem 2 (Even Fibonacci numbers)](https://projecteuler.net/problem=1)
+//! [Problem 2 (Even Fibonacci numbers)](https://projecteuler.net/problem=2)
 //!
 //! # Problem statement
 //!
@@ -41,7 +41,7 @@ impl Iterator for Fibonacci {
     }
 }
 
-/// Returns a Fibonacci sequence iterator
+/// Returns a Fibonacci sequence iterator starting 1, 1, 2, 3, ...
 fn fibonacci() -> Fibonacci {
     Fibonacci { curr: 0, next: 1 }
 }
