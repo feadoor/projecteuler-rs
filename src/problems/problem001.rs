@@ -9,7 +9,8 @@
 //!
 //! # Solution detail
 //!
-//! Using the [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion–exclusion_principle),
+//! Using the
+//! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion–exclusion_principle),
 //! we can calculate the required sum as `s_3 + s_5 - s_15`, where:
 //!
 //! `s_3` is the sum of the multiples of 3 below 1000.

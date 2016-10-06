@@ -28,7 +28,9 @@ struct Args {
 fn exec(name: &str, desc: &str, problem: fn() -> String) {
     let long_desc = format!("Running {} ({})", name, desc);
     println!("{}", Green.bold().paint(long_desc));
-    println!("{} - {}", Cyan.bold().paint("Solution"), Style::new().bold().paint(problem()));
+    println!("{} - {}",
+             Cyan.bold().paint("Solution"),
+             Style::new().bold().paint(problem()));
 }
 
 macro_rules! run {
@@ -45,6 +47,6 @@ fn main() {
     match args.arg_problem {
         1 => run!(problem001),
         2 => run!(problem002),
-        n @ _ => println!("Problem {} has not yet been solved", n),
+        n => println!("Problem {} has not yet been solved", n),
     }
 }
