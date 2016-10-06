@@ -17,8 +17,8 @@ before_script:
   export PATH=$HOME/.local/bin:$PATH
 script:
 - |
-  travis-cargo build --release &&
-  travis-cargo test --release
+  travis-cargo build -- --release &&
+  travis-cargo test -- --release
 after_success: |
   [ $TRAVIS_RUST_VERSION = stable ] &&
   [ $TRAVIS_BRANCH = master ] &&
