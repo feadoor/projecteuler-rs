@@ -26,17 +26,17 @@ fn is_palindrome(num: u64) -> bool {
 
 /// Find the largest palindrome which is the product of two numbers between lower (inclusive) and
 /// upper (exclusive).
-fn solve(lower: u32, upper: u32) -> u64 {
+fn solve(lower: u64, upper: u64) -> u64 {
 
     // Loop over all pairs of numbers, checking if the products are palindromes. Break early if
     // the future products will be too small.
     let mut best = 0;
     for x in (lower..upper).rev() {
-        if (x as u64 * x as u64) < best {
+        if x * x < best {
             break;
         }
         for y in (lower..x + 1).rev() {
-            let product = x as u64 * y as u64;
+            let product = x * y;
             if product < best {
                 break;
             }
