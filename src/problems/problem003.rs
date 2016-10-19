@@ -29,7 +29,7 @@ fn solve(n: u64) -> Result<u64, ()> {
     // Factorise n and return the largest factor, or an error if the factorisation failed.
     if let Ok(factors) = sieve.factorise(n) {
         if let Some(factor) = factors.last() {
-            return Ok(factor.0)
+            return Ok(factor.0);
         }
     }
 
