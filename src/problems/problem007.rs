@@ -15,9 +15,9 @@
 use primesieve::Sieve;
 
 /// The name of the problem.
-pub const NAME: &'static str = "Problem 6";
+pub const NAME: &'static str = "Problem 7";
 /// A description of the problem.
-pub const DESC: &'static str = "10001st primes";
+pub const DESC: &'static str = "10001st prime";
 
 /// Find the `n`th prime number.
 fn solve(n: usize) -> u64 {

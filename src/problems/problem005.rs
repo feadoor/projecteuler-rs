@@ -22,7 +22,7 @@ pub const DESC: &'static str = "Smallest multiple";
 
 /// Find the smallest number divisible by each of 2, 3, ..., limit.
 fn solve(limit: u64) -> u64 {
-    (2..limit + 1).fold(1, |prod, x| lcm(prod, x))
+    (2..limit + 1).fold(1, lcm)
 }
 
 /// Solve the problem, returning the answer as a `String`
