@@ -26,12 +26,12 @@ pub const DESC: &'static str = "Special Pythagorean triplet";
 /// Find the first Pythagorean triplet with a + b + c = n, returning the product abc.
 fn solve(n: u64) -> u64 {
     for a in 1..n {
-    	for b in a + 1..n - a {
-    		let c = n - a - b;
-    		if a * a + b * b == c * c {
-    			return a * b * c
-    		}
-    	}
+        for b in a + 1..n - a {
+            let c = n - a - b;
+            if a * a + b * b == c * c {
+                return a * b * c;
+            }
+        }
     }
 
     0
