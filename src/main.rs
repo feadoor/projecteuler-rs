@@ -9,6 +9,7 @@ extern crate itertools;
 extern crate rustc_serialize;
 
 // My own crates
+extern crate number_theory;
 extern crate primesieve;
 
 pub mod problems;
@@ -25,7 +26,7 @@ Usage: projecteuler-rs run <problem>
 
 #[derive(Debug, RustcDecodable)]
 struct Args {
-    arg_problem: u16,
+    arg_problem: u32,
 }
 
 /// Run a particular problem, printing its solution to the terminal.
@@ -53,6 +54,7 @@ fn main() {
         2 => run!(problem002),
         3 => run!(problem003),
         4 => run!(problem004),
+        5 => run!(problem005),
         n => println!("Problem {} has not yet been solved", n),
     }
 }

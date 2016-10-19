@@ -9,4 +9,5 @@ docopt = "0.6"
 itertools = "0.5.2"
 rustc-serialize = "0.3"
 
+number-theory = { git = "https://github.com/feadoor/number-theory.git" }
 primesieve = { git = "https://github.com/feadoor/primesieve.git" }
