@@ -2,10 +2,14 @@
 //!
 //! Each solved problem has a high-level description of the solution in its documentation.
 
+// Other people's crates
 extern crate ansi_term;
 extern crate docopt;
 extern crate itertools;
 extern crate rustc_serialize;
+
+// My own crates
+extern crate primesieve;
 
 pub mod problems;
 
@@ -35,7 +39,7 @@ fn exec(name: &str, desc: &str, problem: fn() -> String) {
 
 macro_rules! run {
     ($e:ident) => {
-        exec($e::NAME, $e::DESC, $e::solve)
+        exec($e::NAME, $e::DESC, $e::answer)
     }
 }
 
@@ -47,6 +51,7 @@ fn main() {
     match args.arg_problem {
         1 => run!(problem001),
         2 => run!(problem002),
+        3 => run!(problem003),
         n => println!("Problem {} has not yet been solved", n),
     }
 }

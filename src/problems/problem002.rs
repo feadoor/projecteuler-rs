@@ -25,14 +25,14 @@ pub const DESC: &'static str = "Even Fibonacci numbers";
 
 /// A structure which will allow iteration over Fibonacci numbers.
 struct Fibonacci {
-    curr: u32,
-    next: u32,
+    curr: u64,
+    next: u64,
 }
 
 impl Iterator for Fibonacci {
-    type Item = u32;
+    type Item = u64;
 
-    fn next(&mut self) -> Option<u32> {
+    fn next(&mut self) -> Option<u64> {
         let new_next = self.curr + self.next;
         self.curr = self.next;
         self.next = new_next;
@@ -47,7 +47,7 @@ fn fibonacci() -> Fibonacci {
 }
 
 /// Find the sum of all even Fibonacci numbers below the given limit.
-fn compute(limit: u32) -> u32 {
+fn solve(limit: u64) -> u64 {
     fibonacci()
         .skip(2)
         .step(3)
@@ -56,14 +56,14 @@ fn compute(limit: u32) -> u32 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn solve() -> String {
-    compute(4000000).to_string()
+pub fn answer() -> String {
+    solve(4000000).to_string()
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn problem002() {
-        assert_eq!(super::solve(), "4613732");
+        assert_eq!(super::answer(), "4613732");
     }
 }

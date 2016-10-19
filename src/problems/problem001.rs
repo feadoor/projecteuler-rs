@@ -30,13 +30,13 @@ pub const DESC: &'static str = "Multiples of 3 and 5";
 
 /// Calculate the sum of the multiples of `n` below the given limit, using the formula for the sum
 /// of an arithmetic progression.
-fn sum_of_multiples(n: u32, limit: u32) -> u32 {
+fn sum_of_multiples(n: u64, limit: u64) -> u64 {
     let num_terms = (limit - 1) / n;
     n * num_terms * (num_terms + 1) / 2
 }
 
 /// Find the sum of all multiples of 3 or 5 below the given limit.
-fn compute(limit: u32) -> u32 {
+fn solve(limit: u64) -> u64 {
     let s_3 = sum_of_multiples(3, limit);
     let s_5 = sum_of_multiples(5, limit);
     let s_15 = sum_of_multiples(15, limit);
@@ -45,14 +45,14 @@ fn compute(limit: u32) -> u32 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn solve() -> String {
-    compute(1000).to_string()
+pub fn answer() -> String {
+    solve(1000).to_string()
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn problem001() {
-        assert_eq!(super::solve(), "233168");
+        assert_eq!(super::answer(), "233168");
     }
 }
