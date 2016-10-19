@@ -5,6 +5,7 @@
 // Other people's crates
 extern crate ansi_term;
 extern crate docopt;
+#[macro_use]
 extern crate itertools;
 extern crate rustc_serialize;
 
@@ -60,6 +61,7 @@ fn main() {
         8 => run!(problem008),
         9 => run!(problem009),
         10 => run!(problem010),
+        11 => run!(problem011),
         n => println!("Problem {} has not yet been solved", n),
     }
 }
