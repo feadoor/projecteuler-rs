@@ -11,7 +11,7 @@
 //! # Solution detail
 //!
 //! This problem is simply asking for the least common multiple (LCM) of the numbers 1, 2, ..., 20.
-//! This can be computed easily as `lcm(lcm(lcm(... (((2, 3), 4, 5, ...)))`
+//! This can be computed easily as `lcm(lcm(lcm(... (((2, 3), 4), 5), ...)))`
 
 use number_theory::lcm;
 
