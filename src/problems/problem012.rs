@@ -78,7 +78,7 @@ fn solve(n: u64) -> u64 {
         };
 
         if divisors > n {
-            return m * (m + 1) / 2
+            return m * (m + 1) / 2;
         }
     }
 
