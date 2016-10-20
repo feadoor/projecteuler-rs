@@ -38,17 +38,17 @@
 //! This means that to factorise `T(n)`, we need to know about the primes up to `sqrt(n)`.
 //!
 //! Finally, we need an upper bound on `n` to know in advance how many primes are required. The
-//! product of the first `k` primes has `2^k` divisors, so there is definitely some `n`, and hence
-//! some `T(n)`, less than the product of the first 9 primes with at least 500 divisors. That means
-//! that we should sieve primes up to the square root of this product.
+//! product of the first `k` primes has `2^k` divisors, so there is definitely some `n` less than
+//! the product of the first 9 primes with at least 500 divisors. That means that we should sieve
+//! primes up to the square root of this product.
 
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
 
 /// The name of the problem.
-pub const NAME: &'static str = "Problem 3";
+pub const NAME: &'static str = "Problem 12";
 /// A description of the problem.
-pub const DESC: &'static str = "Largest prime factor";
+pub const DESC: &'static str = "Highly divisible triangular number";
 
 /// Find the first triangle number to have more than `n` divisors.
 fn solve(n: u64) -> u64 {
