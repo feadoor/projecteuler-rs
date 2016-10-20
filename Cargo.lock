@@ -144,7 +144,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "number-theory"
 version = "0.1.0"
-source = "git+https://github.com/feadoor/number-theory.git#6aefa4694db8c257c95d2ac08d22563f83692032"
+source = "git+https://github.com/feadoor/number-theory.git#2c955e890b88bfc2449a1f0b3e3af57c1dcac5e1"
 
 [[package]]
 name = "primesieve"
