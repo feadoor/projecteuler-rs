@@ -21,7 +21,7 @@ pub const DESC: &'static str = "Lattice paths";
 
 /// Find the `number of paths through a square grid of size `n`.
 fn solve(n: u64) -> u64 {
-	binom(2 * n, n)
+    binom(2 * n, n)
 }
 
 /// Solve the problem, returning the answer as a `String`
