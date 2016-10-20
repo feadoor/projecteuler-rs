@@ -12,6 +12,7 @@
 //! to use trial division by primes up to at most the square root of the given number. Simply sieve
 //! for those primes, factorise the number, and return the largest factor.
 
+use number_theory::integer_sqrt;
 use primesieve::Sieve;
 
 /// The name of the problem.
@@ -23,8 +24,7 @@ pub const DESC: &'static str = "Largest prime factor";
 fn solve(n: u64) -> Result<u64, ()> {
 
     // Sieve the primes up to the square root of n.
-    let sqrt = (n as f64).sqrt() as u64;
-    let sieve = Sieve::to_limit(sqrt);
+    let sieve = Sieve::to_limit(integer_sqrt(n));
 
     // Factorise n and return the largest factor, or an error if the factorisation failed.
     if let Ok(factors) = sieve.factorise(n) {
