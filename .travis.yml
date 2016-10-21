@@ -18,12 +18,14 @@ before_script:
 script:
 - |
   travis-cargo build -- --release &&
-  travis-cargo test -- --release
+  travis-cargo test -- --release &&
+  travis-cargo test -- -p primesieve --release &&
+  travis-cargo test -- -p number-theory --release
 after_success: |
   [ $TRAVIS_RUST_VERSION = stable ] &&
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc --no-deps &&
+  cargo doc --no-deps && cargo doc -p primesieve --no-deps && cargo doc -p number-theory --no-deps &&
   echo "<meta http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | sed s/-/_/g | cut -d '/' -f 2`/index.html>" > target/doc/index.html &&
   git clone https://github.com/davisp/ghp-import &&
   ./ghp-import/ghp_import.py -n -m "Documentation for $TRAVIS_REPO_SLUG" target/doc &&

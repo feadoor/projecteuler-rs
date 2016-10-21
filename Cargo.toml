@@ -10,5 +10,5 @@ itertools = "0.5.2"
 num = "0.1"
 rustc-serialize = "0.3"
 
-number-theory = { git = "https://github.com/feadoor/number-theory.git" }
-primesieve = { git = "https://github.com/feadoor/primesieve.git" }
+number-theory = { path = "./libs/number-theory" }
+primesieve = { path = "./libs/primesieve" }

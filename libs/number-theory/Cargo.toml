@@ -1,0 +1,6 @@
+[package]
+name = "number-theory"
+version = "0.1.0"
+authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
+
+[dependencies]
