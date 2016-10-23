@@ -70,6 +70,7 @@ fn main() {
         16 => run!(problem016),
         17 => run!(problem017),
         18 => run!(problem018),
+        19 => run!(problem019),
         n => println!("Problem {} has not yet been solved", n),
     }
 }
