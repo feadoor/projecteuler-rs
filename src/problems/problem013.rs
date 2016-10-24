@@ -113,7 +113,7 @@
 //! primitive type, so we should use `BigUint` from the crate `num` instead. Then it's just a
 //! simple case of calculating the sum and extracting the first 10 digits.
 
-use num::{BigUint, FromPrimitive, Num};
+use num::{BigUint, Num};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 13";
@@ -124,7 +124,7 @@ pub const DESC: &'static str = "Large sum";
 fn solve<I>(nums: I, n: usize) -> String
     where I: Iterator<Item = BigUint>
 {
-    let sum = nums.fold(BigUint::from_u64(0).unwrap(), |sum, x| sum + x);
+    let sum: BigUint = nums.fold(From::from(0u64), |sum, x| sum + x);
     let mut sum_str = sum.to_str_radix(10);
     sum_str.truncate(n);
     sum_str

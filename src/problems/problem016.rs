@@ -12,7 +12,7 @@
 //! a primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculation and summing the digits.
 
-use num::{BigUint, FromPrimitive};
+use num::BigUint;
 use num::pow::pow;
 
 /// The name of the problem.
@@ -22,7 +22,7 @@ pub const DESC: &'static str = "Power digit sum";
 
 /// Find the sum of the digits of base ^ exp.
 fn solve(base: u64, exp: usize) -> u64 {
-    let result = pow(BigUint::from_u64(base).unwrap(), exp);
+    let result: BigUint = pow(From::from(base), exp);
     result.to_str_radix(10).as_bytes().iter().map(|x| (x - b'0') as u64).sum()
 }
 
