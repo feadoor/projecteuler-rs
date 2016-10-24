@@ -150,6 +150,7 @@ name = "primesieve"
 version = "0.2.0"
 dependencies = [
  "num-traits 0.1.36 (registry+https://github.com/rust-lang/crates.io-index)",
+ "number-theory 0.1.0",
 ]
 
 [[package]]

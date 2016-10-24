@@ -3,6 +3,8 @@
 
 use num_traits::pow::pow;
 
+use number_theory::{gcd, modexp};
+
 use segment;
 use sieve::Sieve;
 
@@ -159,6 +161,52 @@ impl Sieve {
         } else {
             Err(())
         }
+    }
+
+    /// Calculates the order of n with respect to the given modulus.
+    ///
+    /// Returns `Err(())` if `ϕ(modulus)` cannot be fully factorised without first sieving for more
+    /// primes, and returns `0` if the order does not exist (i.e. `n` and the modulus are not
+    /// coprime).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let sieve = primesieve::Sieve::to_limit(100);
+    ///
+    /// assert_eq!(sieve.order(2, 7), Ok(3));
+    /// assert_eq!(sieve.order(3, 7), Ok(6));
+    /// assert_eq!(sieve.order(7, 10), Ok(4));
+    /// assert_eq!(sieve.order(7, 100), Ok(4));
+    /// assert_eq!(sieve.order(23, 606), Ok(50));
+    /// assert_eq!(sieve.order(11, 606), Ok(100));
+    ///
+    /// assert_eq!(sieve.order(0, 2), Ok(0));
+    /// assert_eq!(sieve.order(3, 30), Ok(0));
+    ///
+    /// assert_eq!(sieve.order(7, 991 * 991), Err(()));
+    /// ```
+    pub fn order(&self, n: u64, modulus: u32) -> Result<u64, ()> {
+        // If n and the modulus are not coprime, just return 0.
+        if gcd(n, modulus as u64) != 1 {
+            return Ok(0);
+        }
+
+        // We know from Euler-Lagrange that n^(phi(m)) == 1 mod m, so the true order of n must
+        // divide phi(m). For each prime factor of phi(m), divide out by it as much as possible
+        // without breaking the above equation - the result is the order.
+        if let Ok(mut order) = self.euler_phi(modulus as u64) {
+            if let Ok(factors) = self.factorise(order) {
+                for (p, _) in factors {
+                    while order % p == 0 && modexp(n, (order / p), modulus) == 1 {
+                        order /= p;
+                    }
+                }
+                return Ok(order);
+            }
+        }
+
+        Err(())
     }
 
     /// Calculates the number of divisors of `n`.
