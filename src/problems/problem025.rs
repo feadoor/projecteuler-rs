@@ -9,17 +9,17 @@
 //!
 //! Hence the first 12 terms will be:
 //!
-//! F<sub>1</sub> = 1
-//! F<sub>2</sub> = 1
-//! F<sub>3</sub> = 2
-//! F<sub>4</sub> = 3
-//! F<sub>5</sub> = 5
-//! F<sub>6</sub> = 8
-//! F<sub>7</sub> = 13
-//! F<sub>8</sub> = 21
-//! F<sub>9</sub> = 34
-//! F<sub>10</sub> = 55
-//! F<sub>11</sub> = 89
+//! F<sub>1</sub> = 1<br>
+//! F<sub>2</sub> = 1<br>
+//! F<sub>3</sub> = 2<br>
+//! F<sub>4</sub> = 3<br>
+//! F<sub>5</sub> = 5<br>
+//! F<sub>6</sub> = 8<br>
+//! F<sub>7</sub> = 13<br>
+//! F<sub>8</sub> = 21<br>
+//! F<sub>9</sub> = 34<br>
+//! F<sub>10</sub> = 55<br>
+//! F<sub>11</sub> = 89<br>
 //! F<sub>12</sub> = 144
 //!
 //! The 12th term, F<sub>12</sub>, is the first term to contain three digits.
@@ -29,10 +29,10 @@
 //! # Solution detail
 //!
 //! We don't actually need to calculate any Fibonacci numbers for this, which is a relief, since
-//! it's nice to avoid dealing with 1000-digit numbers if we can help it.
+//! it's nice to avoid dealing with 1000-digit numbers if we can help it. Since F<sub>n</sub> is
+//! the closest integer to `(phi ^ n) / √5`, we just need to find the first n for which:
 //!
-//! Since F<sub>n</sub> is the closest integer to `(phi ^ n) / √5`, we just need to find the first
-//! n for which `n * log_10(ϕ) > 1000 + log_10(√5) - 1`
+//! `n * log_10(ϕ) > 1000 + log_10(√5) - 1`
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 25";
