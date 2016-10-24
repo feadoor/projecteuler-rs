@@ -75,7 +75,7 @@ fn solve(day: u64, end_year: u64) -> u64 {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(6, 2000).to_string()
+    solve(6, 2_000).to_string()
 }
 
 #[cfg(test)]

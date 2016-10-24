@@ -38,7 +38,7 @@ fn solve(n: u64) -> Result<u64, ()> {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    if let Ok(ans) = solve(600851475143) {
+    if let Ok(ans) = solve(600_851_475_143) {
         ans.to_string()
     } else {
         "Something went wrong!".to_string()

@@ -70,7 +70,7 @@ fn solve(lim: u64) -> u64 {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(28123).to_string()
+    solve(28_123).to_string()
 }
 
 #[cfg(test)]

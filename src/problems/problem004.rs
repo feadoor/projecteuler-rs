@@ -52,7 +52,7 @@ fn solve(lower: u64, upper: u64) -> u64 {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(100, 1000).to_string()
+    solve(100, 1_000).to_string()
 }
 
 #[cfg(test)]

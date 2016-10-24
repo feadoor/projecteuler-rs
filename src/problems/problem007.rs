@@ -26,7 +26,7 @@ fn solve(n: usize) -> u64 {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(10001).to_string()
+    solve(10_001).to_string()
 }
 
 #[cfg(test)]

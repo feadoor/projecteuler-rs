@@ -57,7 +57,7 @@ fn solve(limit: usize) -> usize {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(1000000).to_string()
+    solve(1_000_000).to_string()
 }
 
 #[cfg(test)]

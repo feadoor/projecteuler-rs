@@ -28,7 +28,7 @@ fn solve(base: u64, exp: usize) -> u64 {
 
 /// Solve the problem, returning the answer as a `String`
 pub fn answer() -> String {
-    solve(2, 1000).to_string()
+    solve(2, 1_000).to_string()
 }
 
 #[cfg(test)]
