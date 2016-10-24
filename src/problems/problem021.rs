@@ -46,7 +46,7 @@ fn is_amicable(n: u64, sieve: &Sieve) -> bool {
     (n != dn) && (n == sieve.sum_of_divisors(dn).unwrap() - dn)
 }
 
-/// Find the sum of the damicable numbers below the given limit.
+/// Find the sum of the amicable numbers below the given limit.
 fn solve(lim: u64) -> u64 {
     // Use Robin's Theorem to get an upper bound on how many primes need to be sieved.
     static GAMMA: f64 = 0.57721566490153286060651209008240243104215933593992;
