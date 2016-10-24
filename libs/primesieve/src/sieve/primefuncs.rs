@@ -1,6 +1,8 @@
 //! Functions, such as factorisation and similar computations, which require use of prime numbers
 //! to be calculated.
 
+use num_traits::pow::pow;
+
 use segment;
 use sieve::Sieve;
 
@@ -161,7 +163,7 @@ impl Sieve {
 
     /// Calculates the number of divisors of `n`.
     ///
-    /// Returns Err(()) is `n` cannot be fully factorised without first sieving for more primes.
+    /// Returns `Err(())` if `n` cannot be fully factorised without first sieving for more primes.
     ///
     /// This uses the well-known formula, that if `n` is given in factorised form as a product
     /// `p_i ^ a_i`, then the number of divisors of `n` is given by:
@@ -187,6 +189,40 @@ impl Sieve {
     pub fn number_of_divisors(&self, n: u64) -> Result<u64, ()> {
         if let Ok(factors) = self.factorise(n) {
             Ok(factors.iter().map(|x| x.1 + 1).product())
+        } else {
+            Err(())
+        }
+    }
+
+    /// Calculates the sum of the divisors of `n`.
+    ///
+    /// Returns `Err(())` if `n` cannot be fully factorised without first sieving for more primes.
+    ///
+    /// This uses the well-known facts that:
+    ///
+    /// 1. `sum_of_divisors` is a multiplicative function
+    ///
+    /// 2. `sum_of_divisors(p^a) = (p^(a+1) - 1) / (p - 1)`
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let sieve = primesieve::Sieve::to_limit(100);
+    ///
+    /// assert_eq!(sieve.sum_of_divisors(2), Ok(3));
+    /// assert_eq!(sieve.sum_of_divisors(4), Ok(7));
+    /// assert_eq!(sieve.sum_of_divisors(1 << 62), Ok((1 << 63) - 1));
+    ///
+    /// assert_eq!(sieve.sum_of_divisors(2 * 3), Ok(3 * 4));
+    /// assert_eq!(sieve.sum_of_divisors(89 * 97), Ok(90 * 98));
+    /// assert_eq!(sieve.sum_of_divisors(8 * 9 * 5), Ok(15 * 13 * 6));
+    ///
+    /// assert_eq!(sieve.sum_of_divisors(2 * 3 * 5 * 991), Ok(3 * 4 * 6 * 992));
+    /// assert_eq!(sieve.sum_of_divisors(2 * 3 * 5 * 991 * 991), Err(()));
+    /// ```
+    pub fn sum_of_divisors(&self, n: u64) -> Result<u64, ()> {
+        if let Ok(factors) = self.factorise(n) {
+            Ok(factors.iter().map(|&(x, y)| (pow(x, (y + 1) as usize) - 1) / (x - 1)).product())
         } else {
             Err(())
         }
