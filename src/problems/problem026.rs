@@ -72,7 +72,7 @@ fn solve(lim: u32) -> u32 {
     // For numbers down from the limit, calculate the cycle lengths and find the longest one.
     let mut best_length = 0u64;
     let mut best_d = 0;
-    for d in (1..lim).rev().skip(if lim % 2 == 0 { 0 } else { 1 }).step(2) {
+    for d in (1..lim).rev().skip((lim % 2) as usize).step(2) {
         // Break early if following values of d are too small to have a long enough cycle.
         if (d as u64) < best_length {
             break;
@@ -97,7 +97,7 @@ pub fn answer() -> String {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn problem025() {
+    fn problem026() {
         assert_eq!(super::answer(), "983");
     }
 }
