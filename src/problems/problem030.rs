@@ -45,12 +45,8 @@ type SolIter = Box<Iterator<Item = u64>>;
 // A constant, representing the length in digits of any solution.
 const SOL_LEN: u64 = 6;
 
-/// Calculate the fifth power of `n`.
-#[inline]
-fn fifth_power(n: u64) -> u64 {
-    let square = n * n;
-    square * square * n
-}
+/// Fifth powers of single digits.
+const FIFTH_POWER: &'static [u64; 10] = &[0, 1, 32, 243, 1024, 3125, 7776, 16807, 32768, 59049];
 
 /// Check if the given number can possibly be extended to a solution.
 fn may_be_extended(value: u64, power_sum: u64, length: u64) -> bool {
@@ -58,7 +54,7 @@ fn may_be_extended(value: u64, power_sum: u64, length: u64) -> bool {
     // Calculate the maximum and minimum values taken by the fifth power sum after extending to
     // SOL_LEN digits long.
     let min_power_sum = power_sum;
-    let max_power_sum = power_sum + (SOL_LEN - length) * fifth_power(9);
+    let max_power_sum = power_sum + (SOL_LEN - length) * FIFTH_POWER[9];
 
     // Calculate the maximum and minimum values taken by the actual number after extending to
     // SOL_LEN digits long.
@@ -83,7 +79,7 @@ fn extensions(curr_value: u64, curr_power_sum: u64, curr_length: u64) -> SolIter
         // A closure to find the solutions which come from a specific choice of next digit.
         let next_sols = |next_digit: u64| {
             let next_value = 10 * curr_value + next_digit;
-            let next_power_sum = curr_power_sum + fifth_power(next_digit);
+            let next_power_sum = curr_power_sum + FIFTH_POWER[next_digit as usize];
             let next_length = curr_length + 1;
 
             extensions(next_value, next_power_sum, next_length)
