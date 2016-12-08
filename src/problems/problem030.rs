@@ -86,7 +86,8 @@ fn extensions(curr_value: u64, curr_power_sum: u64, curr_length: u64) -> SolIter
         };
 
         // Chain together all the solutions from each choice of next digit.
-        (0..10).fold(Box::new(None.into_iter()), |acc, x| Box::new(acc.chain(next_sols(x))))
+        (0..10).fold(Box::new(None.into_iter()),
+                     |acc, x| Box::new(acc.chain(next_sols(x))))
 
     } else if curr_length == SOL_LEN && curr_value == curr_power_sum {
         Box::new(Some(curr_value).into_iter())

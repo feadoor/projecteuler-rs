@@ -91,6 +91,38 @@ pub fn binom(m: u64, mut n: u64) -> u64 {
     ans
 }
 
+/// Returns the value of `x` to the power of `y`, using exponentiation by repeated squaring.
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::pow;
+///
+/// assert_eq!(pow(2, 0), 1);
+/// assert_eq!(pow(2, 1), 2);
+/// assert_eq!(pow(2, 2), 4);
+/// assert_eq!(pow(2, 3), 8);
+/// assert_eq!(pow(2, 4), 16);
+///
+/// assert_eq!(pow(13, 7), 62748517);
+/// ```
+pub fn pow(mut x: u64, mut y: u64) -> u64 {
+
+    // Set up somewhere to hold the final answer.
+    let mut ans = 1;
+
+    // Use the repeated squaring algorithm.
+    while y != 0 {
+        if y & 1 == 1 {
+            ans *= x;
+        }
+        x = x * x;
+        y >>= 1;
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -178,6 +210,19 @@ mod tests {
                            2118760, 230300, 19600, 1225, 50, 1];
         for n in 0..51 {
             assert_eq!(binom(50, n), results[n as usize]);
+        }
+    }
+
+    #[test]
+    fn test_pow() {
+        let test_cases = vec![(1, 0, 1),
+                              (1, 283764, 1),
+                              (2, 10, 1024),
+                              (5, 20, 95367431640625),
+                              (10, 10, 10000000000)];
+
+        for (x, y, result) in test_cases {
+            assert_eq!(pow(x, y), result);
         }
     }
 }
