@@ -40,7 +40,7 @@ pub const NAME: &'static str = "Problem 30";
 pub const DESC: &'static str = "Digit fifth powers";
 
 // A custom type for a generic iterator over some u64s
-type SolIter = Box<Iterator<Item = u64>>;
+type NumIter = Box<Iterator<Item = u64>>;
 
 // A constant, representing the length in digits of any solution.
 const SOL_LEN: u64 = 6;
@@ -71,7 +71,7 @@ fn may_be_extended(value: u64, power_sum: u64, length: u64) -> bool {
 
 /// Find all numbers which are equal to the sum of the fifth powers of their digits, and which can
 /// be formed by appending digits to the given number.
-fn extensions(curr_value: u64, curr_power_sum: u64, curr_length: u64) -> SolIter {
+fn extensions(curr_value: u64, curr_power_sum: u64, curr_length: u64) -> NumIter {
 
     // There are only extensions if we have used fewer than SOL_LEN digits so far.
     if curr_length < SOL_LEN && may_be_extended(curr_value, curr_power_sum, curr_length) {
