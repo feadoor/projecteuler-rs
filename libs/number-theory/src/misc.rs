@@ -50,18 +50,15 @@ pub fn lcm(x: u64, y: u64) -> u64 {
 /// ```
 pub fn integer_sqrt(n: u64) -> u64 {
 
-    // Use a binary search, producing the output one bit at a time.
-    let mut bit: u64 = 0x80000000;
-    let mut ans: u64 = 0;
-    for _ in 0..32 {
-        let tmp = ans | bit;
-        if tmp * tmp <= n {
-            ans = tmp;
-        }
-        bit >>= 1;
+    let mut sqrt = (n as f64).sqrt().floor() as u64;
+    while sqrt > 0 && sqrt.saturating_mul(sqrt) > n {
+        sqrt -= 1;
+    }
+    while (sqrt + 1).saturating_mul(sqrt + 1) <= n {
+        sqrt += 1
     }
 
-    ans
+    sqrt
 }
 
 /// Returns whether or not the given number is a square.
