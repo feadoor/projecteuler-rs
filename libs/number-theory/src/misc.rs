@@ -64,6 +64,25 @@ pub fn integer_sqrt(n: u64) -> u64 {
     ans
 }
 
+/// Returns whether or not the given number is a square.
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::is_square;
+///
+/// assert!(is_square(1));
+/// assert!(!is_square(2));
+/// assert!(!is_square(3));
+/// assert!(is_square(4));
+/// assert!(!is_square(5));
+/// assert!(!is_square(6));
+/// ```
+pub fn is_square(n: u64) -> bool {
+    let sqrt = integer_sqrt(n);
+    n == sqrt * sqrt
+}
+
 /// Returns the value of the binomial coefficient `m` choose `n`.
 ///
 /// # Examples
@@ -193,6 +212,18 @@ mod tests {
 
         for x in u64::max_value() - 1000..u64::max_value() {
             assert!(check(x));
+        }
+    }
+
+    #[test]
+    fn test_is_square() {
+        for n in 0..100 {
+            assert!(is_square(n * n));
+        }
+
+        for n in 2..100 {
+            assert!(!is_square(n * n - 1));
+            assert!(!is_square(n * n + 1));
         }
     }
 
