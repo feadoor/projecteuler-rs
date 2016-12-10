@@ -25,7 +25,8 @@
 //! Finding k is easily accomplished using a binary search, and evaluating `f(k)` is a simple
 //! combinatorial problem.
 
-use number_theory::{binary_search, pow};
+use number_theory::pow;
+use utils::binary_search;
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 40";

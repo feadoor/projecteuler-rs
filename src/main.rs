@@ -13,6 +13,7 @@ extern crate rustc_serialize;
 // My own crates
 extern crate number_theory;
 extern crate primesieve;
+extern crate utils;
 
 pub mod problems;
 

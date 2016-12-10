@@ -12,3 +12,4 @@ rustc-serialize = "0.3"
 
 number-theory = { path = "./libs/number-theory" }
 primesieve = { path = "./libs/primesieve" }
+utils = { path = "./libs/utils" }
