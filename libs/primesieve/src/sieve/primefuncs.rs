@@ -186,16 +186,16 @@ impl Sieve {
     ///
     /// assert_eq!(sieve.order(7, 991 * 991), Err(()));
     /// ```
-    pub fn order(&self, n: u64, modulus: u32) -> Result<u64, ()> {
+    pub fn order(&self, n: u64, modulus: u64) -> Result<u64, ()> {
         // If n and the modulus are not coprime, just return 0.
-        if gcd(n, modulus as u64) != 1 {
+        if gcd(n, modulus) != 1 {
             return Ok(0);
         }
 
         // We know from Euler-Lagrange that n^(phi(m)) == 1 mod m, so the true order of n must
         // divide phi(m). For each prime factor of phi(m), divide out by it as much as possible
         // without breaking the above equation - the result is the order.
-        if let Ok(mut order) = self.euler_phi(modulus as u64) {
+        if let Ok(mut order) = self.euler_phi(modulus) {
             if let Ok(factors) = self.factorise(order) {
                 for (p, _) in factors {
                     while order % p == 0 && modexp(n, (order / p), modulus) == 1 {

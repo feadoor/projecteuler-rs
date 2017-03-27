@@ -145,6 +145,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "number-theory"
 version = "0.1.0"
+dependencies = [
+ "num-traits 0.1.36 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "primesieve"

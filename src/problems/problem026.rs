@@ -60,12 +60,12 @@ pub const DESC: &'static str = "Reciprocal cycles";
 /// Find the length of the cycle of the decimal 1/d, where d is coprime to 10. Requires a prime
 /// sieve capable of factorising numbers up to d (that is, containing primes up to the square root
 /// of d).
-fn cycle_length(d: u32, sieve: &Sieve) -> u64 {
+fn cycle_length(d: u64, sieve: &Sieve) -> u64 {
     sieve.order(10, d).unwrap()
 }
 
 /// Find the number below the given limit with the longest repeating decimal.
-fn solve(lim: u32) -> u32 {
+fn solve(lim: u64) -> u64 {
     // Sieve for enough primes to calculate orders with respect to moduli as large as the limit.
     let sieve = Sieve::to_limit(integer_sqrt(lim as u64));
 

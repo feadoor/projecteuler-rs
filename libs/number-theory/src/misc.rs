@@ -1,5 +1,9 @@
 //! Miscellaneous functions which didn't obviously belong together in any sort of group.
 
+use std::mem::swap;
+use num_traits::int::PrimInt;
+use num_traits::sign::Signed;
+
 /// Returns the greatest common divisor of two positive integers, computed with Euclid's algorithm.
 ///
 /// # Examples
@@ -10,9 +14,9 @@
 /// assert_eq!(gcd(89, 55), 1);
 /// assert_eq!(gcd(1001, 770), 77);
 /// ```
-pub fn gcd(mut x: u64, mut y: u64) -> u64 {
+pub fn gcd<T: PrimInt>(mut x: T, mut y: T) -> T {
     let mut tmp;
-    while y != 0 {
+    while y != T::zero() {
         tmp = x % y;
         x = y;
         y = tmp;
@@ -30,7 +34,7 @@ pub fn gcd(mut x: u64, mut y: u64) -> u64 {
 /// assert_eq!(lcm(89, 55), 4895);
 /// assert_eq!(lcm(1001, 770), 10010);
 /// ```
-pub fn lcm(x: u64, y: u64) -> u64 {
+pub fn lcm<T: PrimInt>(x: T, y: T) -> T {
     x * (y / gcd(x, y))
 }
 
@@ -122,21 +126,57 @@ pub fn binom(m: u64, mut n: u64) -> u64 {
 ///
 /// assert_eq!(pow(13, 7), 62748517);
 /// ```
-pub fn pow(mut x: u64, mut y: u64) -> u64 {
+pub fn pow<T: PrimInt>(mut x: T, mut y: u64) -> T {
 
     // Set up somewhere to hold the final answer.
-    let mut ans = 1;
+    let mut ans = T::one();
 
     // Use the repeated squaring algorithm.
     while y != 0 {
         if y & 1 == 1 {
-            ans *= x;
+            ans = ans * x;
         }
         x = x * x;
         y >>= 1;
     }
 
     ans
+}
+
+/// Calculates the Bezout coefficients `s, t` such that `as + bt = g`, where `g` is the greatest
+/// common divisor of `a, b`, using the extended Euclidean algorithm as described
+/// [here](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Pseudocode)
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::bezout;
+///
+/// let (s, t) = bezout(240, 46);
+/// assert_eq!(240 * s + 46 * t, 2);
+/// ```
+pub fn bezout<T: PrimInt + Signed>(a: T, b: T) -> (T, T) {
+    let (mut s, mut old_s) = (T::zero(), T::one());
+    let (mut t, mut old_t) = (T::one(), T::zero());
+    let (mut r, mut old_r) = (b, a);
+
+    while r != T::zero() {
+        let q = old_r / r;
+
+        old_r = old_r - q * r;
+        old_s = old_s - q * s;
+        old_t = old_t - q * t;
+
+        swap(&mut r, &mut old_r);
+        swap(&mut s, &mut old_s);
+        swap(&mut t, &mut old_t);
+    }
+
+  if a * old_s + b * old_t >= T::zero() {
+      (old_s, old_t)
+  } else {
+      (-old_s, -old_t )
+  }
 }
 
 #[cfg(test)]
@@ -164,16 +204,16 @@ mod tests {
 
     #[test]
     fn test_lcm() {
-        let test_cases = vec![(5, 0, 0),
-                              (123, 0, 0),
-                              (0, 34, 0),
-                              (4, 4, 4),
-                              (13, 13, 13),
-                              (2345, 72, 168840),
-                              (1406700, 164115, 9846900),
-                              (1368, 339, 154584),
-                              (55534, 434334, 12060152178),
-                              (30315475, 24440870, 23585439550)];
+        let test_cases: Vec<(u64, u64, u64)> = vec![(5, 0, 0),
+                                                    (123, 0, 0),
+                                                    (0, 34, 0),
+                                                    (4, 4, 4),
+                                                    (13, 13, 13),
+                                                    (2345, 72, 168840),
+                                                    (1406700, 164115, 9846900),
+                                                    (1368, 339, 154584),
+                                                    (55534, 434334, 12060152178),
+                                                    (30315475, 24440870, 23585439550)];
 
         for (x, y, result) in test_cases {
             assert_eq!(lcm(x, y), result);
@@ -243,14 +283,24 @@ mod tests {
 
     #[test]
     fn test_pow() {
-        let test_cases = vec![(1, 0, 1),
-                              (1, 283764, 1),
-                              (2, 10, 1024),
-                              (5, 20, 95367431640625),
-                              (10, 10, 10000000000)];
+        let test_cases: Vec<(u64, u64, u64)> = vec![(1, 0, 1),
+                                                    (1, 283764, 1),
+                                                    (2, 10, 1024),
+                                                    (5, 20, 95367431640625),
+                                                    (10, 10, 10000000000)];
 
         for (x, y, result) in test_cases {
             assert_eq!(pow(x, y), result);
+        }
+    }
+
+    #[test]
+    fn test_bezout() {
+        for a in 1..100 {
+            for b in 1..100 {
+                let (s, t) = bezout(a, b);
+                assert_eq!(s * a + t * b, gcd(a, b))
+            }
         }
     }
 }
