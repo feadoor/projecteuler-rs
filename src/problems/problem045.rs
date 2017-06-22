@@ -1,4 +1,4 @@
-//! [Problem 45 (Triangular, pentagonal and hexagonal)](https://projecteuler.net/problem=44)
+//! [Problem 45 (Triangular, pentagonal and hexagonal)](https://projecteuler.net/problem=45)
 //!
 //! # Problem statement
 //!

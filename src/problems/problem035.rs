@@ -33,6 +33,9 @@ type NumIter = Box<Iterator<Item = u64>>;
 /// Check if the given number is a circular prime.
 fn is_circular_prime(mut n: u64, sieve: &Sieve) -> bool {
 
+    // Deal with a trivial case
+    if n == 0 { return false; }
+
     // First, find the length of `n` so that digit rotations can be performed easily.
     let num_digits = 1 + (n as f64).log(10.0).floor() as u64;
     let power_of_ten = pow(10, num_digits - 1);

@@ -136,8 +136,8 @@ pub fn pow<T: PrimInt>(mut x: T, mut y: u64) -> T {
         if y & 1 == 1 {
             ans = ans * x;
         }
-        x = x * x;
         y >>= 1;
+        if y != 0 { x = x * x; }
     }
 
     ans
