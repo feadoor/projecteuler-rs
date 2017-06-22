@@ -22,6 +22,15 @@
 //!
 //! What is the smallest odd composite that cannot be written as the sum of a prime and twice a
 //! square?
+//!
+//! # Solution detail
+//!
+//! It is easy to find all counterexamples to this conjecture up to a given limit. Simply create
+//! a list of all sums of primes and double-squares up to the limit, and see if any numbers are
+//! missing. This can be done easily, as long as we can generate primes using e.g. a sieve.
+//!
+//! Solving the problem is then a case of starting at a tentative limit and increasing it until
+//! the first counterexample is found.
 
 use primesieve::Sieve;
 
