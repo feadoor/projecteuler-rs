@@ -1,6 +1,6 @@
 //! Functions relating in some way to modular arithmetic.
 
-use num_traits::int::PrimInt;
+use std::mem::swap;
 
 use misc::{bezout, gcd};
 
@@ -16,18 +16,52 @@ use misc::{bezout, gcd};
 /// assert_eq!(modexp(2, 4, 15), 1);
 /// assert_eq!(modexp(73, 101, 991), 456);
 /// ```
-pub fn modexp<T: PrimInt>(base: T, mut exp: u64, modulus: T) -> T {
-    let mut answer = T::one();
+pub fn modexp(base: u64, mut exp: u64, modulus: u64) -> u64 {
+    let mut answer = 1;
     let mut worker = base % modulus;
     while exp != 0 {
         if exp & 1 == 1 {
-            answer = (answer * worker) % modulus;
+            answer = safe_mod_mul(answer, worker, modulus);
         }
         exp >>= 1;
-        worker = (worker * worker) % modulus;
+        if exp != 0 { worker = safe_mod_mul(worker, worker, modulus) };
     }
 
     answer
+}
+
+/// Calcuate a * b with respect to the given modulus, without overflowing for large moduli. Uses
+/// a repeated-doubling algorithm, also known as Russian Peasant multiplication.
+///
+/// Depends on the modulus being at most 2^63 - 1, that is 2 * modulus must not overflow.
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::safe_mod_mul;
+///
+/// assert_eq!(safe_mod_mul(2, 8, 15), 1);
+/// assert_eq!(safe_mod_mul(853_467, 21_660_421_200_929, 100_000_000_000_007), 54701091976795);
+/// ```
+pub fn safe_mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
+    match a.checked_mul(b) {
+        Some(x) => x % m,
+        None => {
+            if a > b { swap(&mut a, &mut b); }
+            b = b % m;
+            let bits_per_loop = m.leading_zeros();
+            let mask = (1 << bits_per_loop) - 1;
+            let mut result = 0;
+
+            while a > 0 {
+                if a & mask != 0 { result = (result + b * (a & mask)) % m; }
+                a >>= bits_per_loop;
+                b = (b << bits_per_loop) % m;
+            }
+
+            result
+        }
+    }
 }
 
 /// Calculate a value `x` such that `a'x == 1 (mod m')` where `a', m'` are calculated from `a, m`
