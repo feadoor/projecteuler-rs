@@ -60,7 +60,7 @@ fn solve(n: usize) -> u64 {
         }
     }
 
-    0
+    unreachable!()
 }
 
 /// Solve the problem, returning the answer as a `String`

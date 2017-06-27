@@ -47,3 +47,4 @@ pub mod problem044;
 pub mod problem045;
 pub mod problem046;
 pub mod problem047;
+pub mod problem048;
