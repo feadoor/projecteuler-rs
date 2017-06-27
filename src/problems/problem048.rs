@@ -11,6 +11,9 @@
 //!
 //! This is simply a case of using, say, a repeated squaring algorithm to calculate the necessary
 //! powers modulo 10^10, and adding up the results.
+//!
+//! Since the modulus here is larger than 2^32, care must be taken that no intermediate
+//! multiplication ever results in overflow.
 
 use number_theory::modexp;
 
