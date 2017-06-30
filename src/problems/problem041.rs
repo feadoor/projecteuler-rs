@@ -13,8 +13,8 @@
 //! therefore only need to check the 7-digit pandigitals and smaller. Simply iterate over them in
 //! reverse order, checking each one for primality and stopping when we find one.
 
+use permutohedron::LexicalPermutation;
 use primesieve::Sieve;
-use utils::permute_prev;
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 41";
@@ -37,7 +37,7 @@ impl Iterator for PandigitalIterator {
 
     fn next(&mut self) -> Option<u64> {
         let curr_num = self.next_num;
-        match permute_prev(&mut self.digits) {
+        match self.digits.prev_permutation() {
             true => self.next_num = Some(to_int(&self.digits)),
             false => self.next_num = None,
         }

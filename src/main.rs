@@ -8,6 +8,7 @@ extern crate docopt;
 #[macro_use]
 extern crate itertools;
 extern crate num;
+extern crate permutohedron;
 extern crate rustc_serialize;
 
 // My own crates
