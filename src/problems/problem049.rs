@@ -58,10 +58,15 @@ fn solve() -> Vec<u64> {
     let mut answers = Vec::new();
     let ignored = (1487, 4817, 8147);
 
+    // Iterate over primes
     let primes: HashSet<_> = Sieve::to_limit(10_000).iter().collect();
     for &prime in primes.iter() {
+
+        // Check for permutations of this prime which are themselves prime
         let permuted_primes = permutations_in_set(prime, &primes);
         for &permuted_prime in permuted_primes.iter().filter(|&&perm| perm > prime) {
+
+            // Check if the number which completes the progression is also a prime permutation
             let other = permuted_prime + (permuted_prime - prime);
             if permuted_primes.contains(&other) && (prime, permuted_prime, other) != ignored {
                 answers.push(vec![prime, permuted_prime, other]);
