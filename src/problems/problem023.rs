@@ -40,7 +40,7 @@ pub const NAME: &'static str = "Problem 23";
 /// A description of the problem.
 pub const DESC: &'static str = "Non-abundant sums";
 
-/// Check whether n is amicable.
+/// Check whether n is a sum of two abundant numbers.
 fn is_sum_of_abundants(n: usize, abundants: &[bool]) -> bool {
     for abundant in 1..abundants.len() {
         if n < abundant + abundant {
@@ -62,7 +62,7 @@ fn abundants(lim: u64) -> Vec<bool> {
     (0..lim).map(|x| x != 0 && sieve.sum_of_divisors(x).unwrap() > x + x).collect()
 }
 
-/// Find the sum of the numbers below the given limit which are not a sum of two amicable numbers.
+/// Find the sum of the numbers below the given limit which are not a sum of two abundant numbers.
 fn solve(lim: u64) -> u64 {
     let abundants = abundants(lim);
     (1..lim as usize).filter(|&x| !is_sum_of_abundants(x, &abundants)).sum::<usize>() as u64

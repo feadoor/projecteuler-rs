@@ -60,7 +60,7 @@ fn solve() -> Vec<u64> {
 
     // Iterate over primes
     let primes: HashSet<_> = Sieve::to_limit(10_000).iter().collect();
-    for &prime in primes.iter() {
+    for &prime in &primes {
 
         // Check for permutations of this prime which are themselves prime
         let permuted_primes = permutations_in_set(prime, &primes);
@@ -74,7 +74,7 @@ fn solve() -> Vec<u64> {
         }
     }
 
-    assert!(answers.len() == 1);
+    assert_eq!(answers.len(), 1);
     answers.remove(0)
 }
 

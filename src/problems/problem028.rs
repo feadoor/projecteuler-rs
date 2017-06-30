@@ -48,7 +48,7 @@ pub const DESC: &'static str = "Number spiral diagonals";
 
 /// Find the sum of the numbers on the diagonals of a spiral grid of size n.
 fn solve(n: u64) -> u64 {
-    assert!(n % 2 == 1);
+    assert_eq!(n % 2, 1);
     (n * (8 + n * (3 + n * 4)) - 9) / 6
 }
 

@@ -73,11 +73,11 @@ fn palindromes(digits: u64) -> NumIter {
 
     // Odd-length palindromes
     let max_length = (digits - 1) / 2;
-    let odd_palindromes = iproduct!((1..pow(10, max_length)), (0..10))
+    let odd_palindromes = iproduct!(1..pow(10, max_length), 0..10)
         .map(|(n, d)| odd_palindromise(n, d));
 
     // Single-digit palindromes
-    let single_digit_palindromes = if digits > 0 { (0..10) } else { (0..0) };
+    let single_digit_palindromes = if digits > 0 { 0..10 } else { 0..0 };
 
     Box::new(single_digit_palindromes.chain(odd_palindromes).chain(even_palindromes))
 }

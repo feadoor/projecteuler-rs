@@ -37,9 +37,10 @@ impl Iterator for PandigitalIterator {
 
     fn next(&mut self) -> Option<u64> {
         let curr_num = self.next_num;
-        match self.digits.prev_permutation() {
-            true => self.next_num = Some(to_int(&self.digits)),
-            false => self.next_num = None,
+        if self.digits.prev_permutation() {
+            self.next_num = Some(to_int(&self.digits));
+        } else {
+            self.next_num = None;
         }
         curr_num
     }

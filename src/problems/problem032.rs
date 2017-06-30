@@ -46,15 +46,16 @@ fn is_pandigital(nums: &mut [u64]) -> bool {
         while *num != 0 {
             let digit = *num % 10;
             *num /= 10;
-            match seen[digit as usize] {
-                true => return false,
-                false => seen[digit as usize] = true,
+            if seen[digit as usize] {
+                return false;
+            } else {
+                seen[digit as usize] = true;
             }
         }
     }
 
     // We need to have seen every digit except zero.
-    seen[0] == false && seen[1..].iter().all(|&x| x == true)
+    !seen[0] && seen[1..].iter().all(|&x| x)
 }
 
 /// Find the sum of all pandigital products.

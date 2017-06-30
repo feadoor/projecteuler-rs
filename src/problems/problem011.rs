@@ -56,22 +56,22 @@ fn solve(numbers: &[Vec<u64>], n: isize) -> u64 {
     };
 
     // The horizontal products
-    let horizontal = iproduct!((0..size), (0..size - n + 1))
+    let horizontal = iproduct!(0..size, 0..size - n + 1)
         .map(|start| line(start, (0, 1)))
         .map(|iter| iter.product());
 
     // The vertical products
-    let vertical = iproduct!((0..size - n + 1), (0..size))
+    let vertical = iproduct!(0..size - n + 1, 0..size)
         .map(|start| line(start, (1, 0)))
         .map(|iter| iter.product());
 
     // The diagonal products parallel to \
-    let down_right = iproduct!((0..size - n + 1), (0..size - n + 1))
+    let down_right = iproduct!(0..size - n + 1, 0..size - n + 1)
         .map(|start| line(start, (1, 1)))
         .map(|iter| iter.product());
 
     // The diagonal products parallel to /
-    let down_left = iproduct!((0..size - n + 1), (n - 1..size))
+    let down_left = iproduct!(0..size - n + 1, n - 1..size)
         .map(|start| line(start, (1, -1)))
         .map(|iter| iter.product());
 

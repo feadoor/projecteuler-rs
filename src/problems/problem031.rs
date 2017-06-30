@@ -60,7 +60,7 @@ fn solve(n: usize) -> u64 {
 
     // For each coin value, update the array so that `a[i]` holds the number of ways of making
     // `i` using the coins considered so far.
-    for val in vec![1, 2, 5, 10, 20, 50, 100, 200] {
+    for &val in &[1, 2, 5, 10, 20, 50, 100, 200] {
         for j in val..n + 1 {
             a[j] += a[j - val];
         }

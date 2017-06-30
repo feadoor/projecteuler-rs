@@ -42,12 +42,11 @@ fn is_circular_prime(mut n: u64, sieve: &Sieve) -> bool {
 
     // Now check that each rotation is prime.
     for _ in 0..num_digits {
-        match sieve.is_prime(n).unwrap() {
-            false => return false,
-            true => {
-                let last_digit = n % 10;
-                n = n / 10 + last_digit * power_of_ten;
-            }
+        if !sieve.is_prime(n).unwrap() {
+            return false;
+        } else {
+            let last_digit = n % 10;
+            n = n / 10 + last_digit * power_of_ten;
         }
     }
 
