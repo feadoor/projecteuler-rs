@@ -26,40 +26,41 @@
 //!
 //! Finally, remember to subtract 3 at the end, since 1 and 2 are not counted as solutions.
 
-use utils::search::{DepthFirstSearcher, DepthFirstNode};
+use utils::search::DepthFirstTree;
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 34";
 /// A description of the problem.
 pub const DESC: &'static str = "Digit factorials";
 
-// A constant, representing the length in digits of any solution.
-const SOL_LEN: u64 = 7;
-
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
 /// A structure holding information about a node in the search tree.
-struct TreeNode {
+struct FactorialSumTreeNode {
     value: u64,
     factorial_sum: u64,
     length: u64,
 }
 
-impl TreeNode {
+struct FactorialSumTree {
+    solution_length: u64,
+}
+
+impl FactorialSumTree {
 
     /// Check if the given node can possibly be extended to a solution.
-    fn may_be_extended(&self) -> bool {
+    fn may_be_extended(&self, node: &FactorialSumTreeNode) -> bool {
         // Calculate the maximum and minimum values taken by the factorial sum after extending to
-        // SOL_LEN digits long.
-        let min_factorial_sum = self.factorial_sum;
-        let max_factorial_sum = self.factorial_sum + (SOL_LEN - self.length) * FACTORIAL[9];
+        // `solution_length` digits long.
+        let min_factorial_sum = node.factorial_sum;
+        let max_factorial_sum = node.factorial_sum + (self.solution_length - node.length) * FACTORIAL[9];
 
         // Calculate the maximum and minimum values taken by the actual number after extending to
-        // SOL_LEN digits long.
-        let mut min_value = self.value;
-        let mut max_value = self.value + 1;
-        for _ in 0..SOL_LEN - self.length {
+        // `solution_length` digits long.
+        let mut min_value = node.value;
+        let mut max_value = node.value + 1;
+        for _ in 0..self.solution_length - node.length {
             min_value *= 10;
             max_value *= 10;
         }
@@ -69,33 +70,38 @@ impl TreeNode {
     }
 }
 
-impl DepthFirstNode for TreeNode {
+impl DepthFirstTree for FactorialSumTree {
+    type Node = FactorialSumTreeNode;
 
-    fn children(&self) -> Vec<Self> {
+    fn root(&self) -> Self::Node {
+        Self::Node { value: 0, factorial_sum: 0, length: 0 }
+    }
+
+    fn children(&self, node: &Self::Node) -> Vec<Self::Node> {
         (0..10).map(|next_digit| {
-            let next_value = 10 * self.value + next_digit;
+            let next_value = 10 * node.value + next_digit;
             let next_factorial_sum = match next_value {
                 0 => 0,
-                _ => self.factorial_sum + FACTORIAL[next_digit as usize],
+                _ => node.factorial_sum + FACTORIAL[next_digit as usize],
             };
-            let next_length = self.length + 1;
-            TreeNode { value: next_value, factorial_sum: next_factorial_sum, length: next_length }
+            let next_length = node.length + 1;
+            Self::Node { value: next_value, factorial_sum: next_factorial_sum, length: next_length }
         }).collect()
     }
 
-    fn should_prune(&self) -> bool {
-        self.length == SOL_LEN || !self.may_be_extended()
+    fn should_prune(&self, node: &Self::Node) -> bool {
+        node.length == self.solution_length || !self.may_be_extended(node)
     }
 
-    fn accept(&self) -> bool {
-        self.length == SOL_LEN && self.value == self.factorial_sum
+    fn accept(&self, node: &Self::Node) -> bool {
+        node.length == self.solution_length && node.value == node.factorial_sum
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the factorials of their digits.
 fn solve() -> u64 {
-    let root = TreeNode{ value: 0, factorial_sum: 0, length: 0};
-    DepthFirstSearcher::new(root).map(|node| node.value).sum::<u64>() - 3
+    let tree = FactorialSumTree { solution_length: 7 };
+    tree.iter().map(|node| node.value).sum::<u64>() - 3
 }
 
 /// Solve the problem, returning the answer as a `String`

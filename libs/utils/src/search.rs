@@ -39,14 +39,23 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 
 /// A trait for nodes in a tree which is to be traversed, depth-first, in the pursuit of nodes which
 /// satisfy a particular condition.
-pub trait DepthFirstNode where Self: Sized {
+pub trait DepthFirstTree<> where Self: Sized {
+    type Node: Sized;
+
+    /// Returns the root of the tree.
+    fn root(&self) -> Self::Node;
     /// Returns all the nodes which are direct descendants of this node.
-    fn children(&self) -> Vec<Self>;
+    fn children(&self, node: &Self::Node) -> Vec<Self::Node>;
     /// Returns `true` if the search tree can be pruned below this node - that is, none of its
     /// children can possibly satisfy the condition.
-    fn should_prune(&self) -> bool;
+    fn should_prune(&self, node: &Self::Node) -> bool;
     /// Returns `true` if this node satisfies the condition.
-    fn accept(&self) -> bool;
+    fn accept(&self, node: &Self::Node) -> bool;
+
+    /// An iterator over the nodes of the tree which meet the condition.
+    fn iter(&self) -> DepthFirstSearcher<Self> {
+        DepthFirstSearcher { tree: self, nodes_to_check: vec![self.root()] }
+    }
 }
 
 /// A structure which is used for iterating through a tree, depth-first, producing only those nodes
@@ -55,52 +64,56 @@ pub trait DepthFirstNode where Self: Sized {
 /// # Examples
 ///
 /// ```
-/// use utils::search::{DepthFirstSearcher, DepthFirstNode};
+/// use utils::search::DepthFirstTree;
 ///
-/// // Find all numbers below 1000 with only odd digits and divisible by 13.
+/// // Find all numbers below 666 with only odd digits and divisible by 13.
 /// struct Node {
 ///     value: u32,
 /// }
 ///
-/// impl DepthFirstNode for Node {
-///     fn children(&self) -> Vec<Self> {
-///         [9, 7, 5, 3, 1].iter().map(|d| Node { value: 10 * self.value + d }).collect()
+/// struct Tree {
+///     max_value: u32,
+/// }
+///
+/// impl DepthFirstTree for Tree {
+///     type Node = Node;
+///
+///     fn root(&self) -> Node {
+///         Node { value: 0 }
 ///     }
 ///
-///     fn should_prune(&self) -> bool {
-///         self.value >= 100
+///     fn children(&self, node: &Node) -> Vec<Node> {
+///         [9, 7, 5, 3, 1].iter().map(|d| Node { value: 10 * node.value + d }).collect()
 ///     }
 ///
-///     fn accept(&self) -> bool {
-///         self.value > 0 && self.value % 13 == 0
+///     fn should_prune(&self, node: &Node) -> bool {
+///         node.value >= 100
+///     }
+///
+///     fn accept(&self, node: &Node) -> bool {
+///         node.value > 0 && node.value < self.max_value && node.value % 13 == 0
 ///     }
 /// }
 ///
-/// let root = Node { value: 0 };
-/// let numbers: Vec<u32> = DepthFirstSearcher::new(root).map(|node| node.value).collect();
+/// let tree = Tree { max_value: 666 };
+/// let numbers: Vec<_> = tree.iter().map(|node| node.value).collect();
 ///
-/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 715, 793, 91, 975]);
+/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 91]);
 /// ```
-pub struct DepthFirstSearcher<T: DepthFirstNode> {
-    nodes_to_visit: Vec<T>,
+pub struct DepthFirstSearcher<'a, T: 'a + Sized + DepthFirstTree> {
+    nodes_to_check: Vec<T::Node>,
+    tree: &'a T,
 }
 
-impl<T: DepthFirstNode> DepthFirstSearcher<T> {
-    /// Construct a new `DepthFirstSearcher` with the given root node.
-    pub fn new(root: T) -> DepthFirstSearcher<T> {
-        DepthFirstSearcher { nodes_to_visit: vec![root] }
-    }
-}
+impl<'a, T: Sized + DepthFirstTree> Iterator for DepthFirstSearcher<'a, T> {
+    type Item = T::Node;
 
-impl<T: DepthFirstNode> Iterator for DepthFirstSearcher<T> {
-    type Item = T;
-
-    fn next(&mut self) -> Option<T> {
-        while let Some(node) = self.nodes_to_visit.pop() {
-            if !node.should_prune() {
-                self.nodes_to_visit.append(&mut node.children());
+    fn next(&mut self) -> Option<T::Node> {
+        while let Some(node) = self.nodes_to_check.pop() {
+            if !self.tree.should_prune(&node) {
+                self.nodes_to_check.append(&mut self.tree.children(&node));
             }
-            if node.accept() {
+            if self.tree.accept(&node) {
                 return Some(node);
             }
         }
