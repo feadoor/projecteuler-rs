@@ -34,13 +34,12 @@
 //!
 //! Finally, remember to subtract 1 at the end, since it is not counted as a solution.
 
+use utils::search::{DepthFirstSearcher, DepthFirstNode};
+
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 30";
 /// A description of the problem.
 pub const DESC: &'static str = "Digit fifth powers";
-
-// A custom type for a generic iterator over some u64s
-type NumIter = Box<Iterator<Item = u64>>;
 
 // A constant, representing the length in digits of any solution.
 const SOL_LEN: u64 = 6;
@@ -48,57 +47,60 @@ const SOL_LEN: u64 = 6;
 /// Fifth powers of single digits.
 const FIFTH_POWER: &'static [u64; 10] = &[0, 1, 32, 243, 1024, 3125, 7776, 16807, 32768, 59049];
 
-/// Check if the given number can possibly be extended to a solution.
-fn may_be_extended(value: u64, power_sum: u64, length: u64) -> bool {
-
-    // Calculate the maximum and minimum values taken by the fifth power sum after extending to
-    // SOL_LEN digits long.
-    let min_power_sum = power_sum;
-    let max_power_sum = power_sum + (SOL_LEN - length) * FIFTH_POWER[9];
-
-    // Calculate the maximum and minimum values taken by the actual number after extending to
-    // SOL_LEN digits long.
-    let mut min_value = value;
-    let mut max_value = value + 1;
-    for _ in 0..SOL_LEN - length {
-        min_value *= 10;
-        max_value *= 10;
-    }
-
-    // Check if the two ranges overlap, otherwise there is definitely no solution.
-    min_power_sum < max_value && max_power_sum >= min_value
+/// A structure holding information about a node in the search tree.
+struct TreeNode {
+    value: u64,
+    power_sum: u64,
+    length: u64,
 }
 
-/// Find all numbers which are equal to the sum of the fifth powers of their digits, and which can
-/// be formed by appending digits to the given number.
-fn extensions(curr_value: u64, curr_power_sum: u64, curr_length: u64) -> NumIter {
+impl TreeNode {
 
-    // There are only extensions if we have used fewer than SOL_LEN digits so far.
-    if curr_length < SOL_LEN && may_be_extended(curr_value, curr_power_sum, curr_length) {
+    /// Check if the given node can possibly be extended to a solution.
+    fn may_be_extended(&self) -> bool {
+        // Calculate the maximum and minimum values taken by the fifth power sum after extending to
+        // SOL_LEN digits long.
+        let min_power_sum = self.power_sum;
+        let max_power_sum = self.power_sum + (SOL_LEN - self.length) * FIFTH_POWER[9];
 
-        // A closure to find the solutions which come from a specific choice of next digit.
-        let next_sols = |next_digit: u64| {
-            let next_value = 10 * curr_value + next_digit;
-            let next_power_sum = curr_power_sum + FIFTH_POWER[next_digit as usize];
-            let next_length = curr_length + 1;
+        // Calculate the maximum and minimum values taken by the actual number after extending to
+        // SOL_LEN digits long.
+        let mut min_value = self.value;
+        let mut max_value = self.value + 1;
+        for _ in 0..SOL_LEN - self.length {
+            min_value *= 10;
+            max_value *= 10;
+        }
 
-            extensions(next_value, next_power_sum, next_length)
-        };
+        // Check if the two ranges overlap, otherwise there is definitely no solution.
+        min_power_sum < max_value && max_power_sum >= min_value
+    }
+}
 
-        // Chain together all the solutions from each choice of next digit.
-        (0..10).fold(Box::new(None.into_iter()),
-                     |acc, x| Box::new(acc.chain(next_sols(x))))
+impl DepthFirstNode for TreeNode {
 
-    } else if curr_length == SOL_LEN && curr_value == curr_power_sum {
-        Box::new(Some(curr_value).into_iter())
-    } else {
-        Box::new(None.into_iter())
+    fn children(&self) -> Vec<Self> {
+        (0..10).map(|next_digit| {
+            let next_value = 10 * self.value + next_digit;
+            let next_power_sum = self.power_sum + FIFTH_POWER[next_digit as usize];
+            let next_length = self.length + 1;
+            TreeNode { value: next_value, power_sum: next_power_sum, length: next_length }
+        }).collect()
+    }
+
+    fn should_prune(&self) -> bool {
+        self.length == SOL_LEN || !self.may_be_extended()
+    }
+
+    fn accept(&self) -> bool {
+        self.length == SOL_LEN && self.value == self.power_sum
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the fifth powers of their digits.
 fn solve() -> u64 {
-    extensions(0, 0, 0).sum::<u64>() - 1
+    let root = TreeNode{ value: 0, power_sum: 0, length: 0};
+    DepthFirstSearcher::new(root).map(|node| node.value).sum::<u64>() - 1
 }
 
 /// Solve the problem, returning the answer as a `String`

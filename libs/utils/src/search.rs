@@ -1,4 +1,4 @@
-//! Implementations of useful utility functions.
+//! Implementations of useful utility functions related to searching.
 
 use std::marker::Sized;
 
@@ -42,8 +42,8 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 pub trait DepthFirstNode where Self: Sized {
     /// Returns all the nodes which are direct descendants of this node.
     fn children(&self) -> Vec<Self>;
-    /// Returns `true` if the search tree can be pruned above this node - that is, neither it, nor
-    /// any of its children, can possibly satisfy the condition.
+    /// Returns `true` if the search tree can be pruned below this node - that is, none of its
+    /// children can possibly satisfy the condition.
     fn should_prune(&self) -> bool;
     /// Returns `true` if this node satisfies the condition.
     fn accept(&self) -> bool;
@@ -57,8 +57,7 @@ pub trait DepthFirstNode where Self: Sized {
 /// ```
 /// use utils::search::{DepthFirstSearcher, DepthFirstNode};
 ///
-/// // Find all numbers below 666 with only odd digits and divisible by 13.
-///
+/// // Find all numbers below 1000 with only odd digits and divisible by 13.
 /// struct Node {
 ///     value: u32,
 /// }
@@ -69,7 +68,7 @@ pub trait DepthFirstNode where Self: Sized {
 ///     }
 ///
 ///     fn should_prune(&self) -> bool {
-///         self.value >= 666
+///         self.value >= 100
 ///     }
 ///
 ///     fn accept(&self) -> bool {
@@ -79,7 +78,8 @@ pub trait DepthFirstNode where Self: Sized {
 ///
 /// let root = Node { value: 0 };
 /// let numbers: Vec<u32> = DepthFirstSearcher::new(root).map(|node| node.value).collect();
-/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 91]);
+///
+/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 715, 793, 91, 975]);
 /// ```
 pub struct DepthFirstSearcher<T: DepthFirstNode> {
     nodes_to_visit: Vec<T>,
@@ -99,9 +99,9 @@ impl<T: DepthFirstNode> Iterator for DepthFirstSearcher<T> {
         while let Some(node) = self.nodes_to_visit.pop() {
             if !node.should_prune() {
                 self.nodes_to_visit.append(&mut node.children());
-                if node.accept() {
-                    return Some(node);
-                }
+            }
+            if node.accept() {
+                return Some(node);
             }
         }
 
