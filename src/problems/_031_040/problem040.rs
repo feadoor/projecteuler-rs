@@ -26,7 +26,7 @@
 //! combinatorial problem.
 
 use number_theory::pow;
-use utils::binary_search;
+use utils::search::binary_search;
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 40";

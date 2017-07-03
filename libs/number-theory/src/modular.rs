@@ -80,7 +80,7 @@ pub fn safe_mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_inverse(6, 7), 6);
 /// ```
 pub fn mod_inverse(a: i64, m: i64) -> i64 {
-    let (s, _) = bezout(a, m as i64);
+    let (s, _) = bezout(a, m);
     let mut ans = s % m;
     if ans < 0 {
         ans += m;
