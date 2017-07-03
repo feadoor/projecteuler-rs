@@ -26,13 +26,12 @@
 //!
 //! Finally, remember to subtract 3 at the end, since 1 and 2 are not counted as solutions.
 
+use utils::search::{DepthFirstSearcher, DepthFirstNode};
+
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 34";
 /// A description of the problem.
 pub const DESC: &'static str = "Digit factorials";
-
-// A custom type for a generic iterator over some u64s
-type NumIter = Box<Iterator<Item = u64>>;
 
 // A constant, representing the length in digits of any solution.
 const SOL_LEN: u64 = 7;
@@ -40,60 +39,63 @@ const SOL_LEN: u64 = 7;
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-/// Check if the given number can possibly be extended to a solution.
-fn may_be_extended(value: u64, factorial_sum: u64, length: u64) -> bool {
-
-    // Calculate the maximum and minimum values taken by the factorial sum after extending to
-    // SOL_LEN digits long.
-    let min_factorial_sum = factorial_sum;
-    let max_factorial_sum = factorial_sum + (SOL_LEN - length) * FACTORIAL[9];
-
-    // Calculate the maximum and minimum values taken by the actual number after extending to
-    // SOL_LEN digits long.
-    let mut min_value = value;
-    let mut max_value = value + 1;
-    for _ in 0..SOL_LEN - length {
-        min_value *= 10;
-        max_value *= 10;
-    }
-
-    // Check if the two ranges overlap, otherwise there is definitely no solution.
-    min_factorial_sum < max_value && max_factorial_sum >= min_value
+/// A structure holding information about a node in the search tree.
+struct TreeNode {
+    value: u64,
+    factorial_sum: u64,
+    length: u64,
 }
 
-/// Find all numbers which are equal to the sum of the factorials of their digits, and which can
-/// be formed by appending digits to the given number.
-fn extensions(curr_value: u64, curr_factorial_sum: u64, curr_length: u64) -> NumIter {
+impl TreeNode {
 
-    // There are only extensions if we have used fewer than SOL_LEN digits so far.
-    if curr_length < SOL_LEN && may_be_extended(curr_value, curr_factorial_sum, curr_length) {
+    /// Check if the given node can possibly be extended to a solution.
+    fn may_be_extended(&self) -> bool {
+        // Calculate the maximum and minimum values taken by the factorial sum after extending to
+        // SOL_LEN digits long.
+        let min_factorial_sum = self.factorial_sum;
+        let max_factorial_sum = self.factorial_sum + (SOL_LEN - self.length) * FACTORIAL[9];
 
-        // A closure to find the solutions which come from a specific choice of next digit.
-        let next_sols = |next_digit: u64| {
-            let next_value = 10 * curr_value + next_digit;
+        // Calculate the maximum and minimum values taken by the actual number after extending to
+        // SOL_LEN digits long.
+        let mut min_value = self.value;
+        let mut max_value = self.value + 1;
+        for _ in 0..SOL_LEN - self.length {
+            min_value *= 10;
+            max_value *= 10;
+        }
+
+        // Check if the two ranges overlap, otherwise there is definitely no solution.
+        min_factorial_sum < max_value && max_factorial_sum >= min_value
+    }
+}
+
+impl DepthFirstNode for TreeNode {
+
+    fn children(&self) -> Vec<Self> {
+        (0..10).map(|next_digit| {
+            let next_value = 10 * self.value + next_digit;
             let next_factorial_sum = match next_value {
                 0 => 0,
-                _ => curr_factorial_sum + FACTORIAL[next_digit as usize],
+                _ => self.factorial_sum + FACTORIAL[next_digit as usize],
             };
-            let next_length = curr_length + 1;
+            let next_length = self.length + 1;
+            TreeNode { value: next_value, factorial_sum: next_factorial_sum, length: next_length }
+        }).collect()
+    }
 
-            extensions(next_value, next_factorial_sum, next_length)
-        };
+    fn should_prune(&self) -> bool {
+        self.length == SOL_LEN || !self.may_be_extended()
+    }
 
-        // Chain together all the solutions from each choice of next digit.
-        (0..10).fold(Box::new(None.into_iter()),
-                     |acc, x| Box::new(acc.chain(next_sols(x))))
-
-    } else if curr_length == SOL_LEN && curr_value == curr_factorial_sum {
-        Box::new(Some(curr_value).into_iter())
-    } else {
-        Box::new(None.into_iter())
+    fn accept(&self) -> bool {
+        self.length == SOL_LEN && self.value == self.factorial_sum
     }
 }
 
-/// Find the sum of the numbers which are equal to the sum of the fifth powers of their digits.
+/// Find the sum of the numbers which are equal to the sum of the factorials of their digits.
 fn solve() -> u64 {
-    extensions(0, 0, 0).sum::<u64>() - 3
+    let root = TreeNode{ value: 0, factorial_sum: 0, length: 0};
+    DepthFirstSearcher::new(root).map(|node| node.value).sum::<u64>() - 3
 }
 
 /// Solve the problem, returning the answer as a `String`
