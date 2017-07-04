@@ -31,59 +31,80 @@
 //! by 2, then for each of those, consider all choices for the next digit which meets the condition
 //! for divisibility by 3, and so on until the whole number has been built.
 
+use utils::search::DepthFirstTree;
+
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 43";
 /// A description of the problem.
 pub const DESC: &'static str = "Sub-string divisibility";
 
-// A generic iterator over some u64s
-type NumIter = Box<Iterator<Item = u64>>;
+/// A structure representing a node in the search tree.
+struct SubstringTreeNode {
+    value: u64,
+    num_digits: usize,
+    last_digit: u64,
+}
 
-/// An iterator over the numbers which form solutions to the sub-string divisibility criterion.
-fn solutions() -> NumIter {
+struct SubstringTree {
+    digits_used: [bool; 10],
+}
 
-    // An inner function which checks the most recently-applicable divisibility condition.
-    fn check_condition(curr_num: u64, num_digits: u64) -> bool {
+impl SubstringTree {
+    /// Construct a new `SubstringTree`.
+    fn new() -> SubstringTree {
+        SubstringTree { digits_used: [false; 10] }
+    }
+
+    /// Check if the most recent substring condition has been satisfied.
+    fn condition_satisfied(&self, value: u64, num_digits: usize) -> bool {
         const MODULI: &'static [u64; 7] = &[2, 3, 5, 7, 11, 13, 17];
-        if num_digits >= 4 {
-            (curr_num % 1000) % MODULI[(num_digits - 4) as usize] == 0
-        } else {
-            true
-        }
+        num_digits < 4 || (value % 1000) % MODULI[num_digits - 4] == 0
+    }
+}
+
+impl DepthFirstTree for SubstringTree {
+    type Node = SubstringTreeNode;
+
+    fn roots(&self) -> Vec<Self::Node> {
+        vec![Self::Node { value: 0, num_digits: 0, last_digit: 0 }]
     }
 
-    // An inner function which recursively calls itself to perform a depth-first traversal of the
-    // space of solutions. Chains together all solutions coming from each possible choice of next
-    // digit.
-    fn generator(curr_num: u64, digits_used: &mut [bool; 10], num_digits: u64) -> NumIter {
-        if check_condition(curr_num, num_digits) {
-            if num_digits == 10 {
-                Box::new(Some(curr_num).into_iter())
+    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
+        (0..10).filter(|&d| !self.digits_used[d as usize]).filter_map(|d| {
+            let next_value = 10 * node.value + d;
+            let next_num_digits = node.num_digits + 1;
+
+            if self.condition_satisfied(next_value, next_num_digits) {
+                Some(Self::Node { value: next_value, num_digits: next_num_digits, last_digit: d })
             } else {
-                let mut solutions = Box::new(None.into_iter()) as NumIter;
-                for digit in 0..10 {
-                    if !digits_used[digit] {
-                        digits_used[digit] = true;
-                        solutions = Box::new(solutions.chain(
-                            generator(10 * curr_num + digit as u64,
-                                      digits_used,
-                                      num_digits + 1)));
-                        digits_used[digit] = false;
-                    }
-                }
-                solutions
+                None
             }
-        } else {
-            Box::new(None.into_iter())
+        }).collect()
+    }
+
+    fn update_state_before(&mut self, node: &Self::Node) {
+        if node.num_digits > 0 {
+            self.digits_used[node.last_digit as usize] = true;
         }
     }
 
-    generator(0, &mut [false; 10], 0)
+    fn update_state_after(&mut self, node: &Self::Node) {
+        self.digits_used[node.last_digit as usize] = false;
+    }
+
+    #[allow(unused_variables)]
+    fn should_prune(&mut self, node: &Self::Node) -> bool {
+        false
+    }
+
+    fn accept(&mut self, node: &Self::Node) -> bool {
+        node.num_digits == 10
+    }
 }
 
 /// Find the sum of all 10-digit pandigital numbers satisfying the divisibility conditions.
 fn solve() -> u64 {
-    solutions().sum()
+    SubstringTree::new().iter().map(|node| node.value).sum()
 }
 
 /// Solve the problem, returning the answer as a `String`
