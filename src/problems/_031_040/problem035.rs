@@ -21,67 +21,74 @@
 
 use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
+use utils::search::DepthFirstTree;
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 35";
 /// A description of the problem.
 pub const DESC: &'static str = "Circular primes";
 
-// A custom type which is a generic iterator over some u64s
-type NumIter = Box<Iterator<Item = u64>>;
-
-/// Check if the given number is a circular prime.
-fn is_circular_prime(mut n: u64, sieve: &Sieve) -> bool {
-
-    // Deal with a trivial case
-    if n == 0 { return false; }
-
-    // First, find the length of `n` so that digit rotations can be performed easily.
-    let num_digits = 1 + (n as f64).log(10.0).floor() as u64;
-    let power_of_ten = pow(10, num_digits - 1);
-
-    // Now check that each rotation is prime.
-    for _ in 0..num_digits {
-        if !sieve.is_prime(n).unwrap() {
-            return false;
-        } else {
-            let last_digit = n % 10;
-            n = n / 10 + last_digit * power_of_ten;
-        }
-    }
-
-    true
+/// A structure holding information about a node in the search tree used to find circular primes.
+struct CircularPrimeTreeNode {
+    value: u64,
+    digits: Vec<u64>,
 }
 
-/// Construct all numbers consisting only of the digits 1, 3, 7 and 9, not exceeding the given
-/// number of digits.
-fn numbers_to_check(digits: u64) -> NumIter {
+struct CircularPrimeTree {
+    max_digits: usize,
+    sieve: Sieve,
+}
 
-    // Define an inner recursive function which finds the numbers we need using a depth-first
-    // algorithm, building them up one digit at a time.
-    fn generator(curr_num: u64, digits_left: u64) -> NumIter {
-        // If we have some spare digits, then chain together all choices coming from each possible
-        // choice of next digit. Otherwise, just produce the current number,
-        if digits_left == 0 {
-            Box::new(Some(curr_num).into_iter())
-        } else {
-            let extensions = [1, 3, 7, 9]
-                .iter()
-                .fold(Box::new(None.into_iter()) as NumIter,
-                      |acc, x| Box::new(acc.chain(generator(curr_num * 10 + x, digits_left - 1))));
-            Box::new(extensions.chain(Box::new(Some(curr_num).into_iter())))
+impl CircularPrimeTree {
+    fn with_max_digits(max_digits: usize) -> CircularPrimeTree {
+        let sieve_limit = integer_sqrt(pow(10, max_digits as u64));
+        CircularPrimeTree { max_digits: max_digits, sieve: Sieve::to_limit(sieve_limit) }
+    }
+}
 
-        }
+impl DepthFirstTree for CircularPrimeTree {
+    type Node = CircularPrimeTreeNode;
+
+    fn root(&self) -> Self::Node {
+        Self::Node { value: 0, digits: Vec::new() }
     }
 
-    generator(0, digits)
+    fn children(&self, node: &Self::Node) -> Vec<Self::Node> {
+        [1, 3, 7, 9].iter().map(|&digit| {
+            let next_value = 10 * node.value + digit;
+            let mut next_digits = node.digits.clone();
+            next_digits.push(digit);
+            Self::Node { value: next_value, digits: next_digits }
+        }).collect()
+    }
+
+    fn should_prune(&self, node: &Self::Node) -> bool {
+        node.digits.len() >= self.max_digits
+    }
+
+    fn accept(&self, node: &Self::Node) -> bool {
+        let mut n = node.value;
+        if n == 0 { return false; }
+
+        // Check that each rotation of n is prime
+        let power_of_ten = pow(10, node.digits.len() as u64 - 1);
+        for digit in node.digits.iter().rev() {
+            if !self.sieve.is_prime(n).unwrap() {
+                return false;
+            } else {
+                n = n / 10 + digit * power_of_ten;
+            }
+        }
+
+        true
+    }
 }
 
 /// Find the number of circular primes there are with at most the given number of digits. Remember
 /// to add on 2 for the primes 2 and 5 which are not considered otherwise.
-fn solve(digits: u64) -> usize {
-    let sieve = Sieve::to_limit(integer_sqrt(pow(10, digits)));
-    numbers_to_check(digits).filter(|&x| is_circular_prime(x, &sieve)).count() + 2
+fn solve(digits: usize) -> usize {
+    let tree = CircularPrimeTree::with_max_digits(digits);
+    tree.iter().count() + 2
 }
 
 /// Solve the problem, returning the answer as a `String`
