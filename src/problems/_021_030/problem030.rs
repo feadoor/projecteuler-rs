@@ -56,6 +56,10 @@ struct PowerSumTree {
 }
 
 impl PowerSumTree {
+    /// Construct a new `PowerSumTree`.
+    fn new() -> PowerSumTree {
+        PowerSumTree { solution_length: 6 }
+    }
 
     /// Check if the given node can possibly be extended to a solution.
     fn may_be_extended(&self, node: &PowerSumTreeNode) -> bool {
@@ -81,11 +85,11 @@ impl PowerSumTree {
 impl DepthFirstTree for PowerSumTree {
     type Node = PowerSumTreeNode;
 
-    fn root(&self) -> Self::Node {
-        Self::Node { value: 0, power_sum: 0, length: 0 }
+    fn roots(&self) -> Vec<Self::Node> {
+        vec![Self::Node { value: 0, power_sum: 0, length: 0 }]
     }
 
-    fn children(&self, node: &Self::Node) -> Vec<Self::Node> {
+    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
         (0..10).map(|next_digit| {
             let next_value = 10 * node.value + next_digit;
             let next_power_sum = node.power_sum + FIFTH_POWER[next_digit as usize];
@@ -94,19 +98,18 @@ impl DepthFirstTree for PowerSumTree {
         }).collect()
     }
 
-    fn should_prune(&self, node: &Self::Node) -> bool {
+    fn should_prune(&mut self, node: &Self::Node) -> bool {
         node.length == self.solution_length || !self.may_be_extended(node)
     }
 
-    fn accept(&self, node: &Self::Node) -> bool {
+    fn accept(&mut self, node: &Self::Node) -> bool {
         node.length == self.solution_length && node.value == node.power_sum
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the fifth powers of their digits.
 fn solve() -> u64 {
-    let tree = PowerSumTree { solution_length: 6 };
-    tree.iter().map(|node| node.value).sum::<u64>() - 1
+    PowerSumTree::new().iter().map(|node| node.value).sum::<u64>() - 1
 }
 
 /// Solve the problem, returning the answer as a `String`

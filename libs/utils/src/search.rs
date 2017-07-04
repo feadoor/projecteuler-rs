@@ -37,7 +37,7 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
     lower
 }
 
-/// A trait for nodes in a tree which is to be traversed, depth-first, in the pursuit of nodes which
+/// A trait for a tree which is to be traversed, depth-first, in the pursuit of nodes which
 /// satisfy a particular condition.
 ///
 /// # Examples
@@ -57,24 +57,24 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 /// impl DepthFirstTree for Tree {
 ///     type Node = Node;
 ///
-///     fn root(&self) -> Node {
-///         Node { value: 0 }
+///     fn roots(&self) -> Vec<Node> {
+///         vec![Node { value: 0 }]
 ///     }
 ///
-///     fn children(&self, node: &Node) -> Vec<Node> {
+///     fn children(&mut self, node: &Node) -> Vec<Node> {
 ///         [9, 7, 5, 3, 1].iter().map(|d| Node { value: 10 * node.value + d }).collect()
 ///     }
 ///
-///     fn should_prune(&self, node: &Node) -> bool {
+///     fn should_prune(&mut self, node: &Node) -> bool {
 ///         node.value >= 100
 ///     }
 ///
-///     fn accept(&self, node: &Node) -> bool {
+///     fn accept(&mut self, node: &Node) -> bool {
 ///         node.value > 0 && node.value < self.max_value && node.value % 13 == 0
 ///     }
 /// }
 ///
-/// let tree = Tree { max_value: 666 };
+/// let mut tree = Tree { max_value: 666 };
 /// let numbers: Vec<_> = tree.iter().map(|node| node.value).collect();
 ///
 /// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 91]);
@@ -82,19 +82,20 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 pub trait DepthFirstTree<> where Self: Sized {
     type Node: Sized;
 
-    /// Returns the root of the tree.
-    fn root(&self) -> Self::Node;
+    /// Returns the roots of the tree.
+    fn roots(&self) -> Vec<Self::Node>;
     /// Returns all the nodes which are direct descendants of this node.
-    fn children(&self, node: &Self::Node) -> Vec<Self::Node>;
+    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node>;
     /// Returns `true` if the search tree can be pruned below this node - that is, none of its
     /// children can possibly satisfy the condition.
-    fn should_prune(&self, node: &Self::Node) -> bool;
+    fn should_prune(&mut self, node: &Self::Node) -> bool;
     /// Returns `true` if this node satisfies the condition.
-    fn accept(&self, node: &Self::Node) -> bool;
+    fn accept(&mut self, node: &Self::Node) -> bool;
 
     /// An iterator over the nodes of the tree which meet the condition.
-    fn iter(&self) -> DepthFirstSearcher<Self> {
-        DepthFirstSearcher { tree: self, nodes_to_check: vec![self.root()] }
+    fn iter(&mut self) -> DepthFirstSearcher<Self> {
+        let roots = self.roots();
+        DepthFirstSearcher { tree: self, nodes_to_check: roots }
     }
 }
 
@@ -102,7 +103,7 @@ pub trait DepthFirstTree<> where Self: Sized {
 /// which satisfy a particular condition.
 pub struct DepthFirstSearcher<'a, T: 'a + Sized + DepthFirstTree> {
     nodes_to_check: Vec<T::Node>,
-    tree: &'a T,
+    tree: &'a mut T,
 }
 
 impl<'a, T: Sized + DepthFirstTree> Iterator for DepthFirstSearcher<'a, T> {

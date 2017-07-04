@@ -40,6 +40,8 @@ struct CircularPrimeTree {
 }
 
 impl CircularPrimeTree {
+    /// Construct a new `CircularPrimeTree` which will produce circular primes with at most the
+    /// specified number of digits.
     fn with_max_digits(max_digits: usize) -> CircularPrimeTree {
         let sieve_limit = integer_sqrt(pow(10, max_digits as u64));
         CircularPrimeTree { max_digits: max_digits, sieve: Sieve::to_limit(sieve_limit) }
@@ -49,11 +51,11 @@ impl CircularPrimeTree {
 impl DepthFirstTree for CircularPrimeTree {
     type Node = CircularPrimeTreeNode;
 
-    fn root(&self) -> Self::Node {
-        Self::Node { value: 0, digits: Vec::new() }
+    fn roots(&self) -> Vec<Self::Node> {
+        vec![Self::Node { value: 0, digits: Vec::new() }]
     }
 
-    fn children(&self, node: &Self::Node) -> Vec<Self::Node> {
+    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
         [1, 3, 7, 9].iter().map(|&digit| {
             let next_value = 10 * node.value + digit;
             let mut next_digits = node.digits.clone();
@@ -62,11 +64,11 @@ impl DepthFirstTree for CircularPrimeTree {
         }).collect()
     }
 
-    fn should_prune(&self, node: &Self::Node) -> bool {
+    fn should_prune(&mut self, node: &Self::Node) -> bool {
         node.digits.len() >= self.max_digits
     }
 
-    fn accept(&self, node: &Self::Node) -> bool {
+    fn accept(&mut self, node: &Self::Node) -> bool {
         let mut n = node.value;
         if n == 0 { return false; }
 
@@ -87,8 +89,7 @@ impl DepthFirstTree for CircularPrimeTree {
 /// Find the number of circular primes there are with at most the given number of digits. Remember
 /// to add on 2 for the primes 2 and 5 which are not considered otherwise.
 fn solve(digits: usize) -> usize {
-    let tree = CircularPrimeTree::with_max_digits(digits);
-    tree.iter().count() + 2
+    CircularPrimeTree::with_max_digits(digits).iter().count() + 2
 }
 
 /// Solve the problem, returning the answer as a `String`

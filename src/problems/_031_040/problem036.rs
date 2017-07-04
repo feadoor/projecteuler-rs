@@ -23,10 +23,7 @@ use number_theory::pow;
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 36";
 /// A description of the problem.
-pub const DESC: &'static str = "Largest palindrome product";
-
-// A generic type for iterating over some u64s
-type NumIter = Box<Iterator<Item = u64>>;
+pub const DESC: &'static str = "Double-base palindromes";
 
 /// Check whether the given number is a binary palindrome.
 fn is_binary_palindrome(mut num: u64) -> bool {
@@ -65,7 +62,7 @@ fn odd_palindromise(mut n: u64, d: u64) -> u64 {
 }
 
 /// An iterator over all palindromes with up to the given number of digits in base 10.
-fn palindromes(digits: u64) -> NumIter {
+fn palindromes(digits: u64) -> Box<Iterator<Item = u64>> {
 
     // Even-length palindromes.
     let max_length = digits / 2;

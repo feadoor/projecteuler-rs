@@ -48,6 +48,10 @@ struct FactorialSumTree {
 }
 
 impl FactorialSumTree {
+    /// Construct a new `FactorialSumTree`.
+    fn new() -> FactorialSumTree {
+        FactorialSumTree { solution_length: 7 }
+    }
 
     /// Check if the given node can possibly be extended to a solution.
     fn may_be_extended(&self, node: &FactorialSumTreeNode) -> bool {
@@ -73,11 +77,11 @@ impl FactorialSumTree {
 impl DepthFirstTree for FactorialSumTree {
     type Node = FactorialSumTreeNode;
 
-    fn root(&self) -> Self::Node {
-        Self::Node { value: 0, factorial_sum: 0, length: 0 }
+    fn roots(&self) -> Vec<Self::Node> {
+        vec![Self::Node { value: 0, factorial_sum: 0, length: 0 }]
     }
 
-    fn children(&self, node: &Self::Node) -> Vec<Self::Node> {
+    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
         (0..10).map(|next_digit| {
             let next_value = 10 * node.value + next_digit;
             let next_factorial_sum = match next_value {
@@ -89,19 +93,18 @@ impl DepthFirstTree for FactorialSumTree {
         }).collect()
     }
 
-    fn should_prune(&self, node: &Self::Node) -> bool {
+    fn should_prune(&mut self, node: &Self::Node) -> bool {
         node.length == self.solution_length || !self.may_be_extended(node)
     }
 
-    fn accept(&self, node: &Self::Node) -> bool {
+    fn accept(&mut self, node: &Self::Node) -> bool {
         node.length == self.solution_length && node.value == node.factorial_sum
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the factorials of their digits.
 fn solve() -> u64 {
-    let tree = FactorialSumTree { solution_length: 7 };
-    tree.iter().map(|node| node.value).sum::<u64>() - 3
+    FactorialSumTree::new().iter().map(|node| node.value).sum::<u64>() - 3
 }
 
 /// Solve the problem, returning the answer as a `String`
