@@ -4,7 +4,7 @@ import re
 from timeit import timeit
 
 def main():
-    if len(sys.argv) == 0:
+    if len(sys.argv) < 2:
         print "Usage: python timings-test.py <path-to-executable>"
     else:
         executable = sys.argv[1]
@@ -15,7 +15,7 @@ def main():
         failed_problems = []
         for problem_number in problem_numbers:
             print "Problem {0:03d}:".format(problem_number),
-            time = timeit(stmt="subprocess.call('{0} run {1}', stdout=open(os.devnull, 'w'))".format(executable, problem_number), setup="import os, subprocess", number=1)
+            time = timeit(stmt="subprocess.call(['{0}', 'run', '{1}'], stdout=open(os.devnull, 'w'))".format(executable, problem_number), setup="import os, subprocess", number=1)
             print "{0:.2f} seconds".format(time)
 
             if time > 60:
