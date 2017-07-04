@@ -16,7 +16,7 @@ def main():
         for problem_number in problem_numbers:
             print "Problem {0:03d}:".format(problem_number),
             time = timeit(stmt="subprocess.call('{0} run {1}', stdout=open(os.devnull, 'w'))".format(executable, problem_number), setup="import os, subprocess", number=1)
-            print "{0:.2f} seconds\n".format(time)
+            print "{0:.2f} seconds".format(time)
 
             if time > 60:
                 failed_problems.append(problem_number)
