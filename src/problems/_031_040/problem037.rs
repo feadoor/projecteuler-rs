@@ -26,26 +26,26 @@
 //! primality testing using a prime sieve that starts at some small size and grows when necessary.
 
 use primesieve::Sieve;
-use utils::search::DepthFirstTree;
+use utils::search::{DepthFirstTree, Pruning};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 37";
 /// A description of the problem.
 pub const DESC: &'static str = "Truncatable primes";
 
-/// A structure representing a node in the search tree.
-struct TruncatablePrimeTreeNode {
-    value: u64,
+struct TruncatablePrimeTreeStep {
+    next_digit: u64,
 }
 
 struct TruncatablePrimeTree {
+    value: u64,
     sieve: Sieve,
 }
 
 impl TruncatablePrimeTree {
     /// Construct a new `TruncatablePrimeTree`
     fn new() -> TruncatablePrimeTree {
-        TruncatablePrimeTree { sieve: Sieve::to_limit(1000) }
+        TruncatablePrimeTree { value: 0, sieve: Sieve::to_limit(1000) }
     }
 
     /// Determine if the given value is prime, expanding the sieve if necessary.
@@ -56,43 +56,58 @@ impl TruncatablePrimeTree {
         self.sieve.is_prime(value).unwrap()
     }
 
-    /// Determine if the given value if a left-truncatable prime, expanding the sieve if necessary.
-    fn is_left_truncatable(&mut self, value: u64) -> bool {
+    /// Determine if the current state is a left-truncatable prime, expanding the sieve if necessary.
+    fn is_left_truncatable(&mut self) -> bool {
         let mut power = 1;
-        while power < value {
+        while power < self.value {
             power *= 10;
-            if !self.is_prime(value % power) { return false; }
+            let value = self.value % power;
+            if !self.is_prime(value) { return false; }
         }
         true
     }
 }
 
 impl DepthFirstTree for TruncatablePrimeTree {
-    type Node = TruncatablePrimeTreeNode;
+    type Step = TruncatablePrimeTreeStep;
+    type Output = u64;
 
-    fn roots(&self) -> Vec<Self::Node> {
-        [2, 3, 5, 7].iter().map(|&d| Self::Node { value: d }).collect()
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        let digits = if self.value == 0 { vec![2, 3, 5, 7] } else { vec![1, 3, 7, 9] };
+        digits.iter().map(|&digit| Self::Step { next_digit: digit }).collect()
     }
 
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
-        [1, 3, 7, 9].iter()
-            .map(|&d| Self::Node { value: 10 * node.value + d })
-            .collect()
+    fn should_prune(&mut self) -> Pruning {
+        let value = self.value;
+        if !self.is_prime(value) {
+            Pruning::Above
+        } else {
+            Pruning::None
+        }
     }
 
-    fn should_prune(&mut self, node: &Self::Node) -> bool {
-        !self.is_prime(node.value)
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.value = 10 * self.value + step.next_digit;
     }
 
-    fn accept(&mut self, node: &Self::Node) -> bool {
-        self.is_left_truncatable(node.value)
+    #[allow(unused_variables)]
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.value /= 10;
+    }
+
+    fn output(&mut self) -> Option<Self::Output> {
+        if self.is_left_truncatable() {
+            Some(self.value)
+        } else {
+            None
+        }
     }
 }
 
 /// Find the sum of all primes which are both left-truncatable and right-truncatable. Remember to
 /// subtract the single-digit primes which are not counted.
 fn solve() -> u64 {
-    TruncatablePrimeTree::new().iter().map(|node| node.value).sum::<u64>() - 17
+    TruncatablePrimeTree::new().iter().sum::<u64>() - 17
 }
 
 /// Solve the problem, returning the answer as a `String`

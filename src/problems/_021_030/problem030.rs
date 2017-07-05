@@ -34,7 +34,7 @@
 //!
 //! Finally, remember to subtract 1 at the end, since it is not counted as a solution.
 
-use utils::search::DepthFirstTree;
+use utils::search::{DepthFirstTree, Pruning};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 30";
@@ -44,35 +44,36 @@ pub const DESC: &'static str = "Digit fifth powers";
 /// Fifth powers of single digits.
 const FIFTH_POWER: &'static [u64; 10] = &[0, 1, 32, 243, 1024, 3125, 7776, 16807, 32768, 59049];
 
-/// A structure holding information about a node in the search tree.
-struct PowerSumTreeNode {
+struct PowerSumTreeStep {
+    next_digit: u64,
+}
+
+#[derive(Debug)]
+struct PowerSumTree {
     value: u64,
     power_sum: u64,
     length: u64,
-}
-
-struct PowerSumTree {
     solution_length: u64,
 }
 
 impl PowerSumTree {
     /// Construct a new `PowerSumTree`.
     fn new() -> PowerSumTree {
-        PowerSumTree { solution_length: 6 }
+        PowerSumTree { value: 0, power_sum: 0, length: 0, solution_length: 6 }
     }
 
-    /// Check if the given node can possibly be extended to a solution.
-    fn may_be_extended(&self, node: &PowerSumTreeNode) -> bool {
+    /// Check if the current state can possibly be extended to a solution.
+    fn may_be_extended(&self) -> bool {
         // Calculate the maximum and minimum values taken by the fifth power sum after extending to
         // `solution_length` digits long.
-        let min_power_sum = node.power_sum;
-        let max_power_sum = node.power_sum + (self.solution_length - node.length) * FIFTH_POWER[9];
+        let min_power_sum = self.power_sum;
+        let max_power_sum = self.power_sum + (self.solution_length - self.length) * FIFTH_POWER[9];
 
         // Calculate the maximum and minimum values taken by the actual number after extending to
         // `solution_length` digits long.
-        let mut min_value = node.value;
-        let mut max_value = node.value + 1;
-        for _ in 0..self.solution_length - node.length {
+        let mut min_value = self.value;
+        let mut max_value = self.value + 1;
+        for _ in 0..self.solution_length - self.length {
             min_value *= 10;
             max_value *= 10;
         }
@@ -83,33 +84,47 @@ impl PowerSumTree {
 }
 
 impl DepthFirstTree for PowerSumTree {
-    type Node = PowerSumTreeNode;
+    type Step = PowerSumTreeStep;
+    type Output = u64;
 
-    fn roots(&self) -> Vec<Self::Node> {
-        vec![Self::Node { value: 0, power_sum: 0, length: 0 }]
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        (0..10).map(|next_digit| Self::Step { next_digit: next_digit }).collect()
     }
 
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
-        (0..10).map(|next_digit| {
-            let next_value = 10 * node.value + next_digit;
-            let next_power_sum = node.power_sum + FIFTH_POWER[next_digit as usize];
-            let next_length = node.length + 1;
-            Self::Node { value: next_value, power_sum: next_power_sum, length: next_length }
-        }).collect()
+    fn should_prune(&mut self) -> Pruning {
+        if self.length == self.solution_length {
+            Pruning::Below
+        } else if !self.may_be_extended() {
+            Pruning::Above
+        } else {
+            Pruning::None
+        }
     }
 
-    fn should_prune(&mut self, node: &Self::Node) -> bool {
-        node.length == self.solution_length || !self.may_be_extended(node)
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.value = 10 * self.value + step.next_digit;
+        self.power_sum += FIFTH_POWER[step.next_digit as usize];
+        self.length += 1;
     }
 
-    fn accept(&mut self, node: &Self::Node) -> bool {
-        node.length == self.solution_length && node.value == node.power_sum
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.value /= 10;
+        self.power_sum -= FIFTH_POWER[step.next_digit as usize];
+        self.length -= 1;
+    }
+
+    fn output(&mut self) -> Option<Self::Output> {
+        if self.length == self.solution_length && self.value == self.power_sum {
+            Some(self.value)
+        } else {
+            None
+        }
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the fifth powers of their digits.
 fn solve() -> u64 {
-    PowerSumTree::new().iter().map(|node| node.value).sum::<u64>() - 1
+    PowerSumTree::new().iter().sum::<u64>() - 1
 }
 
 /// Solve the problem, returning the answer as a `String`

@@ -26,7 +26,7 @@
 //!
 //! Finally, remember to subtract 3 at the end, since 1 and 2 are not counted as solutions.
 
-use utils::search::DepthFirstTree;
+use utils::search::{DepthFirstTree, Pruning};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 34";
@@ -36,35 +36,35 @@ pub const DESC: &'static str = "Digit factorials";
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
-/// A structure holding information about a node in the search tree.
-struct FactorialSumTreeNode {
-    value: u64,
-    factorial_sum: u64,
-    length: u64,
+struct FactorialSumTreeStep {
+    next_digit: u64,
 }
 
 struct FactorialSumTree {
+    value: u64,
+    factorial_sum: u64,
+    length: u64,
     solution_length: u64,
 }
 
 impl FactorialSumTree {
     /// Construct a new `FactorialSumTree`.
     fn new() -> FactorialSumTree {
-        FactorialSumTree { solution_length: 7 }
+        FactorialSumTree { value: 0, factorial_sum: 0, length: 0, solution_length: 7 }
     }
 
-    /// Check if the given node can possibly be extended to a solution.
-    fn may_be_extended(&self, node: &FactorialSumTreeNode) -> bool {
+    /// Check if the current state can possibly be extended to a solution.
+    fn may_be_extended(&self) -> bool {
         // Calculate the maximum and minimum values taken by the factorial sum after extending to
         // `solution_length` digits long.
-        let min_factorial_sum = node.factorial_sum;
-        let max_factorial_sum = node.factorial_sum + (self.solution_length - node.length) * FACTORIAL[9];
+        let min_factorial_sum = self.factorial_sum;
+        let max_factorial_sum = self.factorial_sum + (self.solution_length - self.length) * FACTORIAL[9];
 
         // Calculate the maximum and minimum values taken by the actual number after extending to
         // `solution_length` digits long.
-        let mut min_value = node.value;
-        let mut max_value = node.value + 1;
-        for _ in 0..self.solution_length - node.length {
+        let mut min_value = self.value;
+        let mut max_value = self.value + 1;
+        for _ in 0..self.solution_length - self.length {
             min_value *= 10;
             max_value *= 10;
         }
@@ -75,36 +75,53 @@ impl FactorialSumTree {
 }
 
 impl DepthFirstTree for FactorialSumTree {
-    type Node = FactorialSumTreeNode;
+    type Step = FactorialSumTreeStep;
+    type Output = u64;
 
-    fn roots(&self) -> Vec<Self::Node> {
-        vec![Self::Node { value: 0, factorial_sum: 0, length: 0 }]
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        (0..10).map(|next_digit| Self::Step { next_digit: next_digit }).collect()
     }
 
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
-        (0..10).map(|next_digit| {
-            let next_value = 10 * node.value + next_digit;
-            let next_factorial_sum = match next_value {
-                0 => 0,
-                _ => node.factorial_sum + FACTORIAL[next_digit as usize],
-            };
-            let next_length = node.length + 1;
-            Self::Node { value: next_value, factorial_sum: next_factorial_sum, length: next_length }
-        }).collect()
+    fn should_prune(&mut self) -> Pruning {
+        if self.length == self.solution_length {
+            Pruning::Below
+        } else if !self.may_be_extended() {
+            Pruning::Above
+        } else {
+            Pruning::None
+        }
     }
 
-    fn should_prune(&mut self, node: &Self::Node) -> bool {
-        node.length == self.solution_length || !self.may_be_extended(node)
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.value = 10 * self.value + step.next_digit;
+        self.factorial_sum = match self.value {
+            0 => 0,
+            _ => self.factorial_sum + FACTORIAL[step.next_digit as usize]
+        };
+        self.length += 1;
     }
 
-    fn accept(&mut self, node: &Self::Node) -> bool {
-        node.length == self.solution_length && node.value == node.factorial_sum
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.factorial_sum = match self.value {
+            0 => 0,
+            _ => self.factorial_sum - FACTORIAL[step.next_digit as usize],
+        };
+        self.value /= 10;
+        self.length -= 1;
+    }
+
+    fn output(&mut self) -> Option<Self::Output> {
+        if self.length == self.solution_length && self.value == self.factorial_sum {
+            Some(self.value)
+        } else {
+            None
+        }
     }
 }
 
 /// Find the sum of the numbers which are equal to the sum of the factorials of their digits.
 fn solve() -> u64 {
-    FactorialSumTree::new().iter().map(|node| node.value).sum::<u64>() - 3
+    FactorialSumTree::new().iter().sum::<u64>() - 3
 }
 
 /// Solve the problem, returning the answer as a `String`

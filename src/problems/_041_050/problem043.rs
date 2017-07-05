@@ -31,80 +31,78 @@
 //! by 2, then for each of those, consider all choices for the next digit which meets the condition
 //! for divisibility by 3, and so on until the whole number has been built.
 
-use utils::search::DepthFirstTree;
+use utils::search::{DepthFirstTree, Pruning};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 43";
 /// A description of the problem.
 pub const DESC: &'static str = "Sub-string divisibility";
 
-/// A structure representing a node in the search tree.
-struct SubstringTreeNode {
-    value: u64,
-    num_digits: usize,
-    last_digit: u64,
+struct SubstringTreeStep {
+    next_digit: u64,
 }
 
 struct SubstringTree {
+    value: u64,
+    num_digits: usize,
     digits_used: [bool; 10],
 }
 
 impl SubstringTree {
     /// Construct a new `SubstringTree`.
     fn new() -> SubstringTree {
-        SubstringTree { digits_used: [false; 10] }
+        SubstringTree { value: 0, num_digits: 0, digits_used: [false; 10] }
     }
 
     /// Check if the most recent substring condition has been satisfied.
-    fn condition_satisfied(&self, value: u64, num_digits: usize) -> bool {
+    fn condition_satisfied(&self) -> bool {
         const MODULI: &'static [u64; 7] = &[2, 3, 5, 7, 11, 13, 17];
-        num_digits < 4 || (value % 1000) % MODULI[num_digits - 4] == 0
+        self.num_digits < 4 || (self.value % 1000) % MODULI[self.num_digits - 4] == 0
     }
 }
 
 impl DepthFirstTree for SubstringTree {
-    type Node = SubstringTreeNode;
+    type Step = SubstringTreeStep;
+    type Output = u64;
 
-    fn roots(&self) -> Vec<Self::Node> {
-        vec![Self::Node { value: 0, num_digits: 0, last_digit: 0 }]
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        (0..10).filter(|&d| !self.digits_used[d as usize])
+               .map(|d| Self::Step { next_digit: d })
+               .collect()
     }
 
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
-        (0..10).filter(|&d| !self.digits_used[d as usize]).filter_map(|d| {
-            let next_value = 10 * node.value + d;
-            let next_num_digits = node.num_digits + 1;
-
-            if self.condition_satisfied(next_value, next_num_digits) {
-                Some(Self::Node { value: next_value, num_digits: next_num_digits, last_digit: d })
-            } else {
-                None
-            }
-        }).collect()
-    }
-
-    fn update_state_before(&mut self, node: &Self::Node) {
-        if node.num_digits > 0 {
-            self.digits_used[node.last_digit as usize] = true;
+    fn should_prune(&mut self) -> Pruning {
+        if !self.condition_satisfied() {
+            Pruning::Above
+        } else {
+            Pruning::None
         }
     }
 
-    fn update_state_after(&mut self, node: &Self::Node) {
-        self.digits_used[node.last_digit as usize] = false;
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.value = 10 * self.value + step.next_digit;
+        self.num_digits += 1;
+        self.digits_used[step.next_digit as usize] = true;
     }
 
-    #[allow(unused_variables)]
-    fn should_prune(&mut self, node: &Self::Node) -> bool {
-        false
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.value /= 10;
+        self.num_digits -= 1;
+        self.digits_used[step.next_digit as usize] = false;
     }
 
-    fn accept(&mut self, node: &Self::Node) -> bool {
-        node.num_digits == 10
+    fn output(&mut self) -> Option<Self::Output> {
+        if self.num_digits == 10 {
+            Some(self.value)
+        } else {
+            None
+        }
     }
 }
 
 /// Find the sum of all 10-digit pandigital numbers satisfying the divisibility conditions.
 fn solve() -> u64 {
-    SubstringTree::new().iter().map(|node| node.value).sum()
+    SubstringTree::new().iter().sum()
 }
 
 /// Solve the problem, returning the answer as a `String`

@@ -1,4 +1,5 @@
 # projecteuler-rs [![Build Status](https://travis-ci.org/feadoor/projecteuler-rs.svg?branch=master)](https://travis-ci.org/feadoor/projecteuler-rs)
+
 Solutions to [Project Euler](https://projecteuler.net) problems in Rust.
 
 ## Usage
@@ -26,7 +27,7 @@ cargo test --release -p <crate>
 
 The [documentation](https://feadoor.github.io/projecteuler-rs) explains, at a high level, the solution to each solved problem.
 
-There is also documentation for each of the library crates used in the solutions which can be found at the same place.
+There is also documentation for each of the library crates used in the solutions - this can be found at the same link.
 
 ## Solution times
 

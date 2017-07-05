@@ -40,110 +40,206 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 /// A trait for a tree which is to be traversed, depth-first, in the pursuit of nodes which
 /// satisfy a particular condition.
 ///
+/// # Concepts
+///
+/// There are two concepts that are important in understanding how to use this trait - that of
+/// tree "state", and that of tree "steps".
+///
+/// The "state" of a tree is an umbrella term encompassing all the information held about a
+/// particular position in the tree - including any values associated with the position and any
+/// internal variables that are used to aid the search.
+///
+/// A tree "step" is a small structure - ideally one that can be constructed very cheaply - which
+/// contains instructions about how to move between parent/child tree states.
+///
+/// # Usage
+///
+/// To define a tree, you must provide the following:
+///
+///  - A structure holding the tree state, which you will implement `DepthFirstTree` for
+///  - An associated type `Step` which represents the tree "steps"
+///  - An associated type `Output` which represents the outputs of the search
+///  - Implementations of the required methods of this trait:
+///      - `next_steps` must return the steps that it is valid to take from the current state
+///      - `should_prune` must decide whether to prune the tree at the current state
+///      - `apply_step` must define how to use a step to go from parent to child state
+///      - `revert_step` must define how to use a step to go from child back to parent state
+///      - `output` must take the current state of the tree, and return `Some(value)` if the current
+///         state meets the condition.
+///
 /// # Examples
 ///
-/// ```
-/// use utils::search::DepthFirstTree;
+/// In this example, we will search for all numbers having at most 3 digits, with all digits being
+/// odd, and the whole number being divisible by 13.
 ///
-/// // Find all numbers below 666 with only odd digits and divisible by 13.
-/// struct Node {
-///     value: u32,
+/// We will utilise a tree search, with child states coming from the parent by appending a single
+/// digit to the parent state.
+///
+/// Our tree state will be the current number being examined, the current number of digits,
+/// and the maximum number of digits that a solution should have (in this case, 3).
+///
+/// Our steps will simply contain the values of the child and parent states.
+///
+/// ```
+/// use utils::search::{DepthFirstTree, Pruning};
+///
+/// struct Step {
+///     next_digit: u32,
 /// }
 ///
 /// struct Tree {
-///     max_value: u32,
+///     value: u32,
+///     number_of_digits: usize,
+///     max_digits: usize,
+/// }
+///
+/// impl Tree {
+///     fn new(max_digits: usize) -> Tree {
+///         Tree { value: 0, number_of_digits: 0, max_digits: max_digits }
+///     }
 /// }
 ///
 /// impl DepthFirstTree for Tree {
-///     type Node = Node;
+///     type Step = Step;
+///     type Output = u32;
 ///
-///     fn roots(&self) -> Vec<Node> {
-///         vec![Node { value: 0 }]
+///     fn next_steps(&mut self) -> Vec<Step> {
+///         [1, 3, 5, 7, 9].iter().map(|&digit| { Step { next_digit: digit } }).collect()
 ///     }
 ///
-///     fn children(&mut self, node: &Node) -> Vec<Node> {
-///         [1, 3, 5, 7, 9].iter().map(|d| Node { value: 10 * node.value + d }).collect()
+///     fn should_prune(&mut self) -> Pruning {
+///         if self.number_of_digits == self.max_digits {
+///             Pruning::Below
+///         } else {
+///             Pruning::None
+///         }
 ///     }
 ///
-///     fn should_prune(&mut self, node: &Node) -> bool {
-///         node.value >= 100
+///     fn apply_step(&mut self, step: &Step) {
+///         self.value = 10 * self.value + step.next_digit;
+///         self.number_of_digits += 1;
 ///     }
 ///
-///     fn accept(&mut self, node: &Node) -> bool {
-///         node.value > 0 && node.value < self.max_value && node.value % 13 == 0
+///     fn revert_step(&mut self, step: &Step) {
+///         self.value /= 10;
+///         self.number_of_digits -= 1;
+///     }
+///
+///     fn output(&mut self) -> Option<u32> {
+///         if self.value > 0 && self.value % 13 == 0 {
+///             Some(self.value)
+///         } else {
+///             None
+///         }
 ///     }
 /// }
 ///
-/// let mut tree = Tree { max_value: 666 };
-/// let numbers: Vec<_> = tree.iter().map(|node| node.value).collect();
-///
-/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 91]);
+/// let numbers: Vec<_> = Tree::new(3).iter().collect();
+/// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 715, 793, 91, 975]);
 /// ```
-pub trait DepthFirstTree<> where Self: Sized {
-    type Node: Sized;
+pub trait DepthFirstTree where Self: Sized {
+    type Step: Sized;
+    type Output;
 
-    /// Returns the roots of the tree.
-    fn roots(&self) -> Vec<Self::Node>;
-    /// Returns all the nodes which are direct descendants of this node.
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node>;
-    /// Update any tree-wide state before examining the given node.
-    #[allow(unused_variables)]
-    fn update_state_before(&mut self, node: &Self::Node) {}
-    // Update any tree-wide state after having examined the given node, and all of its children.
-    #[allow(unused_variables)]
-    fn update_state_after(&mut self, node: &Self::Node) {}
-    /// Returns `true` if the search tree can be pruned below this node - that is, none of its
-    /// children can possibly satisfy the condition.
-    fn should_prune(&mut self, node: &Self::Node) -> bool;
-    /// Returns `true` if this node satisfies the condition.
-    fn accept(&mut self, node: &Self::Node) -> bool;
+    /// Returns the steps that can be taken from the current state of the tree.
+    fn next_steps(&mut self) -> Vec<Self::Step>;
+    /// Returns whether to prune the tree at the current state.
+    fn should_prune(&mut self) -> Pruning;
+    /// Update the tree-wide state as a result of applying the given step.
+    fn apply_step(&mut self, node: &Self::Step);
+    // Update any tree-wide state by reverting the given step.
+    fn revert_step(&mut self, node: &Self::Step);
+    /// Maps the internal state of the tree to the actual form required for output. Returns
+    /// `Some(value)` if the current state satisfies the condition, and `None` otherwise.
+    fn output(&mut self) -> Option<Self::Output>;
 
     /// An iterator over the nodes of the tree which meet the condition.
     fn iter(&mut self) -> DepthFirstSearcher<Self> {
-        let roots = self.roots().into_iter().map(|node| DFSNode::Down(node)).collect();
-        DepthFirstSearcher { tree: self, nodes_to_check: roots }
+        DepthFirstSearcher::new(self)
     }
 }
 
+/// An enum for the different types of pruning that can be applied at a given point in the tree.
+pub enum Pruning {
+    /// Prune the tree above the current state - discount this state, and all of its descendants.
+    Above,
+    /// Prune the tree below the current state - discount all descendants, but keep this state.
+    Below,
+    /// Do not prune the tree at this state.
+    None,
+}
 
-/// An enum for distinguishing between the two times we see a node in DFS - first, when going
-/// "down" through the node initially, and secondly, when going "up" through the node when
+
+/// An enum for distinguishing between the two times we see a step in DFS - first, when going
+/// "down" through the step initially, and secondly, when going "up" through the step when
 /// backtracking.
-enum DFSNode<T: DepthFirstTree> {
-    Down(T::Node),
-    Up(T::Node, bool),
+enum Step<T: DepthFirstTree> {
+    Apply(T::Step),
+    Revert(T::Step),
+    StartSearch,
+    EndSearch,
 }
 
 /// A structure which is used for iterating through a tree, depth-first, producing only those nodes
 /// which satisfy a particular condition.
 pub struct DepthFirstSearcher<'a, T: 'a + DepthFirstTree> {
-    nodes_to_check: Vec<DFSNode<T>>,
     tree: &'a mut T,
+    steps: Vec<Step<T>>,
+}
+
+impl<'a, T: 'a + DepthFirstTree> DepthFirstSearcher<'a, T> {
+    /// Construct a new `DepthFirstSearcher` which will examine the tree below the current state.
+    fn new(tree: &'a mut T) -> DepthFirstSearcher<'a, T> {
+        DepthFirstSearcher { tree: tree, steps: vec![Step::StartSearch] }
+    }
+
+    /// Apply the given step, and record how to revert it after all its descendants are searched.
+    fn apply_step(&mut self, step: T::Step) {
+        self.tree.apply_step(&step);
+        self.steps.push(Step::Revert(step));
+    }
+
+    /// Add all steps required to reach the children of the current state.
+    fn add_child_steps(&mut self) {
+        self.steps.extend(self.tree.next_steps().into_iter().rev().map(|step| Step::Apply(step)));
+    }
 }
 
 impl<'a, T: DepthFirstTree> Iterator for DepthFirstSearcher<'a, T> {
-    type Item = T::Node;
+    type Item = T::Output;
 
-    fn next(&mut self) -> Option<T::Node> {
-        use self::DFSNode::{Down, Up};
+    fn next(&mut self) -> Option<T::Output> {
+        use self::Step::*;
 
-        while let Some(node) = self.nodes_to_check.pop() {
-            match node {
-                Down(node) => {
-                    // Update global tree state.
-                    self.tree.update_state_before(&node);
-
-                    // Prepare child nodes and check if this node is acceptable.
-                    let children = if self.tree.should_prune(&node) { Vec::new() } else { self.tree.children(&node) };
-                    let accept = self.tree.accept(&node);
-
-                    // Update the tree and the list of nodes to be visited.
-                    self.nodes_to_check.push(Up(node, accept));
-                    self.nodes_to_check.extend(children.into_iter().rev().map(|child| Down(child)));
+        while let Some(step) = self.steps.pop() {
+            match step {
+                StartSearch => {
+                    self.steps.push(EndSearch);
+                    self.add_child_steps();
                 },
-                Up(node, accept) => {
-                    self.tree.update_state_after(&node);
-                    if accept { return Some(node); }
+                EndSearch => {
+                    if let Some(value) = self.tree.output() {
+                        return Some(value);
+                    }
+                },
+                Apply(step) => {
+                    self.apply_step(step);
+                    match self.tree.should_prune() {
+                        Pruning::Above => {
+                            if let Some(Revert(step)) = self.steps.pop() {
+                                self.tree.revert_step(&step);
+                            }
+                        },
+                        Pruning::Below => {},
+                        Pruning::None => { self.add_child_steps(); },
+                    }
+                },
+                Revert(step) => {
+                    let output = self.tree.output();
+                    self.tree.revert_step(&step);
+                    if let Some(value) = output {
+                        return Some(value);
+                    }
                 }
             }
         }

@@ -21,20 +21,20 @@
 
 use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
-use utils::search::DepthFirstTree;
+use utils::search::{DepthFirstTree, Pruning};
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 35";
 /// A description of the problem.
 pub const DESC: &'static str = "Circular primes";
 
-/// A structure holding information about a node in the search tree used to find circular primes.
-struct CircularPrimeTreeNode {
-    value: u64,
-    digits: Vec<u64>,
+struct CircularPrimeTreeStep {
+    next_digit: u64,
 }
 
 struct CircularPrimeTree {
+    value: u64,
+    digits: Vec<u64>,
     max_digits: usize,
     sieve: Sieve,
 }
@@ -44,37 +44,22 @@ impl CircularPrimeTree {
     /// specified number of digits.
     fn with_max_digits(max_digits: usize) -> CircularPrimeTree {
         let sieve_limit = integer_sqrt(pow(10, max_digits as u64));
-        CircularPrimeTree { max_digits: max_digits, sieve: Sieve::to_limit(sieve_limit) }
-    }
-}
-
-impl DepthFirstTree for CircularPrimeTree {
-    type Node = CircularPrimeTreeNode;
-
-    fn roots(&self) -> Vec<Self::Node> {
-        vec![Self::Node { value: 0, digits: Vec::new() }]
+        CircularPrimeTree {
+            value: 0,
+            digits: Vec::new(),
+            max_digits: max_digits,
+            sieve: Sieve::to_limit(sieve_limit)
+        }
     }
 
-    fn children(&mut self, node: &Self::Node) -> Vec<Self::Node> {
-        [1, 3, 7, 9].iter().map(|&digit| {
-            let next_value = 10 * node.value + digit;
-            let mut next_digits = node.digits.clone();
-            next_digits.push(digit);
-            Self::Node { value: next_value, digits: next_digits }
-        }).collect()
-    }
-
-    fn should_prune(&mut self, node: &Self::Node) -> bool {
-        node.digits.len() >= self.max_digits
-    }
-
-    fn accept(&mut self, node: &Self::Node) -> bool {
-        let mut n = node.value;
+    /// Check if the digits in the current state make a circular prime.
+    fn is_circular_prime(&self) -> bool {
+        let mut n = self.value;
         if n == 0 { return false; }
 
         // Check that each rotation of n is prime
-        let power_of_ten = pow(10, node.digits.len() as u64 - 1);
-        for digit in node.digits.iter().rev() {
+        let power_of_ten = pow(10, self.digits.len() as u64 - 1);
+        for digit in self.digits.iter().rev() {
             if !self.sieve.is_prime(n).unwrap() {
                 return false;
             } else {
@@ -83,6 +68,42 @@ impl DepthFirstTree for CircularPrimeTree {
         }
 
         true
+    }
+}
+
+impl DepthFirstTree for CircularPrimeTree {
+    type Step = CircularPrimeTreeStep;
+    type Output = u64;
+
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        [1, 3, 7, 9].iter().map(|&digit| Self::Step { next_digit: digit }).collect()
+    }
+
+    fn should_prune(&mut self) -> Pruning {
+        if self.digits.len() == self.max_digits {
+            Pruning::Below
+        } else {
+            Pruning::None
+        }
+    }
+
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.value = 10 * self.value + step.next_digit;
+        self.digits.push(step.next_digit);
+    }
+
+    #[allow(unused_variables)]
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.value /= 10;
+        self.digits.pop();
+    }
+
+    fn output(&mut self) -> Option<Self::Output> {
+        if self.is_circular_prime() {
+            Some(self.value)
+        } else {
+            None
+        }
     }
 }
 
