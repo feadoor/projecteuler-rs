@@ -33,12 +33,16 @@ pub const NAME: &'static str = "Problem 37";
 /// A description of the problem.
 pub const DESC: &'static str = "Truncatable primes";
 
+/// A description of a step that can be taken in the search tree.
 struct TruncatablePrimeTreeStep {
     next_digit: u64,
 }
 
+/// The information that is held about the current state during the tree search.
 struct TruncatablePrimeTree {
+    /// The current value being examined.
     value: u64,
+    /// A sieve to facilitate primality testing.
     sieve: Sieve,
 }
 
@@ -68,15 +72,21 @@ impl TruncatablePrimeTree {
     }
 }
 
+/// Search for numbers which are truncatable primes, doing a depth-first search by appending one
+/// digit at a time.
 impl DepthFirstTree for TruncatablePrimeTree {
     type Step = TruncatablePrimeTreeStep;
     type Output = u64;
 
+    /// All possible choices for the next digit, taking into account that the resulting value must
+    /// be prime, and so there are not many valid choices for the final digit.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         let digits = if self.value == 0 { vec![2, 3, 5, 7] } else { vec![1, 3, 7, 9] };
         digits.iter().map(|&digit| Self::Step { next_digit: digit }).collect()
     }
 
+    /// Prune the tree above the current value if it is not prime - this way we only examine
+    /// right-truncatable primes when traversing the tree.
     fn should_prune(&mut self) -> Pruning {
         let value = self.value;
         if !self.is_prime(value) {
@@ -86,15 +96,18 @@ impl DepthFirstTree for TruncatablePrimeTree {
         }
     }
 
+    /// Add the next digit to the end of the current value.
     fn apply_step(&mut self, step: &Self::Step) {
         self.value = 10 * self.value + step.next_digit;
     }
 
+    /// Remove the last digit from the current value.
     #[allow(unused_variables)]
     fn revert_step(&mut self, step: &Self::Step) {
         self.value /= 10;
     }
 
+    /// Output the current value, if it is a truncatable prime.
     fn output(&mut self) -> Option<Self::Output> {
         if self.is_left_truncatable() {
             Some(self.value)

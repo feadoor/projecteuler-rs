@@ -38,13 +38,18 @@ pub const NAME: &'static str = "Problem 43";
 /// A description of the problem.
 pub const DESC: &'static str = "Sub-string divisibility";
 
+/// A description of a step that can be taken in the search tree.
 struct SubstringTreeStep {
     next_digit: u64,
 }
 
+/// The information that is held about the current state during the tree search.
 struct SubstringTree {
+    /// The current value that is being examined.
     value: u64,
+    /// The number of digits in the current value.
     num_digits: usize,
+    /// Which digits appear in the current value.
     digits_used: [bool; 10],
 }
 
@@ -61,16 +66,20 @@ impl SubstringTree {
     }
 }
 
+/// Search for numbers which satisfy all the substring divisibility conditions, doing a depth-first
+/// search by appending one digit at a time.
 impl DepthFirstTree for SubstringTree {
     type Step = SubstringTreeStep;
     type Output = u64;
 
+    /// Al possible choices for the next digit - that is, those which have not yet been used.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         (0..10).filter(|&d| !self.digits_used[d as usize])
                .map(|d| Self::Step { next_digit: d })
                .collect()
     }
 
+    /// Check if the most recent condition is satisfied, and prune the tree if not.
     fn should_prune(&mut self) -> Pruning {
         if !self.condition_satisfied() {
             Pruning::Above
@@ -79,18 +88,21 @@ impl DepthFirstTree for SubstringTree {
         }
     }
 
+    /// Add the next digit to the end of the current value.
     fn apply_step(&mut self, step: &Self::Step) {
         self.value = 10 * self.value + step.next_digit;
         self.num_digits += 1;
         self.digits_used[step.next_digit as usize] = true;
     }
 
+    /// Remove the last digit from the end of the current value.
     fn revert_step(&mut self, step: &Self::Step) {
         self.value /= 10;
         self.num_digits -= 1;
         self.digits_used[step.next_digit as usize] = false;
     }
 
+    /// Output the current value, if it is the right length and satisfies all conditions.
     fn output(&mut self) -> Option<Self::Output> {
         if self.num_digits == 10 {
             Some(self.value)

@@ -41,16 +41,23 @@ pub const DESC: &'static str = "Prime digit replacements";
 
 /// A single symbol, either a digit or a wildcard, in a template string.
 enum Symbol {
+    /// A fixed digit.
     Digit(u64),
+    /// A wildcard, which can be substituted later for any digit.
     Wildcard,
 }
 
 /// A structure representing a template.
 #[derive(Clone)]
 struct Template {
+    /// The value that is represented only by the digits in non-wildcard positions, i.e. if all
+    /// wildcards were set to 0.
     concrete_value: u64,
+    /// The value that would result from setting all wildcards to 1 and all other digits to 0.
     wildcard_value: u64,
+    /// The length of the template.
     length: usize,
+    /// The number of wildcards in the template.
     wildcards: usize,
 }
 
@@ -96,10 +103,12 @@ impl Template {
     }
 }
 
+/// A description of a step that can be taken in the search tree.
 struct TemplateTreeStep {
     next_symbol: Symbol,
 }
 
+/// The information that is held about the current state during the tree search.
 struct TemplateTree {
     template: Template,
     required_length: usize,
@@ -112,16 +121,19 @@ impl TemplateTree {
     }
 }
 
+/// Generate all possible valid templates of a given length in a depth-first manner.
 impl DepthFirstTree for TemplateTree {
     type Step = TemplateTreeStep;
     type Output = Template;
 
+    /// All possible choices of the next symbol to put in the current template.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         let mut steps: Vec<_> = (0..10).map(|d| Self::Step { next_symbol: Symbol::Digit(d) }).collect();
         steps.push(Self::Step { next_symbol: Symbol::Wildcard });
         steps
     }
 
+    /// Don't go any deeper in the tree than the required template length.
     fn should_prune(&mut self) -> Pruning {
         if self.template.length == self.required_length {
             Pruning::Below
@@ -130,14 +142,17 @@ impl DepthFirstTree for TemplateTree {
         }
     }
 
+    /// Add the next symbol to the end of the current template.
     fn apply_step(&mut self, step: &Self::Step) {
         self.template.add_symbol(&step.next_symbol);
     }
 
+    /// Remove the last symbol from the current template.
     fn revert_step(&mut self, step: &Self::Step) {
         self.template.remove_symbol(&step.next_symbol);
     }
 
+    /// Output the current template, if it is of the right length.
     fn output(&mut self) -> Option<Self::Output> {
         if self.template.length == self.required_length {
             Some(self.template.clone())
@@ -149,13 +164,20 @@ impl DepthFirstTree for TemplateTree {
 
 /// Find the smallest member of an 8-prime digit replacement family
 fn solve() -> u64 {
+    // Try all lengths of template, from 4 upwards
     for length_to_try in 4.. {
+
+        // Keep track of the smallest prime that is a member of an 8-prime family, and create a
+        // sieve to test for primality.
         let mut smallest_prime: Option<u64> = None;
         let sieve_limit = integer_sqrt(pow(10, length_to_try));
         let sieve = Sieve::to_limit(sieve_limit);
 
+        // Iterate through the possible templates with 3, 6, 9... wildcards
         for template in TemplateTree::new(length_to_try as usize).iter() {
             if template.wildcards > 0 && template.wildcards % 3 == 0 {
+
+                // Check if we get an 8-prime family from this template.
                 let primes = template.get_prime_substitutions(&sieve);
                 if primes.len() >= 8 {
                     match smallest_prime {

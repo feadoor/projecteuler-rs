@@ -36,14 +36,21 @@ pub const DESC: &'static str = "Digit factorials";
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
 
+/// A description of a step that can be taken in the search tree.
 struct FactorialSumTreeStep {
+    /// The digit to add onto the end of the current value.
     next_digit: u64,
 }
 
+/// The information that is held about the current state during the tree search.
 struct FactorialSumTree {
+    /// The current value being examined.
     value: u64,
+    /// The sum of the factorials of the digits of the current value.
     factorial_sum: u64,
+    /// The length, in digits, of the current value.
     length: u64,
+    /// The number of digits, including leading zeroes, that a solution must contain.
     solution_length: u64,
 }
 
@@ -74,14 +81,19 @@ impl FactorialSumTree {
     }
 }
 
+/// Search for numbers which are equal to the sum of the factorials of their digits, doing a
+/// depth-first search by appending one digit at a time.
 impl DepthFirstTree for FactorialSumTree {
     type Step = FactorialSumTreeStep;
     type Output = u64;
 
+    /// Return all possible choices for the next digit to add to the current state.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         (0..10).map(|next_digit| Self::Step { next_digit: next_digit }).collect()
     }
 
+    /// Check if we have reached the maximum depth, and also if we can discount this section of the
+    /// tree entirely based on the largest and smallest possible extensions.
     fn should_prune(&mut self) -> Pruning {
         if self.length == self.solution_length {
             Pruning::Below
@@ -92,6 +104,7 @@ impl DepthFirstTree for FactorialSumTree {
         }
     }
 
+    /// Add the next digit to the end of the current value.
     fn apply_step(&mut self, step: &Self::Step) {
         self.value = 10 * self.value + step.next_digit;
         self.factorial_sum = match self.value {
@@ -101,6 +114,7 @@ impl DepthFirstTree for FactorialSumTree {
         self.length += 1;
     }
 
+    /// Remove the last digit from the current value.
     fn revert_step(&mut self, step: &Self::Step) {
         self.factorial_sum = match self.value {
             0 => 0,
@@ -110,6 +124,7 @@ impl DepthFirstTree for FactorialSumTree {
         self.length -= 1;
     }
 
+    /// Check if the factorial sum is equal to the value, and output the value if so.
     fn output(&mut self) -> Option<Self::Output> {
         if self.length == self.solution_length && self.value == self.factorial_sum {
             Some(self.value)

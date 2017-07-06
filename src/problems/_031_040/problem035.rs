@@ -28,14 +28,21 @@ pub const NAME: &'static str = "Problem 35";
 /// A description of the problem.
 pub const DESC: &'static str = "Circular primes";
 
+/// A description of a step that can be taken in the search tree.
 struct CircularPrimeTreeStep {
+    /// The digit to add onto the end of the current value.
     next_digit: u64,
 }
 
+/// The information that is held about the current state during the tree search.
 struct CircularPrimeTree {
+    /// The current value being examined.
     value: u64,
+    /// The digits of the current value.
     digits: Vec<u64>,
+    /// The maximum number of digits that we need to consider.
     max_digits: usize,
+    /// A sieve to facilitate primality testing during the search.
     sieve: Sieve,
 }
 
@@ -71,14 +78,19 @@ impl CircularPrimeTree {
     }
 }
 
+/// Search for numbers which are circular primes, doing a depth-first search appending one digit
+/// at a time.
 impl DepthFirstTree for CircularPrimeTree {
     type Step = CircularPrimeTreeStep;
     type Output = u64;
 
+    /// All possible choices of next digit - all circular primes larger than 10 must contain only
+    /// the digits 1, 3, 7 and 9.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         [1, 3, 7, 9].iter().map(|&digit| Self::Step { next_digit: digit }).collect()
     }
 
+    /// Prune the tree when we hit the maximum number of digits.
     fn should_prune(&mut self) -> Pruning {
         if self.digits.len() == self.max_digits {
             Pruning::Below
@@ -87,17 +99,20 @@ impl DepthFirstTree for CircularPrimeTree {
         }
     }
 
+    /// Add the next digit to the end of the current value.
     fn apply_step(&mut self, step: &Self::Step) {
         self.value = 10 * self.value + step.next_digit;
         self.digits.push(step.next_digit);
     }
 
+    /// Remove the last digit from the current value.
     #[allow(unused_variables)]
     fn revert_step(&mut self, step: &Self::Step) {
         self.value /= 10;
         self.digits.pop();
     }
 
+    /// Output the current value, if it is a circular prime.
     fn output(&mut self) -> Option<Self::Output> {
         if self.is_circular_prime() {
             Some(self.value)

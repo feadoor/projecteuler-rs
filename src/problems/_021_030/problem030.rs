@@ -44,15 +44,21 @@ pub const DESC: &'static str = "Digit fifth powers";
 /// Fifth powers of single digits.
 const FIFTH_POWER: &'static [u64; 10] = &[0, 1, 32, 243, 1024, 3125, 7776, 16807, 32768, 59049];
 
+/// A description of a step that can be taken in the search tree.
 struct PowerSumTreeStep {
+    /// The digit to add onto the end of the current value.
     next_digit: u64,
 }
 
-#[derive(Debug)]
+/// The information that is held about the current state during the tree search.
 struct PowerSumTree {
+    /// The current value being examined.
     value: u64,
+    /// The sum of the fifth powers of the digits of the current value.
     power_sum: u64,
+    /// The length, in digits, of the current value.
     length: u64,
+    /// The number of digits, including leading zeroes, that a solution must contain.
     solution_length: u64,
 }
 
@@ -83,14 +89,19 @@ impl PowerSumTree {
     }
 }
 
+/// Search for numbers which are equal to the sum of the fifth powers of their digits, doing a
+/// depth-first search by appending one digit at a time.
 impl DepthFirstTree for PowerSumTree {
     type Step = PowerSumTreeStep;
     type Output = u64;
 
+    /// Return all possible choices for the next digit to add to the current state.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         (0..10).map(|next_digit| Self::Step { next_digit: next_digit }).collect()
     }
 
+    /// Check if we have reached the maximum depth, and also if we can discount this section of the
+    /// tree entirely based on the largest and smallest possible extensions.
     fn should_prune(&mut self) -> Pruning {
         if self.length == self.solution_length {
             Pruning::Below
@@ -101,18 +112,21 @@ impl DepthFirstTree for PowerSumTree {
         }
     }
 
+    /// Add the next digit to the end of the current value.
     fn apply_step(&mut self, step: &Self::Step) {
         self.value = 10 * self.value + step.next_digit;
         self.power_sum += FIFTH_POWER[step.next_digit as usize];
         self.length += 1;
     }
 
+    /// Remove the last digit from the current value.
     fn revert_step(&mut self, step: &Self::Step) {
         self.value /= 10;
         self.power_sum -= FIFTH_POWER[step.next_digit as usize];
         self.length -= 1;
     }
 
+    /// Check if the power sum is equal to the value, and output the value if so.
     fn output(&mut self) -> Option<Self::Output> {
         if self.length == self.solution_length && self.value == self.power_sum {
             Some(self.value)
