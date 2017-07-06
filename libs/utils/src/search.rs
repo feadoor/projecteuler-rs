@@ -78,7 +78,7 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 /// Our tree state will be the current number being examined, the current number of digits,
 /// and the maximum number of digits that a solution should have (in this case, 3).
 ///
-/// Our steps will simply contain the values of the child and parent states.
+/// Our steps will simply contain the digit to be appended when going from parent to child.
 ///
 /// ```
 /// use utils::search::{DepthFirstTree, Pruning};
@@ -103,10 +103,12 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 ///     type Step = Step;
 ///     type Output = u32;
 ///
+///     /// All possible choices for the next digit, which must be odd, as per our constraints.
 ///     fn next_steps(&mut self) -> Vec<Step> {
 ///         [1, 3, 5, 7, 9].iter().map(|&digit| { Step { next_digit: digit } }).collect()
 ///     }
 ///
+///     /// Prune the tree if we have reached the maximum number of digits.
 ///     fn should_prune(&mut self) -> Pruning {
 ///         if self.number_of_digits == self.max_digits {
 ///             Pruning::Below
@@ -115,16 +117,19 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 ///         }
 ///     }
 ///
+///     /// Append the next digit to the end of the current value.
 ///     fn apply_step(&mut self, step: &Step) {
 ///         self.value = 10 * self.value + step.next_digit;
 ///         self.number_of_digits += 1;
 ///     }
 ///
+///     /// Remove the last digit from the end of the current value.
 ///     fn revert_step(&mut self, step: &Step) {
 ///         self.value /= 10;
 ///         self.number_of_digits -= 1;
 ///     }
 ///
+///     /// Check if the value is divisible by 13,and output it if so.
 ///     fn output(&mut self) -> Option<u32> {
 ///         if self.value > 0 && self.value % 13 == 0 {
 ///             Some(self.value)
@@ -147,10 +152,11 @@ pub trait DepthFirstTree where Self: Sized {
     fn should_prune(&mut self) -> Pruning;
     /// Update the tree-wide state as a result of applying the given step.
     fn apply_step(&mut self, node: &Self::Step);
-    // Update any tree-wide state by reverting the given step.
+    /// Update any tree-wide state by reverting the given step.
     fn revert_step(&mut self, node: &Self::Step);
-    /// Maps the internal state of the tree to the actual form required for output. Returns
-    /// `Some(value)` if the current state satisfies the condition, and `None` otherwise.
+    /// Maps the internal state of the tree to the actual form required for output.
+    ///
+    /// Returns `Some(value)` if the current state satisfies the condition, and `None` otherwise.
     fn output(&mut self) -> Option<Self::Output>;
 
     /// An iterator over the nodes of the tree which meet the condition.
