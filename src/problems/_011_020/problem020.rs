@@ -26,7 +26,7 @@ pub const DESC: &'static str = "Factorial digit sum";
 fn factorial(n: u64) -> BigUint {
     let mut result = From::from(1u64);
     for i in 2..n + 1 {
-        result = result * <BigUint as From<u64>>::from(i);
+        result = result * i;
     }
     result
 }
