@@ -49,11 +49,14 @@ struct TruncatablePrimeTree {
 impl TruncatablePrimeTree {
     /// Construct a new `TruncatablePrimeTree`
     fn new() -> TruncatablePrimeTree {
-        TruncatablePrimeTree { value: 0, sieve: Sieve::to_limit(1000) }
+        TruncatablePrimeTree {
+            value: 0,
+            sieve: Sieve::to_limit(1000),
+        }
     }
 
     /// Determine if the given value is prime, expanding the sieve if necessary.
-    fn is_prime(&mut self, value: u64)-> bool {
+    fn is_prime(&mut self, value: u64) -> bool {
         while self.sieve.limit().saturating_mul(self.sieve.limit()) < value {
             self.sieve = Sieve::to_limit(10 * self.sieve.limit());
         }
@@ -66,7 +69,9 @@ impl TruncatablePrimeTree {
         while power < self.value {
             power *= 10;
             let value = self.value % power;
-            if !self.is_prime(value) { return false; }
+            if !self.is_prime(value) {
+                return false;
+            }
         }
         true
     }
@@ -81,7 +86,11 @@ impl DepthFirstTree for TruncatablePrimeTree {
     /// All possible choices for the next digit, taking into account that the resulting value must
     /// be prime, and so there are not many valid choices for the final digit.
     fn next_steps(&mut self) -> Vec<Self::Step> {
-        let digits = if self.value == 0 { vec![2, 3, 5, 7] } else { vec![1, 3, 7, 9] };
+        let digits = if self.value == 0 {
+            vec![2, 3, 5, 7]
+        } else {
+            vec![1, 3, 7, 9]
+        };
         digits.iter().map(|&digit| Self::Step { next_digit: digit }).collect()
     }
 

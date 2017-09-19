@@ -60,7 +60,7 @@ enum Suit {
     Hearts,
     Diamonds,
     Clubs,
-    Spades
+    Spades,
 }
 
 impl Suit {
@@ -71,7 +71,7 @@ impl Suit {
             b'D' => Ok(Suit::Diamonds),
             b'C' => Ok(Suit::Clubs),
             b'S' => Ok(Suit::Spades),
-            _   => Err("Invalid byte for suit".to_string()),
+            _ => Err("Invalid byte for suit".to_string()),
         }
     }
 }
@@ -112,7 +112,7 @@ impl Rank {
             b'Q' => Ok(Rank::Queen),
             b'K' => Ok(Rank::King),
             b'A' => Ok(Rank::Ace),
-            _   => Err("Invalid byte for rank".to_string()),
+            _ => Err("Invalid byte for rank".to_string()),
         }
     }
 }
@@ -164,7 +164,7 @@ enum PokerHandType {
     Flush,
     FullHouse,
     FourOfAKind,
-    StraightFlush
+    StraightFlush,
 }
 
 /// A structure representing a poker hand in a canonical form that means two hands can be
@@ -185,13 +185,16 @@ impl PokerHand {
             // Get the sorted ranks of the given cards, useful for checking for a straight.
             let mut sorted_ranks: Vec<_> = cards.iter().map(|card| card.get_rank()).collect();
             sorted_ranks.sort();
-            if sorted_ranks.as_slice() == [Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Ace] {
+            if sorted_ranks.as_slice() ==
+               [Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Ace] {
                 sorted_ranks = vec![Rank::AceLow, Rank::Two, Rank::Three, Rank::Four, Rank::Five];
             }
 
             // Determine if we have a flush and/or a straight.
             let is_flush = cards.iter().all(|card| card.get_suit() == cards[0].get_suit());
-            let is_straight = sorted_ranks.iter().enumerate().all(|(ix, rank)| *rank as usize == sorted_ranks[0] as usize + ix);
+            let is_straight = sorted_ranks.iter()
+                .enumerate()
+                .all(|(ix, rank)| *rank as usize == sorted_ranks[0] as usize + ix);
 
             // Get a count for how many times each card appears in this hand.
             let mut counter: HashMap<Rank, usize> = HashMap::new();
@@ -263,7 +266,7 @@ pub fn answer() -> String {
     let reader = BufReader::new(file);
     let deals = reader.lines()
         .map(|line| line.unwrap())
-        .map(|line| line.split(' ').map(|card_str| Card::from_str(card_str).unwrap()).collect::<Vec<_>>());
+        .map(|line| line.split(' ').map(|card_str| Card::from_str(card_str).unwrap()).collect());
 
     solve(deals).unwrap().to_string()
 }

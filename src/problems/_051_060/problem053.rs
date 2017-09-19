@@ -64,7 +64,12 @@ impl Iterator for BinomialCoefficientsWithNumerator {
 
 /// Returns an iterator of the binomials coefficients n choose r, with 0 ≤ r ≤ n / 2.
 fn binomial_coefficients_lower_half(n: u64) -> BinomialCoefficientsWithNumerator {
-    BinomialCoefficientsWithNumerator { value: 1, numer: n, denom: 0, denom_limit: n / 2 }
+    BinomialCoefficientsWithNumerator {
+        value: 1,
+        numer: n,
+        denom: 0,
+        denom_limit: n / 2,
+    }
 }
 
 /// Returns the smallest r for which n choose r exceeds the given threshold, if it exists.

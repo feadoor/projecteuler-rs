@@ -55,14 +55,16 @@ impl CircularPrimeTree {
             value: 0,
             digits: Vec::new(),
             max_digits: max_digits,
-            sieve: Sieve::to_limit(sieve_limit)
+            sieve: Sieve::to_limit(sieve_limit),
         }
     }
 
     /// Check if the digits in the current state make a circular prime.
     fn is_circular_prime(&self) -> bool {
         let mut n = self.value;
-        if n == 0 { return false; }
+        if n == 0 {
+            return false;
+        }
 
         // Check that each rotation of n is prime
         let power_of_ten = pow(10, self.digits.len() as u64 - 1);

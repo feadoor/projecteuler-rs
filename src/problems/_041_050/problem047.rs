@@ -54,7 +54,9 @@ fn solve(n: usize) -> u64 {
     for number in 2.. {
         if has_at_least_n_prime_factors(n, number, &mut sieve) {
             consecutive_successes += 1;
-            if consecutive_successes == n { return number - (n as u64 - 1); }
+            if consecutive_successes == n {
+                return number - (n as u64 - 1);
+            }
         } else {
             consecutive_successes = 0;
         }

@@ -64,7 +64,12 @@ struct Template {
 impl Template {
     /// A new, empty template consisting of zero symbols.
     fn new() -> Template {
-        Template { concrete_value: 0, wildcard_value: 0, length: 0, wildcards: 0 }
+        Template {
+            concrete_value: 0,
+            wildcard_value: 0,
+            length: 0,
+            wildcards: 0,
+        }
     }
 
     /// Add a symbol to the end of the template.
@@ -98,8 +103,14 @@ impl Template {
 
     /// Get all substitutions resulting from this template which are prime, in order.
     fn get_prime_substitutions(&self, sieve: &Sieve) -> Vec<u64> {
-        let digits_to_try = if self.concrete_value > self.wildcard_value { 0..10 } else { 1..10 };
-        digits_to_try.map(|d| self.get_substitution(d)).filter(|&x| sieve.is_prime(x).unwrap()).collect()
+        let digits_to_try = if self.concrete_value > self.wildcard_value {
+            0..10
+        } else {
+            1..10
+        };
+        digits_to_try.map(|d| self.get_substitution(d))
+            .filter(|&x| sieve.is_prime(x).unwrap())
+            .collect()
     }
 }
 
@@ -117,7 +128,10 @@ struct TemplateTree {
 impl TemplateTree {
     /// Construct a new `TemplateTree` which will search for templates of the given length.
     fn new(length: usize) -> TemplateTree {
-        TemplateTree { template: Template::new(), required_length: length }
+        TemplateTree {
+            template: Template::new(),
+            required_length: length,
+        }
     }
 }
 
@@ -128,7 +142,8 @@ impl DepthFirstTree for TemplateTree {
 
     /// All possible choices of the next symbol to put in the current template.
     fn next_steps(&mut self) -> Vec<Self::Step> {
-        let mut steps: Vec<_> = (0..10).map(|d| Self::Step { next_symbol: Symbol::Digit(d) }).collect();
+        let mut steps: Vec<_> =
+            (0..10).map(|d| Self::Step { next_symbol: Symbol::Digit(d) }).collect();
         steps.push(Self::Step { next_symbol: Symbol::Wildcard });
         steps
     }
@@ -189,7 +204,9 @@ fn solve() -> u64 {
             }
         }
 
-        if let Some(x) = smallest_prime { return x; }
+        if let Some(x) = smallest_prime {
+            return x;
+        }
     }
 
     unreachable!()

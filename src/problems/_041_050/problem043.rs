@@ -56,7 +56,11 @@ struct SubstringTree {
 impl SubstringTree {
     /// Construct a new `SubstringTree`.
     fn new() -> SubstringTree {
-        SubstringTree { value: 0, num_digits: 0, digits_used: [false; 10] }
+        SubstringTree {
+            value: 0,
+            num_digits: 0,
+            digits_used: [false; 10],
+        }
     }
 
     /// Check if the most recent substring condition has been satisfied.
@@ -74,9 +78,10 @@ impl DepthFirstTree for SubstringTree {
 
     /// Al possible choices for the next digit - that is, those which have not yet been used.
     fn next_steps(&mut self) -> Vec<Self::Step> {
-        (0..10).filter(|&d| !self.digits_used[d as usize])
-               .map(|d| Self::Step { next_digit: d })
-               .collect()
+        (0..10)
+            .filter(|&d| !self.digits_used[d as usize])
+            .map(|d| Self::Step { next_digit: d })
+            .collect()
     }
 
     /// Check if the most recent condition is satisfied, and prune the tree if not.

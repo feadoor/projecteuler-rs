@@ -57,7 +57,12 @@ struct FactorialSumTree {
 impl FactorialSumTree {
     /// Construct a new `FactorialSumTree`.
     fn new() -> FactorialSumTree {
-        FactorialSumTree { value: 0, factorial_sum: 0, length: 0, solution_length: 7 }
+        FactorialSumTree {
+            value: 0,
+            factorial_sum: 0,
+            length: 0,
+            solution_length: 7,
+        }
     }
 
     /// Check if the current state can possibly be extended to a solution.
@@ -109,7 +114,7 @@ impl DepthFirstTree for FactorialSumTree {
         self.value = 10 * self.value + step.next_digit;
         self.factorial_sum = match self.value {
             0 => 0,
-            _ => self.factorial_sum + FACTORIAL[step.next_digit as usize]
+            _ => self.factorial_sum + FACTORIAL[step.next_digit as usize],
         };
         self.length += 1;
     }

@@ -48,9 +48,7 @@ fn is_triangular(n: u64) -> bool {
 fn solve<I>(words: I) -> usize
     where I: Iterator<Item = String>
 {
-    let score = |word: &str| -> u64 {
-        word.as_bytes().iter().map(|x| (x - b'A' + 1) as u64).sum()
-    };
+    let score = |word: &str| -> u64 { word.as_bytes().iter().map(|x| (x - b'A' + 1) as u64).sum() };
 
     words.map(|x| score(&x)).filter(|&x| is_triangular(x)).count()
 }

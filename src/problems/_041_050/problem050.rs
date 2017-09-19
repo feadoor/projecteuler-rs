@@ -38,10 +38,15 @@ fn solve(n: u64) -> u64 {
 
         // Incrementally form totals of this prime with successive primes, checking each total
         for &q in &primes[idx + 1..] {
-            length += 1; total += q;
-            if total > n { break; }
+            length += 1;
+            total += q;
+            if total > n {
+                break;
+            }
+
             if length > best_length && sieve.is_prime(total).unwrap() {
-                best_length = length; best_total = total;
+                best_length = length;
+                best_total = total;
             }
         }
     }

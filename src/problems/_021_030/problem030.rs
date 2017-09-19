@@ -65,7 +65,12 @@ struct PowerSumTree {
 impl PowerSumTree {
     /// Construct a new `PowerSumTree`.
     fn new() -> PowerSumTree {
-        PowerSumTree { value: 0, power_sum: 0, length: 0, solution_length: 6 }
+        PowerSumTree {
+            value: 0,
+            power_sum: 0,
+            length: 0,
+            solution_length: 6,
+        }
     }
 
     /// Check if the current state can possibly be extended to a solution.

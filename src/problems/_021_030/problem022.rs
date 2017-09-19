@@ -34,10 +34,7 @@ fn solve(names: &mut [String]) -> u64 {
     names.sort();
 
     // Now iterate over the names and calculate the name scores.
-    let score = |name: &str| -> u64 {
-        name.as_bytes().iter().map(|x| (x - b'A' + 1) as u64).sum()
-    };
-
+    let score = |name: &str| -> u64 { name.as_bytes().iter().map(|x| (x - b'A' + 1) as u64).sum() };
     names.iter().enumerate().map(|(ix, name)| (ix + 1) as u64 * score(name)).sum()
 }
 
