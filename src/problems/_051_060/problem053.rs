@@ -39,14 +39,14 @@ pub const NAME: &'static str = "Problem 53";
 pub const DESC: &'static str = "Combinatoric selections";
 
 /// A structure which will allow iteration over binomial coefficients.
-struct BinomialCoefficient {
+struct BinomialCoefficientsWithNumerator {
     value: u64,
     numer: u64,
     denom: u64,
     denom_limit: u64,
 }
 
-impl Iterator for BinomialCoefficient {
+impl Iterator for BinomialCoefficientsWithNumerator {
     type Item = u64;
 
     fn next(&mut self) -> Option<u64> {
@@ -63,8 +63,8 @@ impl Iterator for BinomialCoefficient {
 }
 
 /// Returns an iterator of the binomials coefficients n choose r, with 0 ≤ r ≤ n / 2.
-fn binomial_coefficients_lower_half(n: u64) -> BinomialCoefficient {
-    BinomialCoefficient { value: 1, numer: n, denom: 0, denom_limit: n / 2 }
+fn binomial_coefficients_lower_half(n: u64) -> BinomialCoefficientsWithNumerator {
+    BinomialCoefficientsWithNumerator { value: 1, numer: n, denom: 0, denom_limit: n / 2 }
 }
 
 /// Returns the smallest r for which n choose r exceeds the given threshold, if it exists.
