@@ -52,7 +52,7 @@ fn reverse(x: &BigUint) -> BigUint {
 /// Determines whether the given number is a possible Lychrel number, as determined by performing
 /// the reverse-and-add iteration up to the given threshold number of iterations.
 fn is_lychrel(x: usize, threshold: usize) -> bool {
-    let start = BigUint::from(x);
+    let start = From::from(x);
     let mut worker = reverse(&start) + start;
 
     for _ in 0..threshold {
