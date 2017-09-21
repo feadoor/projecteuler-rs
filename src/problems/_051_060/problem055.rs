@@ -29,6 +29,11 @@
 //!
 //! NOTE: Wording was modified slightly on 24 April 2007 to emphasise the theoretical nature of
 //! Lychrel numbers.
+//!
+//! # Solution detail
+//!
+//! Simply check each number up to 10,000 to see if it is a Lychrel number, remembering to use
+//! arbitrary-precision integers since the numbers involved can grow very large.
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 55";

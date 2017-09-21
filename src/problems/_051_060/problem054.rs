@@ -41,6 +41,19 @@
 //! each player's hand is in no specific order, and in each hand there is a clear winner.
 //!
 //! How many hands does Player 1 win?
+//!
+//! # Solution Detail
+//!
+//! There are no tricks, here; we must simply parse each pair of hands, calculate their poker value
+//! and check for a winner.
+//!
+//! To ease comparison between two hands, they can be converted into a canonical form -  a
+//! structure consisting of:
+//!
+//! - The type of poker hand (Straight flush, Four of a kind, Full house...)
+//! - The distinct ranks of cards in the hand, sorted first by count, then by value
+//!
+//! Then lexicographic ordering of these structures corresponds to ordering of poker hands.
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 54";
