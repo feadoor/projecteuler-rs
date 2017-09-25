@@ -31,6 +31,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "continued_fractions"
 version = "0.1.0"
 dependencies = [
+ "num 0.1.40 (registry+https://github.com/rust-lang/crates.io-index)",
  "number-theory 0.1.0",
 ]
 

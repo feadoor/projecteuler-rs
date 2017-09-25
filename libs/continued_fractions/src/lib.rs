@@ -1,7 +1,12 @@
 //! A library relating to continued fraction expansions, particularly of square roots of integers.
 
 extern crate number_theory;
+extern crate num;
+
+use num::{BigUint, Zero, One};
+use num::rational::Ratio;
 use number_theory::integer_sqrt;
+use std::mem::swap;
 
 /// A structure representing a periodic continued fraction.
 pub struct PeriodicContinuedFraction {
@@ -87,11 +92,19 @@ impl<'a> PeriodicContinuedFraction {
     /// # Examples
     ///
     /// ```
+    ///
     /// use continued_fractions::PeriodicContinuedFraction;
     ///
-    /// let cf = PeriodicContinuedFraction::new(vec![1], vec![1, 2]);
-    /// assert_eq!(cf.convergents().take(6).collect::<Vec<(u64, u64)>>(),
-    ///            vec![(1, 1), (2, 1), (5, 3), (7, 4), (19, 11), (26, 15)]);
+    /// let cf = PeriodicContinuedFraction::new(vec![1], vec![2]);
+    /// let mut convergents = cf.convergents().map(|x| (x.numer().clone(), x.denom().clone()));
+    ///
+    /// assert_eq!(convergents.next(), Some((From::from(1u64), From::from(1u64))));
+    /// assert_eq!(convergents.next(), Some((From::from(3u64), From::from(2u64))));
+    /// assert_eq!(convergents.next(), Some((From::from(7u64), From::from(5u64))));
+    /// assert_eq!(convergents.next(), Some((From::from(17u64), From::from(12u64))));
+    /// assert_eq!(convergents.next(), Some((From::from(41u64), From::from(29u64))));
+    /// assert_eq!(convergents.next(), Some((From::from(99u64), From::from(70u64))));
+    /// ```
     pub fn convergents(&'a self) -> ContinuedFractionConvergents<PeriodicContinuedFractionIterator<'a>> {
         ContinuedFractionConvergents::new(self.iter())
     }
@@ -140,9 +153,9 @@ impl<'a> Iterator for PeriodicContinuedFractionIterator<'a> {
 /// A structure for iterating over the convergents resulting from the given continued fraction.
 pub struct ContinuedFractionConvergents<I: Iterator<Item = u64>> {
     /// The numerators of the previous two convergents.
-    numers: (u64, u64),
+    numers: (BigUint, BigUint),
     /// The denominators of the previous two convergents.
-    denoms: (u64, u64),
+    denoms: (BigUint, BigUint),
     /// The terms in the continued fraction expansion.
     terms: I
 }
@@ -150,35 +163,30 @@ pub struct ContinuedFractionConvergents<I: Iterator<Item = u64>> {
 impl<I: Iterator<Item = u64>> ContinuedFractionConvergents<I> {
     /// Create a `ContinuedFractionConvergents` using the items from the given iterator as the terms
     /// in the continued fraction expansion.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use continued_fractions::ContinuedFractionConvergents;
-    /// use std::iter;
-    ///
-    /// let terms = iter::once(1).chain(iter::repeat(2));
-    /// assert_eq!(ContinuedFractionConvergents::new(terms).take(6).collect::<Vec<(u64, u64)>>(),
-    ///            vec![(1, 1), (3, 2), (7, 5), (17, 12), (41, 29), (99, 70)]);
-    /// ```
     pub fn new(terms: I) -> ContinuedFractionConvergents<I> {
         ContinuedFractionConvergents {
-            numers: (0, 1),
-            denoms: (1, 0),
+            numers: (BigUint::zero(), BigUint::one()),
+            denoms: (BigUint::one(), BigUint::zero()),
             terms: terms,
         }
     }
 }
 
 impl<I: Iterator<Item = u64>> Iterator for ContinuedFractionConvergents<I> {
-    type Item = (u64, u64);
+    type Item = Ratio<BigUint>;
 
-    fn next(&mut self) -> Option<(u64, u64)> {
+    fn next(&mut self) -> Option<Ratio<BigUint>> {
         match self.terms.next() {
             Some(a) => {
-                self.numers = (self.numers.1, a * self.numers.1 + self.numers.0);
-                self.denoms = (self.denoms.1, a * self.denoms.1 + self.denoms.0);
-                Some((self.numers.1, self.denoms.1))
+                let next_numer = a * &self.numers.1 + &self.numers.0;
+                let next_denom = a * &self.denoms.1 + &self.denoms.0;
+
+                swap(&mut self.numers.0, &mut self.numers.1);
+                self.numers.1 = next_numer.clone();
+                swap(&mut self.denoms.0, &mut self.denoms.1);
+                self.denoms.1 = next_denom.clone();
+
+                Some(Ratio::new(next_numer, next_denom))
             },
             None => None,
         }
@@ -239,7 +247,8 @@ mod tests {
 
         for &(terms, expected_convergents) in TEST_CASES {
             let actual_convergents = ContinuedFractionConvergents::new(terms.iter().map(|x| *x));
-            assert_eq!(actual_convergents.collect::<Vec<(u64, u64)>>(), expected_convergents);
+            assert_eq!(actual_convergents.collect::<Vec<_>>(),
+                       expected_convergents.iter().map(|&(x, y)| Ratio::new(From::from(x), From::from(y))).collect::<Vec<_>>());
         }
     }
 }
