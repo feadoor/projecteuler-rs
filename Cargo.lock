@@ -3,6 +3,7 @@ name = "projecteuler-rs"
 version = "0.1.0"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "continued_fractions 0.1.0",
  "docopt 0.6.86 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "num 0.1.40 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -25,6 +26,13 @@ dependencies = [
 name = "ansi_term"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "continued_fractions"
+version = "0.1.0"
+dependencies = [
+ "number-theory 0.1.0",
+]
 
 [[package]]
 name = "docopt"

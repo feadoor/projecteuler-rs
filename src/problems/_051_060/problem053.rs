@@ -40,9 +40,13 @@ pub const DESC: &'static str = "Combinatoric selections";
 
 /// A structure which will allow iteration over binomial coefficients.
 struct BinomialCoefficientsWithNumerator {
+    /// The value of the current coefficient.
     value: u64,
+    /// The numerator of the current coefficient.
     numer: u64,
+    /// The denominator of the current coefficient.
     denom: u64,
+    /// The highest denominator to consider for these coefficients.
     denom_limit: u64,
 }
 
