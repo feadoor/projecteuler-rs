@@ -81,6 +81,20 @@ impl<'a> PeriodicContinuedFraction {
             continued_fraction: self,
         }
     }
+
+    /// Return an iterator over the convergents of this continued fraction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use continued_fractions::PeriodicContinuedFraction;
+    ///
+    /// let cf = PeriodicContinuedFraction::new(vec![1], vec![1, 2]);
+    /// assert_eq!(cf.convergents().take(6).collect::<Vec<(u64, u64)>>(),
+    ///            vec![(1, 1), (2, 1), (5, 3), (7, 4), (19, 11), (26, 15)]);
+    pub fn convergents(&'a self) -> ContinuedFractionConvergents<PeriodicContinuedFractionIterator<'a>> {
+        ContinuedFractionConvergents::new(self.iter())
+    }
 }
 
 /// A structure capable of iterating over the terms in a periodic continued fraction.
@@ -123,6 +137,54 @@ impl<'a> Iterator for PeriodicContinuedFractionIterator<'a> {
     }
 }
 
+/// A structure for iterating over the convergents resulting from the given continued fraction.
+pub struct ContinuedFractionConvergents<I: Iterator<Item = u64>> {
+    /// The numerators of the previous two convergents.
+    numers: (u64, u64),
+    /// The denominators of the previous two convergents.
+    denoms: (u64, u64),
+    /// The terms in the continued fraction expansion.
+    terms: I
+}
+
+impl<I: Iterator<Item = u64>> ContinuedFractionConvergents<I> {
+    /// Create a `ContinuedFractionConvergents` using the items from the given iterator as the terms
+    /// in the continued fraction expansion.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use continued_fractions::ContinuedFractionConvergents;
+    /// use std::iter;
+    ///
+    /// let terms = iter::once(1).chain(iter::repeat(2));
+    /// assert_eq!(ContinuedFractionConvergents::new(terms).take(6).collect::<Vec<(u64, u64)>>(),
+    ///            vec![(1, 1), (3, 2), (7, 5), (17, 12), (41, 29), (99, 70)]);
+    /// ```
+    pub fn new(terms: I) -> ContinuedFractionConvergents<I> {
+        ContinuedFractionConvergents {
+            numers: (0, 1),
+            denoms: (1, 0),
+            terms: terms,
+        }
+    }
+}
+
+impl<I: Iterator<Item = u64>> Iterator for ContinuedFractionConvergents<I> {
+    type Item = (u64, u64);
+
+    fn next(&mut self) -> Option<(u64, u64)> {
+        match self.terms.next() {
+            Some(a) => {
+                self.numers = (self.numers.1, a * self.numers.1 + self.numers.0);
+                self.denoms = (self.denoms.1, a * self.denoms.1 + self.denoms.0);
+                Some((self.numers.1, self.denoms.1))
+            },
+            None => None,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -161,6 +223,23 @@ mod tests {
         for &(tail, period, terms) in TEST_CASES {
             let cf = PeriodicContinuedFraction::new(tail.to_vec(), period.to_vec());
             assert_eq!(cf.iter().take(10).collect::<Vec<u64>>(), terms);
+        }
+    }
+
+    #[test]
+    fn test_convergents() {
+        const TEST_CASES: &'static [(&'static [u64], &'static [(u64, u64)])] = &[
+            (&[1, 2, 2, 2, 2, 2], &[(1, 1), (3, 2), (7, 5), (17, 12), (41, 29), (99, 70)]),
+            (&[1, 1, 2, 1, 2, 1], &[(1, 1), (2, 1), (5, 3), (7, 4), (19, 11), (26, 15)]),
+            (&[2, 4, 4, 4, 4, 4], &[(2, 1), (9, 4), (38, 17), (161, 72), (682, 305), (2889, 1292)]),
+            (&[2, 2, 4, 2, 4, 2], &[(2, 1), (5, 2), (22, 9), (49, 20), (218, 89), (485, 198)]),
+            (&[2, 1, 1, 1, 4, 1], &[(2, 1), (3, 1), (5, 2), (8, 3), (37, 14), (45, 17)]),
+            (&[2, 1, 4, 1, 4, 1], &[(2, 1), (3, 1), (14, 5), (17, 6), (82, 29), (99, 35)]),
+        ];
+
+        for &(terms, expected_convergents) in TEST_CASES {
+            let actual_convergents = ContinuedFractionConvergents::new(terms.iter().map(|x| *x));
+            assert_eq!(actual_convergents.collect::<Vec<(u64, u64)>>(), expected_convergents);
         }
     }
 }
