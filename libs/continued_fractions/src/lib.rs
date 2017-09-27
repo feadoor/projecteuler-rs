@@ -4,9 +4,8 @@ extern crate number_theory;
 extern crate num;
 
 use num::{BigUint, Zero, One};
-use num::rational::Ratio;
 use number_theory::integer_sqrt;
-use std::mem::swap;
+use std::mem::replace;
 
 /// A structure representing a periodic continued fraction.
 pub struct PeriodicContinuedFraction {
@@ -96,7 +95,7 @@ impl<'a> PeriodicContinuedFraction {
     /// use continued_fractions::PeriodicContinuedFraction;
     ///
     /// let cf = PeriodicContinuedFraction::new(vec![1], vec![2]);
-    /// let mut convergents = cf.convergents().map(|x| (x.numer().clone(), x.denom().clone()));
+    /// let mut convergents = cf.convergents().map(|(numer, denom)| (numer.clone(), denom.clone()));
     ///
     /// assert_eq!(convergents.next(), Some((From::from(1u64), From::from(1u64))));
     /// assert_eq!(convergents.next(), Some((From::from(3u64), From::from(2u64))));
@@ -173,20 +172,18 @@ impl<I: Iterator<Item = u64>> ContinuedFractionConvergents<I> {
 }
 
 impl<I: Iterator<Item = u64>> Iterator for ContinuedFractionConvergents<I> {
-    type Item = Ratio<BigUint>;
+    type Item = (BigUint, BigUint);
 
-    fn next(&mut self) -> Option<Ratio<BigUint>> {
+    fn next(&mut self) -> Option<(BigUint, BigUint)> {
         match self.terms.next() {
             Some(a) => {
                 let next_numer = a * &self.numers.1 + &self.numers.0;
                 let next_denom = a * &self.denoms.1 + &self.denoms.0;
 
-                swap(&mut self.numers.0, &mut self.numers.1);
-                self.numers.1 = next_numer.clone();
-                swap(&mut self.denoms.0, &mut self.denoms.1);
-                self.denoms.1 = next_denom.clone();
+                replace(&mut self.numers.0, replace(&mut self.numers.1, next_numer.clone()));
+                replace(&mut self.denoms.0, replace(&mut self.denoms.1, next_denom.clone()));
 
-                Some(Ratio::new(next_numer, next_denom))
+                Some((next_numer, next_denom))
             },
             None => None,
         }
@@ -248,7 +245,7 @@ mod tests {
         for &(terms, expected_convergents) in TEST_CASES {
             let actual_convergents = ContinuedFractionConvergents::new(terms.iter().map(|x| *x));
             assert_eq!(actual_convergents.collect::<Vec<_>>(),
-                       expected_convergents.iter().map(|&(x, y)| Ratio::new(From::from(x), From::from(y))).collect::<Vec<_>>());
+                       expected_convergents.iter().map(|&(x, y)| (From::from(x), From::from(y))).collect::<Vec<_>>());
         }
     }
 }

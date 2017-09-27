@@ -12,6 +12,7 @@ extern crate permutohedron;
 extern crate rustc_serialize;
 
 // My own crates
+extern crate continued_fractions;
 extern crate number_theory;
 extern crate primesieve;
 extern crate utils;
@@ -110,6 +111,7 @@ fn main() {
         54 => run!(problem054),
         55 => run!(problem055),
         56 => run!(problem056),
+        57 => run!(problem057),
         n => println!("Problem {} has not yet been solved", n),
     }
 }
