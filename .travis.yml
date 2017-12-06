@@ -9,8 +9,6 @@ addons:
     - binutils-dev
 rust:
 - nightly
-- beta
-- stable
 before_script:
 - |
   pip install 'travis-cargo<0.2' --user &&
@@ -20,7 +18,7 @@ script:
   travis-cargo build -- --release &&
   travis-cargo test -- --release -p projecteuler-rs -p primesieve -p number-theory -p utils -p continued_fractions
 after_success: |
-  [ $TRAVIS_RUST_VERSION = stable ] &&
+  [ $TRAVIS_RUST_VERSION = nightly ] &&
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
   cargo doc --no-deps -p projecteuler-rs -p primesieve -p number-theory -p utils -p continued_fractions &&
