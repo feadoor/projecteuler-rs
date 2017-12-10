@@ -28,93 +28,154 @@ pub const NAME: &'static str = "Problem 60";
 /// A description of the problem.
 pub const DESC: &'static str = "Prime pair sets";
 
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 use primesieve::Sieve;
 use utils::search::{DepthFirstTree, Pruning};
 
-// A structure representing a set of numbers and their sum.
+/// The result of concatenating the numbers `p` and `q`.
+fn concat(p: u64, q: u64) -> u64 {
+    let mut power_of_ten = 1;
+    while power_of_ten <= q {
+        power_of_ten *= 10;
+    }
+    power_of_ten * p + q
+}
+
+/// A structure representing a set of primes, and their sum.
 #[derive(Clone)]
-struct SumSet {
-    /// The numbers belonging to this set.
-    numbers: Vec<u64>,
-    /// The sum of the numbers in this set.
+struct PrimeSet {
+    primes: Vec<u64>,
     sum: u64,
 }
 
-impl SumSet {
-    /// A new, empty `NumberSet` consisting of no numbers.
-    fn new() -> SumSet {
-        SumSet {
-            numbers: vec![],
+impl PrimeSet {
+    /// Construct a new, initially empty, `PrimeSet`.
+    fn new() -> PrimeSet {
+        PrimeSet {
+            primes: Vec::new(),
             sum: 0,
         }
     }
 
-    /// Add a number to this `SumSet`
-    fn add_number(&mut self, number: u64) {
-        self.numbers.push(number);
-        self.sum += number;
+    /// Add the given prime to this `PrimeSet`.
+    fn add(&mut self, p: u64) {
+        self.primes.push(p);
+        self.sum += p;
     }
 
-    /// Remove the most recent number from this `SumSet`
-    fn remove_number(&mut self) {
-        match self.numbers.pop() {
-            Some(num) => self.sum -= num,
+    /// Remove the most recent prime from this `PrimeSet`.
+    fn remove(&mut self) {
+        match self.primes.pop() {
+            Some(x) => self.sum -= x,
             None => {},
+        }
+    }
+
+    /// Get the number of primes currently held in this `PrimeSet`.
+    fn len(&self) -> usize {
+        self.primes.len()
+    }
+
+    /// Get the largest prime held in this `PrimeSet`.
+    fn max(&self) -> Option<u64> {
+        self.primes.last().map(|p| *p)
+    }
+}
+
+/// A structure that holds, for each prime, the primes that are able to
+/// concatenate with it, in both orders, to form new primes.
+struct PrimePairs {
+    /// A cache to hold the results of previous checks.
+    pairs: HashMap<u64, HashSet<u64>>,
+}
+
+impl PrimePairs {
+
+    /// Creates a new `PrimePairs`, checking the given primes and using the
+    /// given sieve for primality checking.
+    fn new(primes: &[u64], sieve: &Sieve) -> PrimePairs {
+        let mut pairs = HashMap::new();
+        let can_concatenate = |p, q| sieve.is_prime(concat(p, q)).unwrap() &&
+                                     sieve.is_prime(concat(q, p)).unwrap();
+
+        for (ix, &p) in primes.iter().enumerate() {
+            pairs.insert(p, HashSet::new());
+            for &q in primes[ix + 1..].iter() {
+                if can_concatenate(p, q) {
+                    pairs.get_mut(&p).unwrap().insert(q);
+                }
+            }
+        }
+
+        PrimePairs {
+            pairs: pairs,
+        }
+    }
+
+    /// Get a `HashSet` containing all the primes `q` that are allowed to
+    /// concatenate with the given prime `p` in both directions, to form new
+    /// primes.
+    fn get_allowed_primes(&self, p: u64) -> Option<&HashSet<u64>> {
+        self.pairs.get(&p)
+    }
+}
+
+/// A structure that can be used for conducting a depth-first search for
+/// prime-pair sets.
+struct PrimePairTree {
+    /// The prime numbers up to the maximum prime to be considered.
+    primes: Vec<u64>,
+    /// A checker
+    prime_pairs: PrimePairs,
+    /// The current set of primes that is being examined.
+    prime_set: PrimeSet,
+    /// The size of prime set that we are looking for.
+    required_size: usize,
+    /// The smallest sum of any prime set found so far.
+    best_sum: u64,
+}
+
+impl PrimePairTree {
+    /// Constructs a new `PrimePairTree` which will search for prime pair sets
+    /// containing the given number of primes, and containing primes no larger
+    /// than the given maximum prime.
+    fn new(size: usize, max_prime: u64) -> PrimePairTree {
+        let sieve = Sieve::to_limit(max_prime);
+        let primes: Vec<_> = sieve.iter().take_while(|&p| p <= max_prime).collect();
+        let prime_pairs = PrimePairs::new(&primes, &sieve);
+
+        PrimePairTree {
+            primes: primes,
+            prime_pairs: prime_pairs,
+            prime_set: PrimeSet::new(),
+            required_size: size,
+            best_sum: u64::max_value(),
         }
     }
 }
 
 /// A description of a step that can be taken in the search tree.
-struct SumSetTreeStep {
-    next_number: u64,
+struct PrimePairTreeStep {
+    next_prime: u64,
 }
 
-/// The information that is held about the current state during the tree search.
-struct SumSetTree {
-    sum_set: SumSet,
-    required_size: usize,
-    best_sum: u64,
-    allowed_pairs: HashMap<u64, HashSet<u64>>,
-}
+/// Search for allowable prime sets of the right size, guaranteeing that the
+/// final set found will be the one with the smallest sum.
+impl DepthFirstTree for PrimePairTree {
+    type Step = PrimePairTreeStep;
+    type Output = PrimeSet;
 
-impl SumSetTree {
-    /// Construct a new `SumSetTree` which will search for sets of numbers:
-    ///
-    ///  - Having the given size
-    ///  - Containing only allowed pairs of numbers
-    fn new(size: usize, allowed_pairs: HashMap<u64, HashSet<u64>>) -> SumSetTree {
-        SumSetTree {
-            sum_set: SumSet::new(),
-            required_size: size,
-            best_sum: u64::max_value(),
-            allowed_pairs: allowed_pairs,
-        }
-    }
-}
-
-/// Generate allowable sets of the right size, guaranteeing that the final set
-/// generated will be the one with the smallest sum.
-impl DepthFirstTree for SumSetTree {
-    type Step = SumSetTreeStep;
-    type Output = SumSet;
-
-    /// All possible choices of the next number to put into the set.
+    /// All possible choices of the next prime to put into the set.
     fn next_steps(&mut self) -> Vec<Self::Step> {
-        if self.sum_set.numbers.is_empty() {
-            self.allowed_pairs.keys()
-                .map(|num| SumSetTreeStep { next_number: *num })
-                .collect()
+        if self.prime_set.len() == 0 {
+            self.primes.iter().map(|&p| PrimePairTreeStep { next_prime: p }).collect()
         } else {
-            let set = self.allowed_pairs
-                .get(self.sum_set.numbers.last().unwrap())
-                .unwrap();
-
-            self.sum_set.numbers.iter()
-                .map(|num| self.allowed_pairs.get(num).unwrap())
-                .fold(set.clone(), |set1, set2| &set1 & &set2)
-                .into_iter()
-                .map(|num| SumSetTreeStep { next_number: num })
+            let largest_prime = self.prime_set.max().unwrap();
+            self.prime_pairs.get_allowed_primes(largest_prime).unwrap().iter()
+                .filter(|&p| self.prime_set.primes.iter().all(
+                    |&q| self.prime_pairs.get_allowed_primes(q).unwrap().contains(p)
+                ))
+                .map(|&p| PrimePairTreeStep { next_prime: p} )
                 .collect()
         }
     }
@@ -122,12 +183,12 @@ impl DepthFirstTree for SumSetTree {
     /// Don't go any deeper in the tree than the required size, and prune when
     /// the sum is too big.
     fn should_prune(&mut self) -> Pruning {
-        let largest_number = self.sum_set.numbers.last().unwrap_or(&0);
-        let space_left = (self.required_size - self.sum_set.numbers.len()) as u64;
+        let largest_number = self.prime_set.max().unwrap_or(0);
+        let space_left = (self.required_size - self.prime_set.len()) as u64;
 
-        if self.sum_set.sum + space_left * largest_number > self.best_sum {
+        if self.prime_set.sum + space_left * largest_number > self.best_sum {
             Pruning::Above
-        } else if self.sum_set.numbers.len() == self.required_size {
+        } else if self.prime_set.len() == self.required_size {
             Pruning::Below
         } else {
             Pruning::None
@@ -136,49 +197,35 @@ impl DepthFirstTree for SumSetTree {
 
     /// Add the next symbol to the end of the current template.
     fn apply_step(&mut self, step: &Self::Step) {
-        self.sum_set.add_number(step.next_number);
+        self.prime_set.add(step.next_prime);
     }
 
     /// Remove the last symbol from the current template.
     fn revert_step(&mut self, _step: &Self::Step) {
-        self.sum_set.remove_number();
+        self.prime_set.remove();
     }
 
     /// Output the current template, if it is of the right length.
     fn output(&mut self) -> Option<Self::Output> {
-        if self.sum_set.numbers.len() == self.required_size {
-            self.best_sum = self.sum_set.sum;
-            Some(self.sum_set.clone())
+        if self.prime_set.len() == self.required_size {
+            self.best_sum = self.prime_set.sum;
+            Some(self.prime_set.clone())
         } else {
             None
         }
     }
 }
 
+
 /// Find the smallest sum of a set of primes such that any pair of primes in
 /// the set concatenate, in both orders, to form another prime. Only considers
 /// numbers up to the given maximum prime.
 fn solve(size_of_set: usize, max_prime: u64) -> u64 {
-    let sieve = Sieve::to_limit(10 * max_prime);
-    let primes: Vec<_> = sieve.iter().filter(|&p| p <= max_prime).collect();
-    let mut prime_pairs = HashMap::new();
-
-    for (ix, &p) in primes.iter().enumerate() {
-        prime_pairs.insert(p, HashSet::new());
-        for &q in primes[ix + 1..].iter() {
-            let concatenation1: u64 = (p.to_string() + &q.to_string()).parse().unwrap();
-            let concatenation2: u64 = (q.to_string() + &p.to_string()).parse().unwrap();
-            if sieve.is_prime(concatenation1).unwrap() && sieve.is_prime(concatenation2).unwrap() {
-                prime_pairs.get_mut(&p).unwrap().insert(q);
-            }
-        }
+    let mut best_set: Option<PrimeSet> = None;
+    for prime_set in PrimePairTree::new(size_of_set, max_prime).iter() {
+        best_set = Some(prime_set);
     }
-
-    let mut best_set: SumSet = SumSet::new();
-    for sum_set in SumSetTree::new(size_of_set, prime_pairs).iter() {
-        best_set = sum_set;
-    }
-    best_set.sum
+    best_set.unwrap().sum
 }
 
 /// Solve the problem, returning the answer as a `String`
