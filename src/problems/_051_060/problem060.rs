@@ -21,7 +21,8 @@
 //! primes.
 //!
 //! Finally, we can speed up checking by pre-calculating which pairs of primes
-//! concatenate to form another prime.
+//! concatenate to form another prime, rather than having to check each pair
+//! multiple times as we go through the search.
 
 /// The name of the problem.
 pub const NAME: &'static str = "Problem 60";
