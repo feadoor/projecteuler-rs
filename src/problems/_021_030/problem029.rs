@@ -25,17 +25,16 @@
 //! by `b`, and store the result in a `HashSet`. The number of elements in the `HashSet` at the
 //! end of it all is the answer.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate itertools;
+extern crate number_theory;
+extern crate primesieve;
+
 use std::collections::HashSet;
-
 use itertools::Itertools;
-
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 29";
-/// A description of the problem.
-pub const DESC: &'static str = "Distinct powers";
 
 /// Find the number of distinct values a^b for 2 ≤ a ≤ `a_lim` and 2 ≤ b ≤ `b_lim`.
 fn solve(a_lim: u64, b_lim: u64) -> usize {
@@ -59,14 +58,8 @@ fn solve(a_lim: u64, b_lim: u64) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100, 100).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem029() {
-        assert_eq!(super::answer(), "9183");
-    }
-}
+problem!(answer, "9183");

@@ -36,10 +36,8 @@
 //! Simply iterate over all groups of thirteen consecutive digits, calculating the products and
 //! keeping track of the best.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 8";
-/// A description of the problem.
-pub const DESC: &'static str = "Largest product in a series";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the largest product of `n` consecutive digits in the given array of digits.
 fn solve(digits: &[u8], n: usize) -> u64 {
@@ -56,7 +54,7 @@ fn solve(digits: &[u8], n: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let digits_str = "\
         73167176531330624919225119674426574742355349194934\
         96983520312774506326239578318016984801869478851843\
@@ -86,10 +84,4 @@ pub fn answer() -> String {
     solve(&digits, 13).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem008() {
-        assert_eq!(super::answer(), "23514624000");
-    }
-}
+problem!(answer, "23514624000");

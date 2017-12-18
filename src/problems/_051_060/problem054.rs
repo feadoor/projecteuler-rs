@@ -55,10 +55,8 @@
 //!
 //! Then lexicographic ordering of these structures corresponds to ordering of poker hands.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 54";
-/// A description of the problem.
-pub const DESC: &'static str = "Poker hands";
+#[macro_use]
+extern crate projecteuler_rs;
 
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -274,7 +272,7 @@ fn solve<I>(deals: I) -> Result<usize, String>
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let file = File::open(&Path::new("inputs/problem054.txt")).unwrap();
     let reader = BufReader::new(file);
     let deals = reader.lines()
@@ -284,10 +282,4 @@ pub fn answer() -> String {
     solve(deals).unwrap().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem054() {
-        assert_eq!(super::answer(), "376");
-    }
-}
+problem!(answer, "376");

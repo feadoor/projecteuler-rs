@@ -25,13 +25,13 @@
 //! Note that we have no a priori upper bound on how large these primes can get, so we will perform
 //! primality testing using a prime sieve that starts at some small size and grows when necessary.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+extern crate utils;
+
 use primesieve::Sieve;
 use utils::search::{DepthFirstTree, Pruning};
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 37";
-/// A description of the problem.
-pub const DESC: &'static str = "Truncatable primes";
 
 /// A description of a step that can be taken in the search tree.
 struct TruncatablePrimeTreeStep {
@@ -133,14 +133,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem037() {
-        assert_eq!(super::answer(), "748317");
-    }
-}
+problem!(answer, "748317");

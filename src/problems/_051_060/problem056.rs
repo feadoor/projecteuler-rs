@@ -15,13 +15,12 @@
 //! a primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculations and summing the digits, keeping track of the best digital sum as we go.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate num;
+
 use num::BigUint;
 use num::pow::pow;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 56";
-/// A description of the problem.
-pub const DESC: &'static str = "Powerful digit sum";
 
 /// Calculate the sum of the digits (in base 10) of the given number.
 fn sum_of_digits(x: BigUint) -> u64 {
@@ -44,14 +43,8 @@ fn solve(limit: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem056() {
-        assert_eq!(super::answer(), "972");
-    }
-}
+problem!(answer, "972");

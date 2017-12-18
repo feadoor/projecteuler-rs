@@ -18,12 +18,13 @@
 //! To iterate over the base-10 palindromes, we can simply iterate over all possible 'first halfs'
 //! of numbers, and create palindromes from them by reversing and gluing together.
 
-use number_theory::pow;
+#[macro_use]
+extern crate projecteuler_rs;
+#[macro_use]
+extern crate itertools;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 36";
-/// A description of the problem.
-pub const DESC: &'static str = "Double-base palindromes";
+use number_theory::pow;
 
 /// Check whether the given number is a binary palindrome.
 fn is_binary_palindrome(mut num: u64) -> bool {
@@ -86,14 +87,8 @@ fn solve(digits: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(6).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem036() {
-        assert_eq!(super::answer(), "872187");
-    }
-}
+problem!(answer, "872187");

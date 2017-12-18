@@ -41,10 +41,8 @@
 //!
 //! `(4n³ + 3n² + 8n - 9) / 6`
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 28";
-/// A description of the problem.
-pub const DESC: &'static str = "Number spiral diagonals";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the sum of the numbers on the diagonals of a spiral grid of size n.
 fn solve(n: u64) -> u64 {
@@ -53,14 +51,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_001).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem028() {
-        assert_eq!(super::answer(), "669171001");
-    }
-}
+problem!(answer, "669171001");

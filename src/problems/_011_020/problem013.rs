@@ -113,12 +113,11 @@
 //! primitive type, so we should use `BigUint` from the crate `num` instead. Then it's just a
 //! simple case of calculating the sum and extracting the first 10 digits.
 
-use num::{BigUint, Num};
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate num;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 13";
-/// A description of the problem.
-pub const DESC: &'static str = "Large sum";
+use num::{BigUint, Num};
 
 /// Find the first `n` digits of the sum of the given iterator of `BigUint`s.
 fn solve<I>(nums: I, n: usize) -> String
@@ -131,7 +130,7 @@ fn solve<I>(nums: I, n: usize) -> String
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let nums_str = "\
         37107287533902102798797998220837590246510135740250 \
         46376937677490009712648124896970078050417018260538 \
@@ -240,10 +239,4 @@ pub fn answer() -> String {
     solve(nums, 10)
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem013() {
-        assert_eq!(super::answer(), "5537376230");
-    }
-}
+problem!(answer, "5537376230");

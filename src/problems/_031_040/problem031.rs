@@ -46,10 +46,8 @@
 //!
 //! After we have done this for all the allowed coin values, the answer is in `a[n]`.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 31";
-/// A description of the problem.
-pub const DESC: &'static str = "Coin sums";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the number of ways of making `n` pence using English coins.
 fn solve(n: usize) -> u64 {
@@ -70,14 +68,8 @@ fn solve(n: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(200).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem031() {
-        assert_eq!(super::answer(), "73682");
-    }
-}
+problem!(answer, "73682");

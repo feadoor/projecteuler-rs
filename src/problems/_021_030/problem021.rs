@@ -31,14 +31,12 @@
 //!
 //! `max(4, e^γ * log(log(10000))) * 10000`
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+
 use std::f64::consts;
-
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 21";
-/// A description of the problem.
-pub const DESC: &'static str = "Amicable numbers";
 
 /// Check whether n is amicable.
 fn is_amicable(n: u64, sieve: &Sieve) -> bool {
@@ -59,14 +57,8 @@ fn solve(lim: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(10_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem021() {
-        assert_eq!(super::answer(), "31626");
-    }
-}
+problem!(answer, "31626");

@@ -15,12 +15,11 @@
 //! primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculation and summing the digits.
 
-use num::BigUint;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate num;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 20";
-/// A description of the problem.
-pub const DESC: &'static str = "Factorial digit sum";
+use num::BigUint;
 
 /// Calculate n! (factorial).
 fn factorial(n: u64) -> BigUint {
@@ -38,14 +37,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem020() {
-        assert_eq!(super::answer(), "648");
-    }
-}
+problem!(answer, "648");

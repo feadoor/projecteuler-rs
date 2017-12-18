@@ -34,10 +34,8 @@
 //!
 //! `n * log_10(ϕ) > 1000 + log_10(√5) - 1`
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 25";
-/// A description of the problem.
-pub const DESC: &'static str = "1000-digit Fibonacci number";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the index of the first Fibonacci number with at least n digits.
 fn solve(n: u64) -> u64 {
@@ -47,14 +45,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem025() {
-        assert_eq!(super::answer(), "4782");
-    }
-}
+problem!(answer, "4782");

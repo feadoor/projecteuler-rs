@@ -24,10 +24,10 @@
 //! concatenate to form another prime, rather than having to check each pair
 //! multiple times as we go through the search.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 60";
-/// A description of the problem.
-pub const DESC: &'static str = "Prime pair sets";
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+extern crate utils;
 
 use std::collections::{HashMap, HashSet};
 use primesieve::Sieve;
@@ -230,14 +230,8 @@ fn solve(size_of_set: usize, max_prime: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(5, 10_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem060() {
-        assert_eq!(super::answer(), "26033");
-    }
-}
+problem!(answer, "26033");

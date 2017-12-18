@@ -12,12 +12,11 @@
 //! down, with 20 of each. The path is uniquely determined by choosing the 20 positions of the
 //! downward steps within the path. This is equal to the binomial coefficient `40 choose 20`
 
-use number_theory::binom;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 15";
-/// A description of the problem.
-pub const DESC: &'static str = "Lattice paths";
+use number_theory::binom;
 
 /// Find the `number of paths through a square grid of size `n`.
 fn solve(n: u64) -> u64 {
@@ -25,14 +24,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(20).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem015() {
-        assert_eq!(super::answer(), "137846528820");
-    }
-}
+problem!(answer, "137846528820");

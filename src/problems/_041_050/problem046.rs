@@ -32,14 +32,12 @@
 //! Solving the problem is then a case of starting at a tentative limit and increasing it until
 //! the first counterexample is found.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+
 use primesieve::Sieve;
-
 use std::collections::HashSet;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 46";
-/// A description of the problem.
-pub const DESC: &'static str = "Goldbach's other conjecture";
 
 /// Search for numbers violating the conjecture up to the given limit. To do so, we generate a list
 /// of all primes up to this limit, calculate all possible values that can be obtained by adding a
@@ -58,14 +56,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem046() {
-        assert_eq!(super::answer(), "5777");
-    }
-}
+problem!(answer, "5777");

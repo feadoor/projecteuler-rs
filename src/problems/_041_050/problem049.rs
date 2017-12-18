@@ -20,16 +20,15 @@
 //! for each prime, generate all of its permutations which are prime, and check for an aritmetic
 //! progression.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate permutohedron;
+extern crate primesieve;
+
 use permutohedron::Heap;
 use primesieve::Sieve;
-
 use std::collections::HashSet;
 use std::iter::Iterator;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 49";
-/// A description of the problem.
-pub const DESC: &'static str = "Prime permutations";
 
 /// Convert a vector of digits into an actual number.
 fn to_int(digits: &[u64]) -> u64 {
@@ -79,14 +78,8 @@ fn solve() -> Vec<u64> {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().iter().fold(String::new(), |x, y| x + &y.to_string())
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem049() {
-        assert_eq!(super::answer(), "296962999629");
-    }
-}
+problem!(answer, "296962999629");

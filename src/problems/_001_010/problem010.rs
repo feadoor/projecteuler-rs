@@ -10,12 +10,11 @@
 //!
 //! This really is as simple as sieving for the primes below 2000000 and adding them up.
 
-use primesieve::Sieve;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 10";
-/// A description of the problem.
-pub const DESC: &'static str = "Summation of primes";
+use primesieve::Sieve;
 
 /// Find the sum of the primes less than the given limit.
 fn solve(limit: u64) -> u64 {
@@ -26,14 +25,8 @@ fn solve(limit: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(2_000_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem010() {
-        assert_eq!(super::answer(), "142913828922");
-    }
-}
+problem!(answer, "142913828922");

@@ -15,12 +15,11 @@
 //! Since the modulus here is larger than 2^32, care must be taken that no intermediate
 //! multiplication ever results in overflow.
 
-use number_theory::modexp;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 48";
-/// A description of the problem.
-pub const DESC: &'static str = "Self powers";
+use number_theory::modexp;
 
 /// Find the last 10 digits of the sum 1^1 + 2^2 + ... + n^n.
 fn solve(n: u64) -> u64 {
@@ -29,14 +28,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem048() {
-        assert_eq!(super::answer(), "9110846700");
-    }
-}
+problem!(answer, "9110846700");

@@ -37,15 +37,13 @@
 //! The rest of the problem is then simply a case of XORing each character with the key again and
 //! finding the sum of the bytes.
 
+#[macro_use]
+extern crate projecteuler_rs;
+
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::str::from_utf8;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 59";
-/// A description of the problem.
-pub const DESC: &'static str = "XOR decryption";
 
 /// Find the sum of the bytes in a plaintext, given the ciphertext and the length of the key that
 /// has been used to encrypt the text using and XOR cipher.
@@ -73,7 +71,7 @@ fn solve(ciphertext: &[u8], key_length: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let file = File::open(&Path::new("inputs/problem059.txt")).unwrap();
     let reader = BufReader::new(file);
     let ciphertext: Vec<_> = reader.split(b',')
@@ -84,10 +82,4 @@ pub fn answer() -> String {
     solve(&ciphertext, 3).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem059() {
-        assert_eq!(super::answer(), "107359");
-    }
-}
+problem!(answer, "107359");

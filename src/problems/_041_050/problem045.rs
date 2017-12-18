@@ -37,12 +37,11 @@
 //! For each solution we find, we can check whether the figurate number is also hexagonal, and if
 //! so, we have a solution.
 
-use number_theory::integer_sqrt;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 45";
-/// A description of the problem.
-pub const DESC: &'static str = "Triangular, pentagonal and hexagonal";
+use number_theory::integer_sqrt;
 
 /// A function to check if a given number is hexagonal.
 ///
@@ -81,14 +80,8 @@ fn solve(k: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(3).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem045() {
-        assert_eq!(super::answer(), "1533776805");
-    }
-}
+problem!(answer, "1533776805");

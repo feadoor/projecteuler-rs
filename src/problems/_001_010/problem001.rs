@@ -23,10 +23,8 @@
 //! [arithmetic progression](https://en.wikipedia.org/wiki/Arithmetic_progression) and can be
 //! calculated by the usual formula.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 1";
-/// A description of the problem.
-pub const DESC: &'static str = "Multiples of 3 and 5";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Calculate the sum of the multiples of `n` below the given limit, using the formula for the sum
 /// of an arithmetic progression.
@@ -45,14 +43,8 @@ fn solve(limit: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem001() {
-        assert_eq!(super::answer(), "233168");
-    }
-}
+problem!(answer, "233168");

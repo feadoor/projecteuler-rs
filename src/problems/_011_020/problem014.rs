@@ -30,10 +30,8 @@
 //! Collatz sequence is. Then, for larger numbers, when we reach a point in the sequence where the
 //! number has gone below its original value, we will already know how many steps remain.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 14";
-/// A description of the problem.
-pub const DESC: &'static str = "Longest Collatz sequence";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the number below the given limit with the longest Collatz sequence.
 fn solve(limit: usize) -> usize {
@@ -56,14 +54,8 @@ fn solve(limit: usize) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem014() {
-        assert_eq!(super::answer(), "837799");
-    }
-}
+problem!(answer, "837799");

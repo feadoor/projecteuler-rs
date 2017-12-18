@@ -13,10 +13,8 @@
 //! is a palindrome. As a simple optimisation, we can consider the larger products first, and
 //! break out of loops early when all future products will be smaller than the current best.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 4";
-/// A description of the problem.
-pub const DESC: &'static str = "Largest palindrome product";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Check whether the given number is a palindrome.
 fn is_palindrome(num: u64) -> bool {
@@ -51,14 +49,8 @@ fn solve(lower: u64, upper: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100, 1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem004() {
-        assert_eq!(super::answer(), "906609");
-    }
-}
+problem!(answer, "906609");

@@ -25,13 +25,13 @@
 //! Finding k is easily accomplished using a binary search, and evaluating `f(k)` is a simple
 //! combinatorial problem.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+extern crate utils;
+
 use number_theory::pow;
 use utils::search::binary_search;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 40";
-/// A description of the problem.
-pub const DESC: &'static str = "Champernowne's constant";
 
 /// Calculate the number of digits used when writing the numbers from 1 to k.
 fn digits_used(k: u64) -> u64 {
@@ -73,14 +73,8 @@ fn solve(indices: &[u64]) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(&[1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem040() {
-        assert_eq!(super::answer(), "210");
-    }
-}
+problem!(answer, "210");

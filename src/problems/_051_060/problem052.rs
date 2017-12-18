@@ -19,10 +19,8 @@
 //! We can therefore just iterate up through the possible values of <i>x</i>, and checking the
 //! multiples of each one until we find a solution.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 52";
-/// A description of the problem.
-pub const DESC: &'static str = "Permuted multiples";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Convert the given number into a count of how many times each digit appears.
 fn to_digit_count(mut n: u64) -> [usize; 10] {
@@ -60,14 +58,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem052() {
-        assert_eq!(super::answer(), "142857");
-    }
-}
+problem!(answer, "142857");

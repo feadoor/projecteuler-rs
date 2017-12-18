@@ -32,13 +32,13 @@
 //! The abundant numbers themselves can be found by brute force, using prime factorisation to
 //! calculate the sum of divisors.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+extern crate primesieve;
+
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 23";
-/// A description of the problem.
-pub const DESC: &'static str = "Non-abundant sums";
 
 /// Check whether n is a sum of two abundant numbers.
 fn is_sum_of_abundants(n: usize, abundants: &[bool]) -> bool {
@@ -69,14 +69,8 @@ fn solve(lim: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(28_123).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem023() {
-        assert_eq!(super::answer(), "4179871");
-    }
-}
+problem!(answer, "4179871");

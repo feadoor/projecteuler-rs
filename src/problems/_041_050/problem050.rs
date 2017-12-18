@@ -19,12 +19,11 @@
 //! prime, iteratively form the sums of it with successive primes, checking if each one is prime,
 //! and keeping track of the longest sequence seen so far.
 
-use primesieve::Sieve;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 50";
-/// A description of the problem.
-pub const DESC: &'static str = "Consecutive prime sum";
+use primesieve::Sieve;
 
 /// Find the prime below n which can be written as the sum of the most successive primes.
 fn solve(n: u64) -> u64 {
@@ -55,14 +54,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem050() {
-        assert_eq!(super::answer(), "997651");
-    }
-}
+problem!(answer, "997651");

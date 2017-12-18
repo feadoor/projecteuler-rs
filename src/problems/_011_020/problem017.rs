@@ -19,10 +19,8 @@
 //! how to say a number out loud. Once that's done, simply add up the lengths of each number from
 //! 1 to 1000.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 17";
-/// A description of the problem.
-pub const DESC: &'static str = "Number letter counts";
+#[macro_use]
+extern crate projecteuler_rs;
 
 // Numbers below 20 are special, so store their lengths.
 const SMALL_LENS: &'static [usize; 21] =
@@ -78,14 +76,8 @@ fn solve(n: usize) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem017() {
-        assert_eq!(super::answer(), "21124");
-    }
-}
+problem!(answer, "21124");

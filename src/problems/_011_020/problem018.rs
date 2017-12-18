@@ -49,12 +49,10 @@
 //! is the number in that cell, plus the greater of the two maximums from the cells directly above
 //! it.
 
-use std::cmp::max;
+#[macro_use]
+extern crate projecteuler_rs;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 18";
-/// A description of the problem.
-pub const DESC: &'static str = "Maximum path sum I";
+use std::cmp::max;
 
 /// Find the maximum sum of a path through the given triangular grid, given as a vector of vectors
 /// and guaranteed to be of valid dimensions.
@@ -79,7 +77,7 @@ fn solve(grid: &[Vec<u64>]) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let grid_str = "\
         75
         95 64
@@ -107,10 +105,4 @@ pub fn answer() -> String {
     solve(&grid).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem018() {
-        assert_eq!(super::answer(), "1074");
-    }
-}
+problem!(answer, "1074");

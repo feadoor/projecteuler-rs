@@ -27,17 +27,15 @@
 /// Now that we have a method for deciding if a number is triangular, all that's left is to go
 /// through the names, convert them to numbers and check each one.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::str::from_utf8;
-
 use number_theory::is_square;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 42";
-/// A description of the problem.
-pub const DESC: &'static str = "Coded triangle numbers";
 
 /// Decide if a given number is triangular.
 fn is_triangular(n: u64) -> bool {
@@ -54,7 +52,7 @@ fn solve<I>(words: I) -> usize
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let file = File::open(&Path::new("inputs/problem042.txt")).unwrap();
     let reader = BufReader::new(file);
     let names = reader.split(b',')
@@ -63,10 +61,4 @@ pub fn answer() -> String {
     solve(names).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem042() {
-        assert_eq!(super::answer(), "162");
-    }
-}
+problem!(answer, "162");

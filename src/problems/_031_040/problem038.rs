@@ -26,12 +26,11 @@
 //! concatenated product that has at least 9 digits, then check to see if it is pandigital or not.
 //! Then just remember the largest solution that is found during this process.
 
-use number_theory::pow;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 38";
-/// A description of the problem.
-pub const DESC: &'static str = "Pandigital multiples";
+use number_theory::pow;
 
 /// Check whether the given number is pandigital.
 fn is_pandigital(mut num: u64) -> bool {
@@ -97,14 +96,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem038() {
-        assert_eq!(super::answer(), "932718654");
-    }
-}
+problem!(answer, "932718654");

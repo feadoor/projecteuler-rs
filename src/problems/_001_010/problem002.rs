@@ -16,12 +16,11 @@
 //! sequence modulo 2. This means we can calculate the sum simply by taking every third Fibonacci
 //! number until the terms exceed four million and taking the sum as we go along.
 
-use itertools::Itertools;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate itertools;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 2";
-/// A description of the problem.
-pub const DESC: &'static str = "Even Fibonacci numbers";
+use itertools::Itertools;
 
 /// A structure which will allow iteration over Fibonacci numbers.
 struct Fibonacci {
@@ -56,14 +55,8 @@ fn solve(limit: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(4_000_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem002() {
-        assert_eq!(super::answer(), "4613732");
-    }
-}
+problem!(answer, "4613732");

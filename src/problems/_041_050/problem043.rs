@@ -31,12 +31,11 @@
 //! by 2, then for each of those, consider all choices for the next digit which meets the condition
 //! for divisibility by 3, and so on until the whole number has been built.
 
-use utils::search::{DepthFirstTree, Pruning};
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate utils;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 43";
-/// A description of the problem.
-pub const DESC: &'static str = "Sub-string divisibility";
+use utils::search::{DepthFirstTree, Pruning};
 
 /// A description of a step that can be taken in the search tree.
 struct SubstringTreeStep {
@@ -123,14 +122,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem043() {
-        assert_eq!(super::answer(), "16695334890");
-    }
-}
+problem!(answer, "16695334890");

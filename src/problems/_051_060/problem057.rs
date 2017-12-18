@@ -28,12 +28,11 @@
 //! Note that the problem statement does not consider the first expansion, 1/1, to be valid, so we
 //! should skip it.
 
-use continued_fractions::PeriodicContinuedFraction;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate continued_fractions;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 57";
-/// A description of the problem.
-pub const DESC: &'static str = "Square root convergents";
+use continued_fractions::PeriodicContinuedFraction;
 
 /// Find how many of the first `num_expansions` expansions of the square root of `n` have more
 /// digits in the numerator than the denominator.
@@ -46,14 +45,8 @@ fn solve(n: u64, num_expansions: usize) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(2, 1000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem057() {
-        assert_eq!(super::answer(), "153");
-    }
-}
+problem!(answer, "153");

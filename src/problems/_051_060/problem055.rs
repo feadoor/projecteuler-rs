@@ -35,10 +35,9 @@
 //! Simply check each number up to 10,000 to see if it is a Lychrel number, remembering to use
 //! arbitrary-precision integers since the numbers involved can grow very large.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 55";
-/// A description of the problem.
-pub const DESC: &'static str = "Lychrel numbers";
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate num;
 
 use num::{BigUint, Num};
 
@@ -73,14 +72,8 @@ fn solve(limit: usize, threshold: usize) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(10_000, 50).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem055() {
-        assert_eq!(super::answer(), "249");
-    }
-}
+problem!(answer, "249");

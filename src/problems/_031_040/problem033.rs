@@ -41,14 +41,12 @@
 //! It is easy to brute-force solutions to this equation by iterating over `a, b` and checking if
 //! this gives an integer value for `d`.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+
 use std::cmp::Ordering;
-
 use number_theory::gcd;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 33";
-/// A description of the problem.
-pub const DESC: &'static str = "Digit cancelling fractions";
 
 /// Find the denominator of the product of all 2-digit cancelling fractions.
 fn solve() -> u64 {
@@ -90,14 +88,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem033() {
-        assert_eq!(super::answer(), "100");
-    }
-}
+problem!(answer, "100");

@@ -47,15 +47,15 @@
 //! 5, since other values of `d` will be equivalent to smaller values of `d` which result from
 //! dividing out the 2 and 5.
 
-use itertools::Itertools;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate itertools;
+extern crate number_theory;
+extern crate primesieve;
 
+use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 26";
-/// A description of the problem.
-pub const DESC: &'static str = "Reciprocal cycles";
 
 /// Find the length of the cycle of the decimal 1/d, where d is coprime to 10. Requires a prime
 /// sieve capable of factorising numbers up to d (that is, containing primes up to the square root
@@ -90,14 +90,8 @@ fn solve(lim: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem026() {
-        assert_eq!(super::answer(), "983");
-    }
-}
+problem!(answer, "983");

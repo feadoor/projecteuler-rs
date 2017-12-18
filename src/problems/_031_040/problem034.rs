@@ -26,12 +26,11 @@
 //!
 //! Finally, remember to subtract 3 at the end, since 1 and 2 are not counted as solutions.
 
-use utils::search::{DepthFirstTree, Pruning};
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate utils;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 34";
-/// A description of the problem.
-pub const DESC: &'static str = "Digit factorials";
+use utils::search::{DepthFirstTree, Pruning};
 
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
@@ -145,14 +144,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem034() {
-        assert_eq!(super::answer(), "40730");
-    }
-}
+problem!(answer, "40730");

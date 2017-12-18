@@ -12,13 +12,12 @@
 //! a primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculation and summing the digits.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate num;
+
 use num::BigUint;
 use num::pow::pow;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 16";
-/// A description of the problem.
-pub const DESC: &'static str = "Power digit sum";
 
 /// Find the sum of the digits of base ^ exp.
 fn solve(base: u64, exp: usize) -> u64 {
@@ -27,14 +26,8 @@ fn solve(base: u64, exp: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(2, 1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem016() {
-        assert_eq!(super::answer(), "1366");
-    }
-}
+problem!(answer, "1366");

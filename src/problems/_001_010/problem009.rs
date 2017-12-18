@@ -18,10 +18,8 @@
 //! condition exactly when `(1000 - a)(1000 - b) = 500000`.The only factorisation which leads to a
 //! valid solution is then `500000 = 800 * 625` which directly gives `(a, b, c) = (200, 375, 425)`.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 9";
-/// A description of the problem.
-pub const DESC: &'static str = "Special Pythagorean triplet";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the first Pythagorean triplet with a + b + c = n, returning the product abc.
 fn solve(n: u64) -> u64 {
@@ -38,14 +36,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem009() {
-        assert_eq!(super::answer(), "31875000");
-    }
-}
+problem!(answer, "31875000");

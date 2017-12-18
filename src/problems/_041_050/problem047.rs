@@ -27,12 +27,11 @@
 //! To aid factorisation, pre-sieve a number of primes, and sieve more when we encounter a number
 //! that cannot be factorised with the current list of primes.
 
-use primesieve::Sieve;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 47";
-/// A description of the problem.
-pub const DESC: &'static str = "Distinct primes factors";
+use primesieve::Sieve;
 
 // Factorise the number using the given sieve, expanding to a higher limit if necessary, and
 // return whether or not the number has at least n prime factors.
@@ -66,14 +65,8 @@ fn solve(n: usize) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(4).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem047() {
-        assert_eq!(super::answer(), "134043");
-    }
-}
+problem!(answer, "134043");

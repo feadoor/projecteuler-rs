@@ -27,12 +27,10 @@
 //! These two cases are small enough that we can just iterate over all choices for `a, b` and
 //! check if the resulting product is pandigital.
 
-use std::collections::HashSet;
+#[macro_use]
+extern crate projecteuler_rs;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 32";
-/// A description of the problem.
-pub const DESC: &'static str = "Pandigital products";
+use std::collections::HashSet;
 
 /// Check whether the given numbers are together pandigital.
 fn is_pandigital(nums: &mut [u64]) -> bool {
@@ -87,14 +85,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem032() {
-        assert_eq!(super::answer(), "45228");
-    }
-}
+problem!(answer, "45228");

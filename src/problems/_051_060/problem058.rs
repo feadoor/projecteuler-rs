@@ -36,12 +36,11 @@
 //! have a precomputed prime sieve. If it turns out that the sieve is not large enough, then we can
 //! increase the size as we go.
 
-use primesieve::Sieve;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 58";
-/// A description of the problem.
-pub const DESC: &'static str = "Spiral primes";
+use primesieve::Sieve;
 
 /// Check if the given number is prime using the given prime sieve, expanding the size of the prime
 /// sieve if necessary.
@@ -82,14 +81,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem058() {
-        assert_eq!(super::answer(), "26241");
-    }
-}
+problem!(answer, "26241");

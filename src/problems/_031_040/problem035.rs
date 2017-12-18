@@ -19,14 +19,15 @@
 //! which holds enough pre-computed prime numbers to do primality checking for each number we might
 //! encounter.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+extern crate number_theory;
+extern crate utils;
+
 use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
 use utils::search::{DepthFirstTree, Pruning};
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 35";
-/// A description of the problem.
-pub const DESC: &'static str = "Circular primes";
 
 /// A description of a step that can be taken in the search tree.
 struct CircularPrimeTreeStep {
@@ -131,14 +132,8 @@ fn solve(digits: usize) -> usize {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(6).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem035() {
-        assert_eq!(super::answer(), "55");
-    }
-}
+problem!(answer, "55");

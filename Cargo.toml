@@ -5,7 +5,6 @@ authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 
 [dependencies]
 ansi_term = "0.9.0"
-docopt = "0.6"
 itertools = "0.5.2"
 num = "0.1.40"
 permutohedron = "0.2.2"
@@ -15,3 +14,243 @@ continued_fractions = { path = "./libs/continued_fractions" }
 number-theory = { path = "./libs/number-theory" }
 primesieve = { path = "./libs/primesieve" }
 utils = { path = "./libs/utils" }
+
+[[bin]]
+name = "p001"
+path = "src/problems/_001_010/problem001.rs"
+
+[[bin]]
+name = "p002"
+path = "src/problems/_001_010/problem002.rs"
+
+[[bin]]
+name = "p003"
+path = "src/problems/_001_010/problem003.rs"
+
+[[bin]]
+name = "p004"
+path = "src/problems/_001_010/problem004.rs"
+
+[[bin]]
+name = "p005"
+path = "src/problems/_001_010/problem005.rs"
+
+[[bin]]
+name = "p006"
+path = "src/problems/_001_010/problem006.rs"
+
+[[bin]]
+name = "p007"
+path = "src/problems/_001_010/problem007.rs"
+
+[[bin]]
+name = "p008"
+path = "src/problems/_001_010/problem008.rs"
+
+[[bin]]
+name = "p009"
+path = "src/problems/_001_010/problem009.rs"
+
+[[bin]]
+name = "p010"
+path = "src/problems/_001_010/problem010.rs"
+
+[[bin]]
+name = "p011"
+path = "src/problems/_011_020/problem011.rs"
+
+[[bin]]
+name = "p012"
+path = "src/problems/_011_020/problem012.rs"
+
+[[bin]]
+name = "p013"
+path = "src/problems/_011_020/problem013.rs"
+
+[[bin]]
+name = "p014"
+path = "src/problems/_011_020/problem014.rs"
+
+[[bin]]
+name = "p015"
+path = "src/problems/_011_020/problem015.rs"
+
+[[bin]]
+name = "p016"
+path = "src/problems/_011_020/problem016.rs"
+
+[[bin]]
+name = "p017"
+path = "src/problems/_011_020/problem017.rs"
+
+[[bin]]
+name = "p018"
+path = "src/problems/_011_020/problem018.rs"
+
+[[bin]]
+name = "p019"
+path = "src/problems/_011_020/problem019.rs"
+
+[[bin]]
+name = "p020"
+path = "src/problems/_011_020/problem020.rs"
+
+[[bin]]
+name = "p021"
+path = "src/problems/_021_030/problem021.rs"
+
+[[bin]]
+name = "p022"
+path = "src/problems/_021_030/problem022.rs"
+
+[[bin]]
+name = "p023"
+path = "src/problems/_021_030/problem023.rs"
+
+[[bin]]
+name = "p024"
+path = "src/problems/_021_030/problem024.rs"
+
+[[bin]]
+name = "p025"
+path = "src/problems/_021_030/problem025.rs"
+
+[[bin]]
+name = "p026"
+path = "src/problems/_021_030/problem026.rs"
+
+[[bin]]
+name = "p027"
+path = "src/problems/_021_030/problem027.rs"
+
+[[bin]]
+name = "p028"
+path = "src/problems/_021_030/problem028.rs"
+
+[[bin]]
+name = "p029"
+path = "src/problems/_021_030/problem029.rs"
+
+[[bin]]
+name = "p030"
+path = "src/problems/_021_030/problem030.rs"
+
+[[bin]]
+name = "p031"
+path = "src/problems/_031_040/problem031.rs"
+
+[[bin]]
+name = "p032"
+path = "src/problems/_031_040/problem032.rs"
+
+[[bin]]
+name = "p033"
+path = "src/problems/_031_040/problem033.rs"
+
+[[bin]]
+name = "p034"
+path = "src/problems/_031_040/problem034.rs"
+
+[[bin]]
+name = "p035"
+path = "src/problems/_031_040/problem035.rs"
+
+[[bin]]
+name = "p036"
+path = "src/problems/_031_040/problem036.rs"
+
+[[bin]]
+name = "p037"
+path = "src/problems/_031_040/problem037.rs"
+
+[[bin]]
+name = "p038"
+path = "src/problems/_031_040/problem038.rs"
+
+[[bin]]
+name = "p039"
+path = "src/problems/_031_040/problem039.rs"
+
+[[bin]]
+name = "p040"
+path = "src/problems/_031_040/problem040.rs"
+
+[[bin]]
+name = "p041"
+path = "src/problems/_041_050/problem041.rs"
+
+[[bin]]
+name = "p042"
+path = "src/problems/_041_050/problem042.rs"
+
+[[bin]]
+name = "p043"
+path = "src/problems/_041_050/problem043.rs"
+
+[[bin]]
+name = "p044"
+path = "src/problems/_041_050/problem044.rs"
+
+[[bin]]
+name = "p045"
+path = "src/problems/_041_050/problem045.rs"
+
+[[bin]]
+name = "p046"
+path = "src/problems/_041_050/problem046.rs"
+
+[[bin]]
+name = "p047"
+path = "src/problems/_041_050/problem047.rs"
+
+[[bin]]
+name = "p048"
+path = "src/problems/_041_050/problem048.rs"
+
+[[bin]]
+name = "p049"
+path = "src/problems/_041_050/problem049.rs"
+
+[[bin]]
+name = "p050"
+path = "src/problems/_041_050/problem050.rs"
+
+[[bin]]
+name = "p051"
+path = "src/problems/_051_060/problem051.rs"
+
+[[bin]]
+name = "p052"
+path = "src/problems/_051_060/problem052.rs"
+
+[[bin]]
+name = "p053"
+path = "src/problems/_051_060/problem053.rs"
+
+[[bin]]
+name = "p054"
+path = "src/problems/_051_060/problem054.rs"
+
+[[bin]]
+name = "p055"
+path = "src/problems/_051_060/problem055.rs"
+
+[[bin]]
+name = "p056"
+path = "src/problems/_051_060/problem056.rs"
+
+[[bin]]
+name = "p057"
+path = "src/problems/_051_060/problem057.rs"
+
+[[bin]]
+name = "p058"
+path = "src/problems/_051_060/problem058.rs"
+
+[[bin]]
+name = "p059"
+path = "src/problems/_051_060/problem059.rs"
+
+[[bin]]
+name = "p060"
+path = "src/problems/_051_060/problem060.rs"

@@ -12,43 +12,25 @@
 //! to use trial division by primes up to at most the square root of the given number. Simply sieve
 //! for those primes, factorise the number, and return the largest factor.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+extern crate primesieve;
+
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 3";
-/// A description of the problem.
-pub const DESC: &'static str = "Largest prime factor";
-
 /// Find the largest prime factor of n.
-fn solve(n: u64) -> Result<u64, ()> {
+fn solve(n: u64) -> u64 {
 
     // Sieve the primes up to the square root of n.
     let sieve = Sieve::to_limit(integer_sqrt(n));
-
-    // Factorise n and return the largest factor, or an error if the factorisation failed.
-    if let Ok(factors) = sieve.factorise(n) {
-        if let Some(factor) = factors.last() {
-            return Ok(factor.0);
-        }
-    }
-
-    Err(())
+    sieve.factorise(n).unwrap().last().unwrap().0
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
-    if let Ok(ans) = solve(600_851_475_143) {
-        ans.to_string()
-    } else {
-        "Something went wrong!".to_string()
-    }
+fn answer() -> String {
+    solve(600_851_475_143).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem003() {
-        assert_eq!(super::answer(), "6857");
-    }
-}
+problem!(answer, "6857");

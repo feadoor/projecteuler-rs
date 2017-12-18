@@ -31,11 +31,8 @@
 //! Then simply do this over a given range of months and count how many times the day at the start
 //! of the month was Sunday.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 19";
-/// A description of the problem.
-pub const DESC: &'static str = "Counting Sundays";
-
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Returns how many days were in the given month in the given year, where 0 -> January,
 /// 1 -> February and so on.
@@ -74,14 +71,8 @@ fn solve(day: u64, end_year: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(6, 2_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem019() {
-        assert_eq!(super::answer(), "171");
-    }
-}
+problem!(answer, "171");

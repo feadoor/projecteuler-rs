@@ -34,15 +34,15 @@
 //! Finally, we only need to check the values of `b` for which `f(0) = b` is itself prime - this
 //! saves some meaningless iteration over `a` for such values of `b`.
 
-use itertools::Itertools;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate itertools;
+extern crate number_theory;
+extern crate primesieve;
 
+use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 27";
-/// A description of the problem.
-pub const DESC: &'static str = "Quadratic primes";
 
 /// Find the number of primes produced by n^2 + an + b for successive values n = 0, 1, 2, ...
 fn num_primes(a: i64, b: i64, sieve: &Sieve) -> usize {
@@ -70,14 +70,8 @@ fn solve(a_lim: u64, b_lim: u64) -> i64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000, 1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem027() {
-        assert_eq!(super::answer(), "-59231");
-    }
-}
+problem!(answer, "-59231");

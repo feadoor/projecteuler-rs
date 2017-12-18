@@ -25,10 +25,8 @@
 //! The second of these quantites is always larger, so just calculate them directly and take the
 //! difference.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 6";
-/// A description of the problem.
-pub const DESC: &'static str = "Sum square difference";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the difference between the sum of the squares of the first `n` natural numbers and the
 /// square of the sum of the first `n` natural numbers.
@@ -39,14 +37,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem006() {
-        assert_eq!(super::answer(), "25164150");
-    }
-}
+problem!(answer, "25164150");

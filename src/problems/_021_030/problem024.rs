@@ -24,10 +24,8 @@
 //! Then, the remainder of the permutation is the nth lexicographic permutation of the reamining
 //! digits, which can be computed iteratively using the same algorithm.
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 24";
-/// A description of the problem.
-pub const DESC: &'static str = "Lexicographic permutations";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// Find the nth lexicographic permutation of [0, 1, ..., m - 1].
 fn solve(mut n: usize, m: usize) -> Vec<usize> {
@@ -53,15 +51,9 @@ fn solve(mut n: usize, m: usize) -> Vec<usize> {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let permutation = solve(1_000_000, 10);
     permutation.iter().fold("".to_string(), |acc, x| acc + &x.to_string())
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem024() {
-        assert_eq!(super::answer(), "2783915460");
-    }
-}
+problem!(answer, "2783915460");

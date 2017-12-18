@@ -13,12 +13,12 @@
 //! This problem is simply asking for the least common multiple (LCM) of the numbers 1, 2, ..., 20.
 //! This can be computed easily as `lcm(lcm(lcm(... (((2, 3), 4), 5), ...)))`
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
+
 use number_theory::lcm;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 5";
-/// A description of the problem.
-pub const DESC: &'static str = "Smallest multiple";
 
 /// Find the smallest number divisible by each of 2, 3, ..., limit.
 fn solve(limit: u64) -> u64 {
@@ -26,14 +26,8 @@ fn solve(limit: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(20).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem005() {
-        assert_eq!(super::answer(), "232792560");
-    }
-}
+problem!(answer, "232792560");

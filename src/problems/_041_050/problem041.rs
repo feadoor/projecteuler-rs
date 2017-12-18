@@ -13,13 +13,13 @@
 //! therefore only need to check the 7-digit pandigitals and smaller. Simply iterate over them in
 //! reverse order, checking each one for primality and stopping when we find one.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate permutohedron;
+extern crate primesieve;
+
 use permutohedron::LexicalPermutation;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 41";
-/// A description of the problem.
-pub const DESC: &'static str = "Pandigital prime";
 
 /// Convert a vector of digits into an actual number.
 fn to_int(digits: &[u64]) -> u64 {
@@ -76,14 +76,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem041() {
-        assert_eq!(super::answer(), "7652413");
-    }
-}
+problem!(answer, "7652413");

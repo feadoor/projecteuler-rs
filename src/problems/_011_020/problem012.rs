@@ -42,13 +42,13 @@
 //! the product of the first 9 primes with at least 500 divisors. That means that we should sieve
 //! primes up to the square root of this product.
 
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate primesieve;
+extern crate number_theory;
+
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 12";
-/// A description of the problem.
-pub const DESC: &'static str = "Highly divisible triangular number";
 
 /// Find the first triangle number to have more than `n` divisors.
 fn solve(n: u64) -> u64 {
@@ -86,14 +86,8 @@ fn solve(n: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(500).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem012() {
-        assert_eq!(super::answer(), "76576500");
-    }
-}
+problem!(answer, "76576500");

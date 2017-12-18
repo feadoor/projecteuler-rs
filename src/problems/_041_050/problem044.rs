@@ -26,12 +26,11 @@
 //! check if a number m is pentagonal is to see if 24m + 1 is a square whose square root is
 //! congruent to 5 modulo 6.
 
-use number_theory::integer_sqrt;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 44";
-/// A description of the problem.
-pub const DESC: &'static str = "Pentagon numbers";
+use number_theory::integer_sqrt;
 
 /// A function to check if a given number is pentagonal.
 fn is_pentagonal(m: u64) -> bool {
@@ -70,14 +69,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem044() {
-        assert_eq!(super::answer(), "5482660");
-    }
-}
+problem!(answer, "5482660");

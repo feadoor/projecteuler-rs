@@ -19,12 +19,11 @@
 //! described [here](https://en.wikipedia.org/wiki/Tree_of_primitive_Pythagorean_triples), and
 //! multiply up to non-primitive triples as well.
 
-use number_theory::primitive_pythag_triples;
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate number_theory;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 39";
-/// A description of the problem.
-pub const DESC: &'static str = "Integer right triangles";
+use number_theory::primitive_pythag_triples;
 
 /// Find the perimeter below the given limit for which there are the most right-angled triangles.
 fn solve(limit: u64) -> u64 {
@@ -43,14 +42,8 @@ fn solve(limit: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(1_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem039() {
-        assert_eq!(super::answer(), "840");
-    }
-}
+problem!(answer, "840");

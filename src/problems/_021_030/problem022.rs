@@ -18,15 +18,13 @@
 //! There's no clever trick going on here. Just read in the names from file, sort them, calculate
 //! each name score and find the sum.
 
+#[macro_use]
+extern crate projecteuler_rs;
+
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::str::from_utf8;
-
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 22";
-/// A description of the problem.
-pub const DESC: &'static str = "Names scores";
 
 /// Find the sum of the scores of the given list of names.
 fn solve(names: &mut [String]) -> u64 {
@@ -39,7 +37,7 @@ fn solve(names: &mut [String]) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     let file = File::open(&Path::new("inputs/problem022.txt")).unwrap();
     let reader = BufReader::new(file);
     let mut names: Vec<String> = reader.split(b',')
@@ -49,10 +47,4 @@ pub fn answer() -> String {
     solve(&mut names).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem022() {
-        assert_eq!(super::answer(), "871198282");
-    }
-}
+problem!(answer, "871198282");

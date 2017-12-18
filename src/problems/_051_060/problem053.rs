@@ -33,10 +33,8 @@
 //! relation <sup>n</sup>C<sub>r+1</sub> =
 //! <sup>n</sup>C<sub>r</sub> × (<i>n</i> - <i>r</i>) / (<i>r</i> + 1)
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 53";
-/// A description of the problem.
-pub const DESC: &'static str = "Combinatoric selections";
+#[macro_use]
+extern crate projecteuler_rs;
 
 /// A structure which will allow iteration over binomial coefficients.
 struct BinomialCoefficientsWithNumerator {
@@ -90,14 +88,8 @@ fn solve(limit: u64, threshold: u64) -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve(100, 1_000_000).to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem053() {
-        assert_eq!(super::answer(), "4075");
-    }
-}
+problem!(answer, "4075");

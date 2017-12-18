@@ -34,12 +34,11 @@
 //!
 //! Finally, remember to subtract 1 at the end, since it is not counted as a solution.
 
-use utils::search::{DepthFirstTree, Pruning};
+#[macro_use]
+extern crate projecteuler_rs;
+extern crate utils;
 
-/// The name of the problem.
-pub const NAME: &'static str = "Problem 30";
-/// A description of the problem.
-pub const DESC: &'static str = "Digit fifth powers";
+use utils::search::{DepthFirstTree, Pruning};
 
 /// Fifth powers of single digits.
 const FIFTH_POWER: &'static [u64; 10] = &[0, 1, 32, 243, 1024, 3125, 7776, 16807, 32768, 59049];
@@ -147,14 +146,8 @@ fn solve() -> u64 {
 }
 
 /// Solve the problem, returning the answer as a `String`
-pub fn answer() -> String {
+fn answer() -> String {
     solve().to_string()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn problem030() {
-        assert_eq!(super::answer(), "443839");
-    }
-}
+problem!(answer, "443839");
