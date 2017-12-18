@@ -21,7 +21,7 @@ after_success: |
   [ $TRAVIS_RUST_VERSION = nightly ] &&
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc --no-deps -p projecteuler-rs -p primesieve -p number-theory -p utils -p continued_fractions &&
+  cargo doc --no-deps &&
   echo "<meta http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | sed s/-/_/g | cut -d '/' -f 2`/index.html>" > target/doc/index.html &&
   git clone https://github.com/davisp/ghp-import &&
   ./ghp-import/ghp_import.py -n -m "Documentation for $TRAVIS_REPO_SLUG" target/doc &&
