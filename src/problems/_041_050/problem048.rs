@@ -10,9 +10,9 @@
 //! # Solution detail
 //!
 //! This is simply a case of using, say, a repeated squaring algorithm to calculate the necessary
-//! powers modulo 10^10, and adding up the results.
+//! powers modulo 10<sup>10</sup>, and adding up the results.
 //!
-//! Since the modulus here is larger than 2^32, care must be taken that no intermediate
+//! Since the modulus here is larger than 2<sup>32</sup>, care must be taken that no intermediate
 //! multiplication ever results in overflow.
 
 #[macro_use]

@@ -18,9 +18,9 @@
 //!
 //! Each of the two quantities in question has a direct formula:
 //!
-//! `1² + 2² + ... + n² = n * (n + 1) * (2n + 1) / 6`
+//! 1<sup>2</sup> + 2<sup>2</sup> + ... + n<sup>2</sup> = `n * (n + 1) * (2n + 1) / 6`
 //!
-//! `(1 + 2 + ... + n)² = (n * (n + 1) / 2) ^ 2`
+//! (1 + 2 + ... + n)<sup>2</sup> = `(n * (n + 1) / 2) ^ 2`
 //!
 //! The second of these quantites is always larger, so just calculate them directly and take the
 //! difference.
