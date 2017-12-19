@@ -31,9 +31,9 @@
 //! # Solution detail
 //!
 //! We can use a depth-first search, starting with octagonal numbers as the first-level nodes,
-//! and having child nodes formed by adding one more polygonal number (meeting the digit
-//! constraints) to the set. It is possible to assume that we should start with octagonal numbers
-//! because solutions are, by definition, cyclic, so any solution can be rotated to one that
+//! and having child nodes formed from parent nodes by adding one more polygonal number (meeting
+//! the digit constraints) to the set. It is possible to assume that we should start with octagonal
+//! numbers because solutions are, by definition, cyclic, so any solution can be rotated to one that
 //! starts with an octagonal number.
 //!
 //! The search can be sped up by precomputing lists of four-digit polygonal numbers, so that they
