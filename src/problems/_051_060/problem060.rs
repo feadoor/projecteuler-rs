@@ -196,17 +196,17 @@ impl DepthFirstTree for PrimePairTree {
         }
     }
 
-    /// Add the next symbol to the end of the current template.
+    /// Add the next prime to the set.
     fn apply_step(&mut self, step: &Self::Step) {
         self.prime_set.add(step.next_prime);
     }
 
-    /// Remove the last symbol from the current template.
+    /// Remove the last prime from the set.
     fn revert_step(&mut self, _step: &Self::Step) {
         self.prime_set.remove();
     }
 
-    /// Output the current template, if it is of the right length.
+    /// Output the current set of primes, if its sum is small enough.
     fn output(&mut self) -> Option<Self::Output> {
         if self.prime_set.len() == self.required_size {
             self.best_sum = self.prime_set.sum;
