@@ -21,9 +21,9 @@
 //! long password key for security, but short enough to be memorable.
 //!
 //! Your task has been made easy, as the encryption key consists of three lower case characters.
-//! Using cipher.txt (right click and 'Save Link/Target As...'), a file containing the encrypted
-//! ASCII codes, and the knowledge that the plain text must contain common English words, decrypt
-//! the message and find the sum of the ASCII values in the original text.
+//! Using cipher.txt, a file containing the encrypted ASCII codes, and the knowledge that the plain
+//! text must contain common English words, decrypt the message and find the sum of the ASCII values
+//! in the original text.
 //!
 //! # Solution detail
 //!
