@@ -2,31 +2,26 @@
 //!
 //! # Problem statement
 //!
-//! The cube, 41063625 (345<sup>3</sup>), can be permuted to produce two other
-//! cubes: 56623104 (384<sup>3</sup>) and 66430125 (405<sup>3</sup>). In fact,
-//! 41063625 is the smallest cube which has exactly three permutations of its
-//! digits which are also cube.
+//! The cube, 41063625 (345<sup>3</sup>), can be permuted to produce two other cubes: 56623104
+//! (384<sup>3</sup>) and 66430125 (405<sup>3</sup>). In fact, 41063625 is the smallest cube which
+//! has exactly three permutations of its digits which are also cube.
 //!
-//! Find the smallest cube for which exactly five permutations of its digits
-//! are cube.
+//! Find the smallest cube for which exactly five permutations of its digits are cube.
 //!
 //! # Solution detail
 //!
 //! This problem can be solved using the following algorithm:
 //!
-//!  - For each range 1...9, 10...99, 100...999, iterate over the cubes in that
-//!  range.
+//!  - For each range 1...9, 10...99, 100...999, iterate over the cubes in that range.
 //!
-//!  - Create a hash table, with keys given by sets of digits, and values given
-//!  by the number of cubes having those digits.
+//!  - Create a hash table, with keys given by sets of digits, and values given by the number of
+//!  cubes having those digits.
 //!
-//!  - After getting to the end of a range, check for keys in the hash table
-//!  with five cubes, and find the smallest cube corresponding to such an
-//!  entry.
+//!  - After getting to the end of a range, check for keys in the hash table with five cubes, and
+//!  find the smallest cube corresponding to such an entry.
 //!
-//! To speed up the last of these steps, we can store in the hash table not
-//! only the number of cubes having a given set of digits, but also the
-//! smallest cube having those digits.
+//! To speed up the last of these steps, we can store in the hash table not only the number of cubes
+//! having a given set of digits, but also the smallest cube having those digits.
 
 #[macro_use]
 extern crate projecteuler_rs;

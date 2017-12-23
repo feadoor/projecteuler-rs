@@ -2,23 +2,22 @@
 //!
 //! # Problem statement
 //!
-//! The 5-digit number, 16807=7<sup>5</sup>, is also a fifth power. Similarly,
-//! the 9-digit number, 134217728=8<sup>9</sup>, is a ninth power.
+//! The 5-digit number, 16807=7<sup>5</sup>, is also a fifth power. Similarly, the 9-digit number,
+//! 134217728=8<sup>9</sup>, is a ninth power.
 //!
 //! How many n-digit positive integers exist which are also an nth power?
 //!
 //! # Solution detail
 //!
-//! Since 10<sup>n</sup> has n + 1 digits, there are no solutions
-//! a<sup>n</sup> with a > 9.
+//! Since 10<sup>n</sup> has n + 1 digits, there are no solutions a<sup>n</sup> with a > 9.
 //!
-//! For 1 ≤ a ≤ 9, if a<sup>n</sup> has fewer than n digits, then also
-//! a<sup>n+1</sup> has fewer than n + 1 digits, so all the solutions are of
-//! the form a<sup>n</sup> for some consecutive range of values of n.
+//! For 1 ≤ a ≤ 9, if a<sup>n</sup> has fewer than n digits, then also a<sup>n+1</sup> has fewer
+//! than n + 1 digits, so all the solutions are of the form a<sup>n</sup> for some consecutive range
+//! of values of n.
 //!
-//! We therefore just need to iterate over each 1 ≤ a ≤ 9, and for each one,
-//! find the first power with fewer than the requisite number of digits - this
-//! will be sufficient to have found all solutions.
+//! We therefore just need to iterate over each 1 ≤ a ≤ 9, and for each one, find the first power
+//! with fewer than the requisite number of digits - this will be sufficient to have found all
+//! solutions.
 
 #[macro_use]
 extern crate projecteuler_rs;
