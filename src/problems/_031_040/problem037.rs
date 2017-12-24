@@ -129,7 +129,7 @@ impl DepthFirstTree for TruncatablePrimeTree {
 /// Find the sum of all primes which are both left-truncatable and right-truncatable. Remember to
 /// subtract the single-digit primes which are not counted.
 fn solve() -> u64 {
-    TruncatablePrimeTree::new().iter().sum::<u64>() - 17
+    TruncatablePrimeTree::new().into_iter().sum::<u64>() - 17
 }
 
 /// Solve the problem, returning the answer as a `String`

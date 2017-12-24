@@ -140,7 +140,7 @@ impl DepthFirstTree for FactorialSumTree {
 
 /// Find the sum of the numbers which are equal to the sum of the factorials of their digits.
 fn solve() -> u64 {
-    FactorialSumTree::new().iter().sum::<u64>() - 3
+    FactorialSumTree::new().into_iter().sum::<u64>() - 3
 }
 
 /// Solve the problem, returning the answer as a `String`

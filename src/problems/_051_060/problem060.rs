@@ -51,7 +51,7 @@ struct PrimeSet {
 
 impl PrimeSet {
     /// Construct a new, initially empty, `PrimeSet`.
-    fn new() -> PrimeSet {
+    fn empty() -> PrimeSet {
         PrimeSet {
             primes: Vec::new(),
             sum: 0,
@@ -94,7 +94,7 @@ impl PrimePairs {
 
     /// Creates a new `PrimePairs`, checking the given primes and using the
     /// given sieve for primality checking.
-    fn new(primes: &[u64], sieve: &Sieve) -> PrimePairs {
+    fn from_primes(primes: &[u64], sieve: &Sieve) -> PrimePairs {
         let mut pairs = HashMap::new();
         let can_concatenate = |p, q| sieve.is_prime(concat(p, q)).unwrap() &&
                                      sieve.is_prime(concat(q, p)).unwrap();
@@ -143,12 +143,12 @@ impl PrimePairTree {
     fn new(size: usize, max_prime: u64) -> PrimePairTree {
         let sieve = Sieve::to_limit(max_prime);
         let primes: Vec<_> = sieve.iter().take_while(|&p| p <= max_prime).collect();
-        let prime_pairs = PrimePairs::new(&primes, &sieve);
+        let prime_pairs = PrimePairs::from_primes(&primes, &sieve);
 
         PrimePairTree {
             primes: primes,
             prime_pairs: prime_pairs,
-            prime_set: PrimeSet::new(),
+            prime_set: PrimeSet::empty(),
             required_size: size,
             best_sum: u64::max_value(),
         }
@@ -223,7 +223,7 @@ impl DepthFirstTree for PrimePairTree {
 /// numbers up to the given maximum prime.
 fn solve(size_of_set: usize, max_prime: u64) -> u64 {
     let mut best_set: Option<PrimeSet> = None;
-    for prime_set in PrimePairTree::new(size_of_set, max_prime).iter() {
+    for prime_set in PrimePairTree::new(size_of_set, max_prime).into_iter() {
         best_set = Some(prime_set);
     }
     best_set.unwrap().sum

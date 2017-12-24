@@ -142,7 +142,7 @@ impl DepthFirstTree for PowerSumTree {
 
 /// Find the sum of the numbers which are equal to the sum of the fifth powers of their digits.
 fn solve() -> u64 {
-    PowerSumTree::new().iter().sum::<u64>() - 1
+    PowerSumTree::new().into_iter().sum::<u64>() - 1
 }
 
 /// Solve the problem, returning the answer as a `String`

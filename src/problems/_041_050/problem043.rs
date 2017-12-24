@@ -118,7 +118,7 @@ impl DepthFirstTree for SubstringTree {
 
 /// Find the sum of all 10-digit pandigital numbers satisfying the divisibility conditions.
 fn solve() -> u64 {
-    SubstringTree::new().iter().sum()
+    SubstringTree::new().into_iter().sum()
 }
 
 /// Solve the problem, returning the answer as a `String`

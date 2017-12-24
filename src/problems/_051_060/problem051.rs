@@ -64,7 +64,7 @@ struct Template {
 
 impl Template {
     /// A new, empty template consisting of zero symbols.
-    fn new() -> Template {
+    fn empty() -> Template {
         Template {
             concrete_value: 0,
             wildcard_value: 0,
@@ -128,9 +128,9 @@ struct TemplateTree {
 
 impl TemplateTree {
     /// Construct a new `TemplateTree` which will search for templates of the given length.
-    fn new(length: usize) -> TemplateTree {
+    fn with_required_length(length: usize) -> TemplateTree {
         TemplateTree {
-            template: Template::new(),
+            template: Template::empty(),
             required_length: length,
         }
     }
@@ -190,7 +190,7 @@ fn solve() -> u64 {
         let sieve = Sieve::to_limit(sieve_limit);
 
         // Iterate through the possible templates with 3, 6, 9... wildcards
-        for template in TemplateTree::new(length_to_try as usize).iter() {
+        for template in TemplateTree::with_required_length(length_to_try as usize).into_iter() {
             if template.wildcards > 0 && template.wildcards % 3 == 0 {
 
                 // Check if we get an 8-prime family from this template.

@@ -93,12 +93,6 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 ///     max_digits: usize,
 /// }
 ///
-/// impl Tree {
-///     fn new(max_digits: usize) -> Tree {
-///         Tree { value: 0, number_of_digits: 0, max_digits: max_digits }
-///     }
-/// }
-///
 /// impl DepthFirstTree for Tree {
 ///     type Step = Step;
 ///     type Output = u32;
@@ -139,7 +133,13 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 ///     }
 /// }
 ///
-/// let numbers: Vec<_> = Tree::new(3).iter().collect();
+/// impl Tree {
+///     fn with_max_digits(max_digits: usize) -> Tree {
+///         Tree { value: 0, number_of_digits: 0, max_digits: max_digits }
+///     }
+/// }
+///
+/// let numbers: Vec<_> = Tree::with_max_digits(3).into_iter().collect();
 /// assert_eq!(numbers, vec![117, 13, 195, 351, 377, 39, 533, 559, 715, 793, 91, 975]);
 /// ```
 pub trait DepthFirstTree where Self: Sized {
@@ -160,7 +160,7 @@ pub trait DepthFirstTree where Self: Sized {
     fn output(&mut self) -> Option<Self::Output>;
 
     /// An iterator over the nodes of the tree which meet the condition.
-    fn iter(&mut self) -> DepthFirstSearcher<Self> {
+    fn into_iter(self) -> DepthFirstSearcher<Self> {
         DepthFirstSearcher::new(self)
     }
 }
@@ -188,14 +188,14 @@ enum Step<T: DepthFirstTree> {
 
 /// A structure which is used for iterating through a tree, depth-first, producing only those nodes
 /// which satisfy a particular condition.
-pub struct DepthFirstSearcher<'a, T: 'a + DepthFirstTree> {
-    tree: &'a mut T,
+pub struct DepthFirstSearcher<T: DepthFirstTree> {
+    tree: T,
     steps: Vec<Step<T>>,
 }
 
-impl<'a, T: 'a + DepthFirstTree> DepthFirstSearcher<'a, T> {
+impl<T: DepthFirstTree> DepthFirstSearcher<T> {
     /// Construct a new `DepthFirstSearcher` which will examine the tree below the current state.
-    fn new(tree: &'a mut T) -> DepthFirstSearcher<'a, T> {
+    fn new(tree: T) -> DepthFirstSearcher<T> {
         DepthFirstSearcher { tree: tree, steps: vec![Step::StartSearch] }
     }
 
@@ -211,7 +211,7 @@ impl<'a, T: 'a + DepthFirstTree> DepthFirstSearcher<'a, T> {
     }
 }
 
-impl<'a, T: DepthFirstTree> Iterator for DepthFirstSearcher<'a, T> {
+impl<T: DepthFirstTree> Iterator for DepthFirstSearcher<T> {
     type Item = T::Output;
 
     fn next(&mut self) -> Option<T::Output> {

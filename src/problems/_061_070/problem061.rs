@@ -65,7 +65,7 @@ struct CyclicPolygonalTree {
 impl CyclicPolygonalTree {
     /// Constructs a new `CyclicPolygonalTree` which will search for cyclic sets of 4-digit
     /// polygonal numbers of the given size.
-    fn new(size: usize) -> CyclicPolygonalTree {
+    fn with_required_size(size: usize) -> CyclicPolygonalTree {
         let (min_value, max_value) = (1_000, 10_000);
 
         let polygonal = |d: u64, n: u64| n * ((d - 2) * n + 4 - d) / 2;
@@ -163,8 +163,8 @@ impl DepthFirstTree for CyclicPolygonalTree {
 
 /// Find the sum of all cyclic sequences of 4-digit polygonal numbers having the given size.
 fn solve(size_of_set: usize) -> u64 {
-    let mut searcher = CyclicPolygonalTree::new(size_of_set);
-    searcher.iter().map(|set| set.iter().sum::<u64>()).sum()
+    let searcher = CyclicPolygonalTree::with_required_size(size_of_set);
+    searcher.into_iter().map(|set| set.iter().sum::<u64>()).sum()
 }
 
 /// Solve the problem, returning the answer as a `String`

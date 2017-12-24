@@ -128,7 +128,7 @@ impl DepthFirstTree for CircularPrimeTree {
 /// Find the number of circular primes there are with at most the given number of digits. Remember
 /// to add on 2 for the primes 2 and 5 which are not considered otherwise.
 fn solve(digits: usize) -> usize {
-    CircularPrimeTree::with_max_digits(digits).iter().count() + 2
+    CircularPrimeTree::with_max_digits(digits).into_iter().count() + 2
 }
 
 /// Solve the problem, returning the answer as a `String`
