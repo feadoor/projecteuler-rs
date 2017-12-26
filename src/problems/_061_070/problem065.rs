@@ -30,54 +30,23 @@
 #[macro_use]
 extern crate projecteuler_rs;
 extern crate continued_fractions;
+extern crate itertools;
+#[macro_use]
+extern crate interleave;
 
+use std::iter::repeat;
 use continued_fractions::ContinuedFractionConvergents;
-
-/// An iterator over the terms of the continued fraction expansion of e.
-struct EContinuedFractionIterator {
-    started: bool,
-    next_even_term: u64,
-    idx_in_group: u64,
-}
-
-impl EContinuedFractionIterator {
-    fn new() -> EContinuedFractionIterator {
-        EContinuedFractionIterator {
-            started: false,
-            next_even_term: 2,
-            idx_in_group: 0,
-        }
-    }
-}
-
-impl Iterator for EContinuedFractionIterator {
-    type Item = u64;
-
-    fn next(&mut self) -> Option<u64> {
-        if !self.started {
-            self.started = true;
-            return Some(2);
-        }
-
-        let next = match self.idx_in_group {
-            1 => self.next_even_term,
-            _ => 1,
-        };
-
-        self.idx_in_group += 1;
-        if self.idx_in_group == 3 {
-            self.idx_in_group = 0;
-            self.next_even_term += 2;
-        }
-
-        Some(next)
-    }
-}
+use interleave::*;
+use itertools::Itertools;
 
 /// Find the sum of the digits of the numerator of the given convergent of the continued fraction
 /// expansion of e.
 fn solve(n: usize) -> u64 {
-    ContinuedFractionConvergents::new(EContinuedFractionIterator::new())
+    let e_continued_fraction = Some(2).into_iter().chain(
+        interleave!(repeat(1), (2..).step(2), repeat(1))
+    );
+
+    ContinuedFractionConvergents::new(e_continued_fraction)
         .skip(n - 1)
         .next().unwrap().0
         .to_str_radix(10).as_bytes().iter()
