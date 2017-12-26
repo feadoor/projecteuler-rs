@@ -5,7 +5,7 @@
 //! Consider the following "magic" 3-gon ring, filled with the numbers 1 to 6, and each line adding
 //! to nine.
 //!
-//! ```
+//! ```text
 //!   4
 //!    \
 //!     3
@@ -47,13 +47,13 @@
 //! In order to maximise the first digit of the solution string, we should put the largest numbers
 //! around the edge of the ring - 6, 7, 8 9 and 10. The sum of all 5 rows will then be:
 //!
-//! 6 + 7 + 8 + 9 + 10 + 2 * (1 + 2 + 3 + 4 + 5) = 70
+//! `6 + 7 + 8 + 9 + 10 + 2 * (1 + 2 + 3 + 4 + 5) = 70`
 //!
 //! This means that each row must have a total of 14. In order to maximise the solution string, the
 //! digit appearing after 6 should be as large as possible, that is, 5. Then the next digit must be
 //! 3, to achieve the total of 14. This leaves us with:
 //!
-//! ```
+//! ```text
 //!       6
 //!        \
 //!  E--J---5   B
@@ -70,7 +70,7 @@
 //! Wherever the 10 goes in the outer ring, it must be paired with 3 and 1 in the inner ring to
 //! achieve the total of 14. This forces the next two numbers in the ring:
 //!
-//! ```
+//! ```text
 //!       6
 //!        \
 //!  E--J---5   10
@@ -87,7 +87,7 @@
 //! The digit 2 cannot appear next to 1, since there is no 11, which would be needed to make 14.
 //! This allows us to complete the inner ring:
 //!
-//! ```
+//! ```text
 //!       6
 //!        \
 //!  E--2---5   10
@@ -104,7 +104,7 @@
 //! Finally, the numbers in the outer ring must be placed so as to maintain totals of 14 for each of
 //! the rows:
 //!
-//! ```
+//! ```text
 //!       6
 //!        \
 //!  7--2---5   10
