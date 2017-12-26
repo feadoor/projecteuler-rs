@@ -1,4 +1,4 @@
-//! [Problem 18 (Maximum path sum I)](https://projecteuler.net/problem=18)
+//! [Problem 67 (Maximum path sum II)](https://projecteuler.net/problem=67)
 //!
 //! # Problem statement
 //!

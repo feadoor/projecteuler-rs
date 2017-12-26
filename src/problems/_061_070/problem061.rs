@@ -69,7 +69,7 @@ impl CyclicPolygonalTree {
         let (min_value, max_value) = (1_000, 10_000);
 
         let polygonal = |d: u64, n: u64| n * ((d - 2) * n + 4 - d) / 2;
-        let polygonals_in_range = |d| (0..)
+        let polygonals_in_range = |d| (1..)
             .map(|n| polygonal(d, n))
             .filter(|&p| p >= min_value)
             .take_while(|&p| p < max_value)
@@ -103,32 +103,26 @@ impl DepthFirstTree for CyclicPolygonalTree {
 
     /// All possible choices of the next number to put into the set.
     fn next_steps(&mut self) -> Vec<Self::Step> {
+        let mut steps = Vec::new();
+
         if self.current_set.len() == 0 {
             let idx = self.required_size - 1;
-            self.polygonal_numbers[idx].iter().map(|&n|
-                CyclicPolygonalTreeStep {
-                    next_number: n,
-                    polygonal_type: idx,
-                }
-            ).collect()
+            steps = self.polygonal_numbers[idx].iter().map(|&n| (n, idx)).collect();
         } else {
             let last_number = *self.current_set.last().unwrap();
-            let mut steps = Vec::new();
-
             for (idx, numbers) in self.polygonal_numbers.iter().enumerate() {
                 if !self.polygonal_types_used[idx] {
                     steps.extend(numbers.iter()
                         .filter(|&&n| digits_match(last_number, n))
-                        .map(|&n| CyclicPolygonalTreeStep {
-                            next_number: n,
-                            polygonal_type: idx,
-                        })
+                        .map(|&n| (n, idx))
                     );
                 }
             }
-
-            steps
         }
+
+        steps.iter()
+            .map(|&(n, idx)| CyclicPolygonalTreeStep { next_number: n, polygonal_type: idx })
+            .collect()
     }
 
     /// The pruning actually happens as a side-effect of generating the next steps.
