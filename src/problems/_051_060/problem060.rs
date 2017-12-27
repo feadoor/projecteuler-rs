@@ -27,11 +27,11 @@
 #[macro_use]
 extern crate projecteuler_rs;
 extern crate primesieve;
-extern crate utils;
+extern crate search;
 
 use std::collections::{HashMap, HashSet};
 use primesieve::Sieve;
-use utils::search::{DepthFirstTree, Pruning};
+use search::{DepthFirstTree, Pruning};
 
 /// The result of concatenating the numbers `p` and `q`.
 fn concat(p: u64, q: u64) -> u64 {

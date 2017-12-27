@@ -23,11 +23,11 @@
 extern crate projecteuler_rs;
 extern crate primesieve;
 extern crate number_theory;
-extern crate utils;
+extern crate search;
 
 use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
-use utils::search::{DepthFirstTree, Pruning};
+use search::{DepthFirstTree, Pruning};
 
 /// A description of a step that can be taken in the search tree.
 struct CircularPrimeTreeStep {

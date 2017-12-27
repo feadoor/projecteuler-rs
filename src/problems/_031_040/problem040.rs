@@ -28,10 +28,10 @@
 #[macro_use]
 extern crate projecteuler_rs;
 extern crate number_theory;
-extern crate utils;
+extern crate search;
 
 use number_theory::pow;
-use utils::search::binary_search;
+use search::binary_search;
 
 /// Calculate the number of digits used when writing the numbers from 1 to k.
 fn digits_used(k: u64) -> u64 {

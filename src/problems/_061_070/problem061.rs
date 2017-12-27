@@ -41,9 +41,9 @@
 
 #[macro_use]
 extern crate projecteuler_rs;
-extern crate utils;
+extern crate search;
 
-use utils::search::{DepthFirstTree, Pruning};
+use search::{DepthFirstTree, Pruning};
 
 fn digits_match(prev: u64, next: u64) -> bool {
     prev % 100 == next / 100

@@ -28,9 +28,9 @@
 
 #[macro_use]
 extern crate projecteuler_rs;
-extern crate utils;
+extern crate search;
 
-use utils::search::{DepthFirstTree, Pruning};
+use search::{DepthFirstTree, Pruning};
 
 // The factorials of single digits.
 const FACTORIAL: &'static [u64; 10] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];

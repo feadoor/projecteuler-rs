@@ -12,9 +12,10 @@ permutohedron = "0.2.2"
 rustc-serialize = "0.3"
 
 continued_fractions = { path = "./libs/continued_fractions" }
-number-theory = { path = "./libs/number-theory" }
+mertens_recurrence = { path = "./libs/mertens_recurrence" }
+number_theory = { path = "./libs/number_theory" }
 primesieve = { path = "./libs/primesieve" }
-utils = { path = "./libs/utils" }
+search = { path = "./libs/search" }
 
 [[bin]]
 name = "p001"

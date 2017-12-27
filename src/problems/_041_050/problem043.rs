@@ -33,9 +33,9 @@
 
 #[macro_use]
 extern crate projecteuler_rs;
-extern crate utils;
+extern crate search;
 
-use utils::search::{DepthFirstTree, Pruning};
+use search::{DepthFirstTree, Pruning};
 
 /// A description of a step that can be taken in the search tree.
 struct SubstringTreeStep {

@@ -8,7 +8,7 @@ use std::marker::Sized;
 /// # Examples
 ///
 /// ```
-/// use utils::search::binary_search;
+/// use search::binary_search;
 ///
 /// assert_eq!(binary_search(&|n| n + 17, 22), 5);
 /// assert_eq!(binary_search(&|n| n * n, 2000), 45);
@@ -81,7 +81,7 @@ pub fn binary_search<F>(func: &F, target: u64) -> u64
 /// Our steps will simply contain the digit to be appended when going from parent to child.
 ///
 /// ```
-/// use utils::search::{DepthFirstTree, Pruning};
+/// use search::{DepthFirstTree, Pruning};
 ///
 /// struct Step {
 ///     next_digit: u32,

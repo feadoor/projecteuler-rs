@@ -1,8 +1,8 @@
 [package]
-name = "primesieve"
-version = "0.2.0"
+name = "number_theory"
+version = "0.1.0"
 authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 
 [dependencies]
 num-traits = "0.1.36"
-number_theory = { path = "../number_theory" }
+rand = "0.3"
