@@ -19,12 +19,12 @@
 //! Let g(n) denote the number of pairs (x, y) with 1 <= x <= y <= n and gcd(x, y) = 1. We are
 //! looking for the value of g(1,000,000).
 
-//! By multiplying pairs by a common factor k, it follows that g(n / k) is equal to the number of
+//! By multiplying pairs by a common factor k, it follows that g(n/k) is equal to the number of
 //! pairs (x, y) with x, y <= n and gcd(x, y) = k. Summing over all k, we find that:
 //!
-//! sum[k = 1 to n] g(n / k) = n(n + 1) / 2
+//! `sum[k = 1 to n] g(n/k) = n(n + 1) / 2`
 //!
-//! This is because both sides are equal to the total number of pairs x, y with 1 <= x <= y <= n.
+//! This is because both sides are equal to the total number of pairs (x, y) with 1 <= x <= y <= n.
 //!
 //! Isolated values of functions defined by this style of recurrence relation can be computed
 //! quickly using the `mertens_recurrence` crate.

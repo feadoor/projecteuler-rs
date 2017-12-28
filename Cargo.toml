@@ -304,3 +304,7 @@ path = "src/problems/_071_080/problem071.rs"
 [[bin]]
 name = "p072"
 path = "src/problems/_071_080/problem072.rs"
+
+[[bin]]
+name = "p073"
+path = "src/problems/_071_080/problem073.rs"
