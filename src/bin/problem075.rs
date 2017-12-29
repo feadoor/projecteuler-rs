@@ -1,4 +1,4 @@
-//! [Problem 75 (Digit factorial chains)](https://projecteuler.net/problem=74)
+//! [Problem 75 (Singular integer right triangles)](https://projecteuler.net/problem=75)
 //!
 //! # Solution detail
 //!
