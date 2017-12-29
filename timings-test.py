@@ -15,7 +15,7 @@ def main():
         failed_problems = []
         for problem_number in problem_numbers:
             print "Problem {0:03d}:".format(problem_number),
-            executable = os.path.join(output_dir, "p{0:03d}".format(problem_number))
+            executable = os.path.join(output_dir, "problem{0:03d}".format(problem_number))
             time = timeit(stmt="subprocess.call(['{0}'], stdout=open(os.devnull, 'w'))".format(executable), setup="import os, subprocess", number=1)
             print "{0:.2f} seconds".format(time)
 
