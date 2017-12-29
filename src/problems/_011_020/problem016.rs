@@ -1,11 +1,5 @@
 //! [Problem 16 (Power digit sum)](https://projecteuler.net/problem=16)
 //!
-//! # Problem statement
-//!
-//! 2<sup>15</sup> = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
-//!
-//! What is the sum of the digits of the number 2<sup>1000</sup>?
-//!
 //! # Solution detail
 //!
 //! The only thing worth noting here is that the result of the exponentiation will never fit into

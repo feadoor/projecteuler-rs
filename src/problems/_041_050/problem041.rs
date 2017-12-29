@@ -1,12 +1,5 @@
 //! [Problem 41 (Pandigital prime)](https://projecteuler.net/problem=41)
 //!
-//! # Problem statement
-//!
-//! We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n
-//! exactly once. For example, 2143 is a 4-digit pandigital and is also prime.
-//!
-//! What is the largest n-digit pandigital prime that exists?
-//!
 //! # Solution detail
 //!
 //! Note that any 9- or 8-digit pandigital number is divisible by 3 and hence not prime. We

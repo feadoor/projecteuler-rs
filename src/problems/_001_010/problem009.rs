@@ -1,14 +1,5 @@
 //! [Problem 9 (Special Pythagorean triplet)](https://projecteuler.net/problem=9)
 //!
-//! # Problem statement
-//!
-//! A Pythagorean triplet is a set of three natural numbers, a < b < c, for which
-//! a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup>
-//!
-//! For example, 3<sup>2</sup> + 4<sup>2</sup> = 9 + 16 = 25 = 5<sup>2</sup>.
-//!
-//! There exists exactly one Pythagorean triplet for which a + b + c = 1000. Find the product abc.
-//!
 //! # Solution detail
 //!
 //! There's no need to try to be clever here - brute force works just fine. Loop over `a`, `b` and

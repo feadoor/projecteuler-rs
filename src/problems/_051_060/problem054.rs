@@ -1,47 +1,5 @@
 //! [Problem 54 (Poker hands)](https://projecteuler.net/problem=54)
 //!
-//! # Problem statement
-//!
-//! In the card game poker, a hand consists of five cards and are ranked, from lowest to highest,
-//! in the following way:
-//!
-//! - High Card: Highest value card.
-//! - One Pair: Two cards of the same value.
-//! - Two Pairs: Two different pairs.
-//! - Three of a Kind: Three cards of the same value.
-//! - Straight: All cards are consecutive values.
-//! - Flush: All cards of the same suit.
-//! - Full House: Three of a kind and a pair.
-//! - Four of a Kind: Four cards of the same value.
-//! - Straight Flush: All cards are consecutive values of same suit.
-//! - Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-//!
-//! The cards are valued in the order 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
-//!
-//! If two players have the same ranked hands then the rank made up of the highest value wins;
-//! for example, a pair of eights beats a pair of fives (see example 1 below). But if two ranks
-//! tie, for example, both players have a pair of queens, then highest cards in each hand are
-//! compared (see example 4 below); if the highest cards tie then the next highest cards are
-//! compared, and so on.
-//!
-//! Consider the following five hands dealt to two players:
-//!
-//! | Hand        | Player 1                                                                            | Player 2                                                                             | Winner   |
-//! |-------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|----------|
-//! | <b>1</b>    | 5H 5C 6S 7S KD<br><small>Pair of Fives</small>                                      | 2C 3S 8S 8D TD<br><small>Pair of Eights</small>                                      | Player 2 |
-//! | <b>2</b>    | 5D 8C 9S JS AC<br><small>Highest card Ace </small>                                  | 2C 5C 7D 8S QH<br><small>Highest card Queen</small>                                  | Player 1 |
-//! | <b>3</b>    | 2D 9C AS AH AC<br><small>Three Aces</small>                                         | 3D 6D 7D TD QD<br><small>Flush with Diamonds </small>                                | Player 2 |
-//! | <b>4</b>    | 4D 6S 9H QH QC<br><small>Pair of Queens</small><br><small>Highest card Nine</small> | 3D 6D 7H QD QS<br><small>Pair of Queens</small><br><small>Highest card Seven</small> | Player 1 |
-//! | <b>5</b>    | 2H 2D 4C 4D 4S<br><small>Full House</small><br><small>With Three Fours</small>      | 3C 3D 3S 9S 9D<br><small>Full House</small><br><small>with Three Threes</small>      | Player 1 |
-//!
-//! The file, [poker.txt](https://projecteuler.net/project/resources/p054_poker.txt), contains
-//! one-thousand random hands dealt to two players. Each line of the file contains ten cards
-//! (separated by a single space): the first five are Player 1's cards and the last five are Player
-//! 2's cards. You can assume that all hands are valid (no invalid characters or repeated cards),
-//! each player's hand is in no specific order, and in each hand there is a clear winner.
-//!
-//! How many hands does Player 1 win?
-//!
 //! # Solution Detail
 //!
 //! There are no tricks, here; we must simply parse each pair of hands, calculate their poker value

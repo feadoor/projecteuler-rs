@@ -1,22 +1,5 @@
 //! [Problem 53 (Combinatoric selections)](https://projecteuler.net/problem=53)
 //!
-//! # Problem statement
-//!
-//! There are exactly ten ways of selecting three from five, 12345:
-//!
-//! 123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
-//!
-//! In combinatorics, we use the notation, <sup>5</sup>C<sub>3</sub> = 10.
-//!
-//! In general, <sup>n</sup>C<sub>r</sub> = <i>n</i>! / (<i>r</i>! × (<i>n</i>−<i>r</i>)!), where
-//! <i>r</i> ≤ <i>n</i>, and <i>n</i>! = <i>n</i> × (<i>n</i>−1) × ... × 3 × 2 × 1, and 0! = 1.
-//!
-//! It is not until <i>n</i> = 23, that a value exceeds one-million:
-//! <sup>23</sup>C<sub>10</sub> = 1144066.
-//!
-//! How many, not necessarily distinct, values of  <sup>n</sup>C<sub>r</sub>, for
-//! 1 ≤ <i>n</i> ≤ 100, are greater than one-million?
-//!
 //! # Solution detail
 //!
 //! We can use two facts about binomial coefficients to speed up the search:
