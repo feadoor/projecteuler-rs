@@ -1,8 +1,7 @@
 //! Miscellaneous functions which didn't obviously belong together in any sort of group.
 
 use std::mem::swap;
-use num_traits::int::PrimInt;
-use num_traits::sign::Signed;
+use numeric_traits::{Algebraic, DivRem, Saturating};
 
 /// Returns the greatest common divisor of two positive integers, computed with Euclid's algorithm.
 ///
@@ -14,7 +13,7 @@ use num_traits::sign::Signed;
 /// assert_eq!(gcd(89, 55), 1);
 /// assert_eq!(gcd(1001, 770), 77);
 /// ```
-pub fn gcd<T: PrimInt>(mut x: T, mut y: T) -> T {
+pub fn gcd<T: Algebraic + DivRem + Copy>(mut x: T, mut y: T) -> T {
     let mut tmp;
     while y != T::zero() {
         tmp = x % y;
@@ -34,7 +33,7 @@ pub fn gcd<T: PrimInt>(mut x: T, mut y: T) -> T {
 /// assert_eq!(lcm(89, 55), 4895);
 /// assert_eq!(lcm(1001, 770), 10010);
 /// ```
-pub fn lcm<T: PrimInt>(x: T, y: T) -> T {
+pub fn lcm<T: Algebraic + DivRem + Copy>(x: T, y: T) -> T {
     x * (y / gcd(x, y))
 }
 
@@ -45,21 +44,21 @@ pub fn lcm<T: PrimInt>(x: T, y: T) -> T {
 /// ```
 /// use number_theory::integer_sqrt;
 ///
-/// assert_eq!(integer_sqrt(15), 3);
-/// assert_eq!(integer_sqrt(16), 4);
-/// assert_eq!(integer_sqrt(17), 4);
+/// assert_eq!(integer_sqrt(15u64), 3);
+/// assert_eq!(integer_sqrt(16u64), 4);
+/// assert_eq!(integer_sqrt(17u64), 4);
 ///
-/// assert_eq!(integer_sqrt(24), 4);
-/// assert_eq!(integer_sqrt(25), 5);
+/// assert_eq!(integer_sqrt(24u64), 4);
+/// assert_eq!(integer_sqrt(25u64), 5);
 /// ```
-pub fn integer_sqrt(n: u64) -> u64 {
+pub fn integer_sqrt<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> T {
 
-    let mut sqrt = (n as f64).sqrt().floor() as u64;
-    while sqrt > 0 && sqrt.saturating_mul(sqrt) > n {
-        sqrt -= 1;
+    let mut sqrt: T = From::from((n.into() as f64).sqrt().floor() as u64);
+    while sqrt > T::zero() && sqrt.saturating_mul(sqrt) > n {
+        sqrt = sqrt - T::one();
     }
-    while (sqrt + 1).saturating_mul(sqrt + 1) <= n {
-        sqrt += 1
+    while (sqrt + T::one()).saturating_mul(sqrt + T::one()) <= n {
+        sqrt = sqrt + T::one();
     }
 
     sqrt
@@ -72,14 +71,14 @@ pub fn integer_sqrt(n: u64) -> u64 {
 /// ```
 /// use number_theory::is_square;
 ///
-/// assert!(is_square(1));
-/// assert!(!is_square(2));
-/// assert!(!is_square(3));
-/// assert!(is_square(4));
-/// assert!(!is_square(5));
-/// assert!(!is_square(6));
+/// assert!(is_square(1u64));
+/// assert!(!is_square(2u64));
+/// assert!(!is_square(3u64));
+/// assert!(is_square(4u64));
+/// assert!(!is_square(5u64));
+/// assert!(!is_square(6u64));
 /// ```
-pub fn is_square(n: u64) -> bool {
+pub fn is_square<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> bool {
     let sqrt = integer_sqrt(n);
     n == sqrt * sqrt
 }
@@ -98,15 +97,17 @@ pub fn is_square(n: u64) -> bool {
 /// assert_eq!(binom(5, 4), 5);
 /// assert_eq!(binom(5, 5), 1);
 /// ```
-pub fn binom(m: u64, mut n: u64) -> u64 {
+pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T {
     // Deal with easy cases, and make n the smaller of the two choices for n.
-    if n > m { return 0; }
+    if n > m { return T::zero(); }
     if n > m - n { n = m - n; }
 
     // Calculate the answer iteratively.
-    let mut ans = 1;
-    for k in 1..n + 1 {
-        ans = ans * (m - k + 1) / k;
+    let mut ans = T::one();
+    let mut k = T::one();
+    while k <= n {
+        ans = ans * (m - k + T::one()) / k;
+        k = k + T::one();
     }
     ans
 }
@@ -126,7 +127,7 @@ pub fn binom(m: u64, mut n: u64) -> u64 {
 ///
 /// assert_eq!(pow(13, 7), 62748517);
 /// ```
-pub fn pow<T: PrimInt>(mut x: T, mut y: u64) -> T {
+pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
 
     // Set up somewhere to hold the final answer.
     let mut ans = T::one();
@@ -155,7 +156,7 @@ pub fn pow<T: PrimInt>(mut x: T, mut y: u64) -> T {
 /// let (s, t) = bezout(240, 46);
 /// assert_eq!(240 * s + 46 * t, 2);
 /// ```
-pub fn bezout<T: PrimInt + Signed>(a: T, b: T) -> (T, T) {
+pub fn bezout<T: Algebraic + DivRem + PartialOrd<T> + Copy>(a: T, b: T) -> (T, T) {
     let (mut s, mut old_s) = (T::zero(), T::one());
     let (mut t, mut old_t) = (T::one(), T::zero());
     let (mut r, mut old_r) = (b, a);
@@ -172,11 +173,7 @@ pub fn bezout<T: PrimInt + Signed>(a: T, b: T) -> (T, T) {
         swap(&mut t, &mut old_t);
     }
 
-  if a * old_s + b * old_t >= T::zero() {
-      (old_s, old_t)
-  } else {
-      (-old_s, -old_t )
-  }
+  (old_s, old_t)
 }
 
 #[cfg(test)]
@@ -222,7 +219,7 @@ mod tests {
 
     #[test]
     fn test_integer_sqrt() {
-        let check = |x| {
+        let check = |x: u64| {
             // Calculate the integer square root.
             let sqrt = integer_sqrt(x);
 
@@ -254,11 +251,11 @@ mod tests {
 
     #[test]
     fn test_is_square() {
-        for n in 0..100 {
+        for n in 0u64..100 {
             assert!(is_square(n * n));
         }
 
-        for n in 2..100 {
+        for n in 2u64..100 {
             assert!(!is_square(n * n - 1));
             assert!(!is_square(n * n + 1));
         }
@@ -276,7 +273,7 @@ mod tests {
                            4923689695575, 2250829575120, 937845656300, 354860518600, 121399651100,
                            37353738800, 10272278170, 2505433700, 536878650, 99884400, 15890700,
                            2118760, 230300, 19600, 1225, 50, 1];
-        for n in 0..51 {
+        for n in 0u64..51 {
             assert_eq!(binom(50, n), results[n as usize]);
         }
     }

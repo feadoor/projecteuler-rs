@@ -54,7 +54,7 @@ use mertens_recurrence::Recurrence;
 fn solve(limit: u64) -> i64 {
     let f = |n| {
         let (q, r) = (n / 6, n % 6);
-        (q * (3 * q - 2 + r) + if r == 5 { 1 } else { 0 }) as i64
+        (if q == 0 { 0 } else { q * (3 * q - 2 + r) } + if r == 5 { 1 } else { 0 }) as i64
     };
 
     let recurrence = Recurrence::new(f, |b, c| (c - b) as i64);

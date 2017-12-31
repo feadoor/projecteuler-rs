@@ -1,9 +1,6 @@
 [package]
-name = "number_theory"
+name = "numeric_traits"
 version = "0.1.0"
 authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 
 [dependencies]
-rand = "0.3"
-
-numeric_traits = { path = "../numeric_traits" }

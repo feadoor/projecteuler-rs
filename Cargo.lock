@@ -132,9 +132,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "number_theory"
 version = "0.1.0"
 dependencies = [
- "num-traits 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
+ "numeric_traits 0.1.0",
  "rand 0.3.18 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "numeric_traits"
+version = "0.1.0"
 
 [[package]]
 name = "permutohedron"
