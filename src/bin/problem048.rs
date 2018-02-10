@@ -10,9 +10,9 @@
 
 #[macro_use]
 extern crate projecteuler_rs;
-extern crate number_theory;
+extern crate modular_arithmetic;
 
-use number_theory::modexp;
+use modular_arithmetic::modexp;
 
 /// Find the last 10 digits of the sum 1^1 + 2^2 + ... + n^n.
 fn solve(n: u64) -> u64 {

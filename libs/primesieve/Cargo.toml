@@ -4,5 +4,5 @@ version = "0.2.0"
 authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 
 [dependencies]
-num-traits = "0.1.36"
+modular_arithmetic = { path = "../modular_arithmetic" }
 number_theory = { path = "../number_theory" }

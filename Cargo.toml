@@ -13,6 +13,7 @@ rustc-serialize = "0.3"
 
 continued_fractions = { path = "./libs/continued_fractions" }
 mertens_recurrence = { path = "./libs/mertens_recurrence" }
+modular_arithmetic = { path = "./libs/modular_arithmetic" }
 number_theory = { path = "./libs/number_theory" }
 primesieve = { path = "./libs/primesieve" }
 search = { path = "./libs/search" }

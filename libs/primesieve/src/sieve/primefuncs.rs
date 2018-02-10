@@ -1,9 +1,8 @@
 //! Functions, such as factorisation and similar computations, which require use of prime numbers
 //! to be calculated.
 
-use num_traits::pow::pow;
-
-use number_theory::{gcd, modexp};
+use modular_arithmetic::modexp;
+use number_theory::{gcd, pow};
 
 use segment;
 use sieve::Sieve;
@@ -198,7 +197,7 @@ impl Sieve {
         if let Ok(mut order) = self.euler_phi(modulus) {
             if let Ok(factors) = self.factorise(order) {
                 for (p, _) in factors {
-                    while order % p == 0 && modexp(n, (order / p), modulus) == 1 {
+                    while order % p == 0 && modexp(n, order / p, modulus) == 1 {
                         order /= p;
                     }
                 }
@@ -270,7 +269,7 @@ impl Sieve {
     /// ```
     pub fn sum_of_divisors(&self, n: u64) -> Result<u64, ()> {
         if let Ok(factors) = self.factorise(n) {
-            Ok(factors.iter().map(|&(x, y)| (pow(x, (y + 1) as usize) - 1) / (x - 1)).product())
+            Ok(factors.iter().map(|&(x, y)| (pow(x, y + 1) - 1) / (x - 1)).product())
         } else {
             Err(())
         }

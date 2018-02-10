@@ -63,6 +63,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "modular_arithmetic"
+version = "0.1.0"
+dependencies = [
+ "number_theory 0.1.0",
+ "numeric_traits 0.1.0",
+]
+
+[[package]]
 name = "num"
 version = "0.1.41"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -149,7 +157,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "primesieve"
 version = "0.2.0"
 dependencies = [
- "num-traits 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
+ "modular_arithmetic 0.1.0",
  "number_theory 0.1.0",
 ]
 
@@ -162,6 +170,7 @@ dependencies = [
  "interleave 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "mertens_recurrence 0.1.0",
+ "modular_arithmetic 0.1.0",
  "num 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
  "number_theory 0.1.0",
  "permutohedron 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",

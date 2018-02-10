@@ -1,6 +1,5 @@
-//! Miscellaneous functions which didn't obviously belong together in any sort of group.
+//! Functions relating to basic numeric operations.
 
-use std::mem::swap;
 use numeric_traits::{Algebraic, DivRem, Saturating};
 
 /// Returns the greatest common divisor of two positive integers, computed with Euclid's algorithm.
@@ -125,7 +124,7 @@ pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T 
 /// assert_eq!(pow(2, 3), 8);
 /// assert_eq!(pow(2, 4), 16);
 ///
-/// assert_eq!(pow(13, 7), 62748517);
+/// assert_eq!(pow(13, 7), 62_748_517);
 /// ```
 pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
 
@@ -142,38 +141,6 @@ pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
     }
 
     ans
-}
-
-/// Calculates the Bezout coefficients `s, t` such that `as + bt = g`, where `g` is the greatest
-/// common divisor of `a, b`, using the extended Euclidean algorithm as described
-/// [here](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Pseudocode)
-///
-/// # Examples
-///
-/// ```
-/// use number_theory::bezout;
-///
-/// let (s, t) = bezout(240, 46);
-/// assert_eq!(240 * s + 46 * t, 2);
-/// ```
-pub fn bezout<T: Algebraic + DivRem + PartialOrd<T> + Copy>(a: T, b: T) -> (T, T) {
-    let (mut s, mut old_s) = (T::zero(), T::one());
-    let (mut t, mut old_t) = (T::one(), T::zero());
-    let (mut r, mut old_r) = (b, a);
-
-    while r != T::zero() {
-        let q = old_r / r;
-
-        old_r = old_r - q * r;
-        old_s = old_s - q * s;
-        old_t = old_t - q * t;
-
-        swap(&mut r, &mut old_r);
-        swap(&mut s, &mut old_s);
-        swap(&mut t, &mut old_t);
-    }
-
-  (old_s, old_t)
 }
 
 #[cfg(test)]
@@ -288,16 +255,6 @@ mod tests {
 
         for (x, y, result) in test_cases {
             assert_eq!(pow(x, y), result);
-        }
-    }
-
-    #[test]
-    fn test_bezout() {
-        for a in 1..100 {
-            for b in 1..100 {
-                let (s, t) = bezout(a, b);
-                assert_eq!(s * a + t * b, gcd(a, b))
-            }
         }
     }
 }

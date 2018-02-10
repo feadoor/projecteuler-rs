@@ -3,10 +3,10 @@
 extern crate numeric_traits;
 extern crate rand;
 
-mod iterators;
-mod misc;
-mod modular;
+mod numeric;
+mod partitions;
+mod pythagorean_triples;
 
-pub use iterators::*;
-pub use misc::*;
-pub use modular::*;
+pub use numeric::*;
+pub use partitions::*;
+pub use pythagorean_triples::*;
