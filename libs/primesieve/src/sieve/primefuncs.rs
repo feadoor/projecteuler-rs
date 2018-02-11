@@ -1,7 +1,7 @@
 //! Functions, such as factorisation and similar computations, which require use of prime numbers
 //! to be calculated.
 
-use modular_arithmetic::modexp;
+use modular_arithmetic::mod_exp;
 use number_theory::{gcd, pow};
 
 use segment;
@@ -197,7 +197,7 @@ impl Sieve {
         if let Ok(mut order) = self.euler_phi(modulus) {
             if let Ok(factors) = self.factorise(order) {
                 for (p, _) in factors {
-                    while order % p == 0 && modexp(n, order / p, modulus) == 1 {
+                    while order % p == 0 && mod_exp(n, order / p, modulus) == 1 {
                         order /= p;
                     }
                 }

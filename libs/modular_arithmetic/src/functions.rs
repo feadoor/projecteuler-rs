@@ -2,29 +2,36 @@
 
 use std::mem::swap;
 
-/// Calculate `base ^ exp` with respect to the given modulus.
+/// Calculate a + b with respect to the given modulus.
+///
+/// Depends on the modulus being at most 2^63 - 1 - that is, `2 * modulus` must not overflow.
 ///
 /// # Examples
 ///
 /// ```
-/// use modular_arithmetic::modexp;
+/// use modular_arithmetic::mod_add;
 ///
-/// assert_eq!(modexp(2, 4, 17), 16);
-/// assert_eq!(modexp(2, 4, 15), 1);
-/// assert_eq!(modexp(73, 101, 991), 456);
+/// assert_eq!(mod_add(5, 7, 11), 1);
+/// assert_eq!(mod_add(2, 100_000_000_000_006, 100_000_000_000_007), 1);
 /// ```
-pub fn modexp(base: u64, mut exp: u64, modulus: u64) -> u64 {
-    let mut answer = 1;
-    let mut worker = base % modulus;
-    while exp != 0 {
-        if exp & 1 == 1 {
-            answer = safe_mod_mul(answer, worker, modulus);
-        }
-        exp >>= 1;
-        if exp != 0 { worker = safe_mod_mul(worker, worker, modulus) };
-    }
+pub fn mod_add(a: u64, b: u64, m: u64) -> u64 {
+    (a + b) % m
+}
 
-    answer
+/// Calculate a - b with respect to the given modulus.
+///
+/// Depends on the modulus being at most 2^63 - 1 - that is, `2 * modulus` must not overflow.
+///
+/// # Examples
+///
+/// ```
+/// use modular_arithmetic::mod_sub;
+///
+/// assert_eq!(mod_sub(5, 7, 11), 9);
+/// assert_eq!(mod_sub(2, 100_000_000_000_006, 100_000_000_000_007), 3);
+/// ```
+pub fn mod_sub(a: u64, b: u64, m: u64) -> u64 {
+    (a + m - b) % m
 }
 
 /// Calcuate a * b with respect to the given modulus, without overflowing for large moduli. Uses
@@ -35,12 +42,12 @@ pub fn modexp(base: u64, mut exp: u64, modulus: u64) -> u64 {
 /// # Examples
 ///
 /// ```
-/// use modular_arithmetic::safe_mod_mul;
+/// use modular_arithmetic::mod_mul;
 ///
-/// assert_eq!(safe_mod_mul(2, 8, 15), 1);
-/// assert_eq!(safe_mod_mul(853_467, 21_660_421_200_929, 100_000_000_000_007), 54701091976795);
+/// assert_eq!(mod_mul(2, 8, 15), 1);
+/// assert_eq!(mod_mul(853_467, 21_660_421_200_929, 100_000_000_000_007), 54701091976795);
 /// ```
-pub fn safe_mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
+pub fn mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
     match a.checked_mul(b) {
         Some(x) => x % m,
         None => {
@@ -59,6 +66,31 @@ pub fn safe_mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
             result
         }
     }
+}
+
+/// Calculate `base ^ exp` with respect to the given modulus.
+///
+/// # Examples
+///
+/// ```
+/// use modular_arithmetic::mod_exp;
+///
+/// assert_eq!(mod_exp(2, 4, 17), 16);
+/// assert_eq!(mod_exp(2, 4, 15), 1);
+/// assert_eq!(mod_exp(73, 101, 991), 456);
+/// ```
+pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
+    let mut answer = 1;
+    let mut worker = base % modulus;
+    while exp != 0 {
+        if exp & 1 == 1 {
+            answer = mod_mul(answer, worker, modulus);
+        }
+        exp >>= 1;
+        if exp != 0 { worker = mod_mul(worker, worker, modulus) };
+    }
+
+    answer
 }
 
 /// Calculates the inverse of `a` with respect to modulus `m`, if it exists.
@@ -106,7 +138,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_modexp() {
+    fn test_mod_exp() {
         for base in vec![2, 3, 5, 1001, u64::max_value()] {
             for modulus in vec![11, 17, 23, u32::max_value() as u64] {
                 let mut exp = 1;
@@ -114,7 +146,7 @@ mod tests {
                 let mut true_ans = mod_base;
 
                 while exp < 100 {
-                    assert_eq!(modexp(base, exp, modulus), true_ans);
+                    assert_eq!(mod_exp(base, exp, modulus), true_ans);
                     true_ans = (true_ans * mod_base) % modulus as u64;
                     exp += 1;
                 }

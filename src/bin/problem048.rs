@@ -12,12 +12,12 @@
 extern crate projecteuler_rs;
 extern crate modular_arithmetic;
 
-use modular_arithmetic::modexp;
+use modular_arithmetic::{mod_add, mod_exp};
 
 /// Find the last 10 digits of the sum 1^1 + 2^2 + ... + n^n.
 fn solve(n: u64) -> u64 {
     let modulus = 10_000_000_000;
-    (1..n + 1).map(|x| modexp(x, x, modulus)).fold(0, |x, y| (x + y) % modulus)
+    (1..n + 1).map(|x| mod_exp(x, x, modulus)).fold(0, |x, y| mod_add(x, y, modulus))
 }
 
 /// Solve the problem, returning the answer as a `String`

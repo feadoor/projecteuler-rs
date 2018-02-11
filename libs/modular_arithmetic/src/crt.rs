@@ -1,7 +1,7 @@
 //! A small module allowing computations based on the Chinese Remainder Theorem.
 
 use number_theory::gcd;
-use functions::mod_inverse;
+use functions::{mod_inverse, mod_add, mod_sub, mod_mul};
 
 /// A structure representing a CRT-style constraint.
 #[derive(PartialEq, Eq, Debug)]
@@ -62,11 +62,12 @@ pub fn crt(constraints: &[Constraint]) -> Constraint {
         let r_inv = mod_inverse(r, s);
 
         if r_inv.is_some() {
-            for res_a in &con_a.residues {
-                for res_b in &con_b.residues {
-                    let difference = res_b + modulus - res_a;
+            for &res_a in &con_a.residues {
+                for &res_b in &con_b.residues {
+                    let difference = mod_sub(res_b, res_a, modulus);
                     if difference % g == 0 {
-                        let mut class = (res_a + difference * r_inv.unwrap() * r) % modulus;
+                        let coeff = mod_mul(r_inv.unwrap(), r, modulus);
+                        let class = mod_add(res_a, mod_mul(coeff, difference, modulus), modulus);
                         classes.push(class);
                     }
                 }
