@@ -1,80 +1,97 @@
 //! A macro that defines a struct which behaves like a number constrained by a given modulus.
 
 use numeric_traits::{Zero, One};
+use std::fmt::Debug;
+use std::marker::PhantomData;
 use std::ops::{Add, Sub, Mul};
 use functions::{mod_add, mod_sub, mod_mul, mod_inverse};
 
-/// Until const-generics are available, this macro is used to define an ad-hoc type for any given
-/// modulus - long-term, a struct with a constant generic parameter makes more sense.
+/// Until const-generics are available, use types implementing this trait as a stand-in for
+/// an associated const on the `Modular` struct.
+trait Modulus: Clone + Copy + Debug + PartialEq + Eq {
+    fn modulus() -> u64;
+}
+
+/// A utility macro used to easily define a struct which implements `Modulus`
+#[macro_export]
 macro_rules! define_modulus {
     ($t: ident, $mod: expr) => {
-
         #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-        struct $t {
-            pub value: u64,
-        }
+        struct $t {}
 
-        impl $t {
-            pub fn inverse(&self) -> Option<$t> {
-                mod_inverse(self.value, $mod).map(|x| $t { value: x })
+        impl Modulus for $t {
+            fn modulus() -> u64 {
+                $mod
             }
         }
+    }
+}
 
-        impl From<u64> for $t {
-            fn from(value: u64) -> $t {
-                $t { value: value % $mod }
-            }
-        }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Modular<T: Modulus> {
+    pub value: u64,
+    modulus: PhantomData<T>,
+}
 
-        impl Into<u64> for $t {
-            fn into(self) -> u64 {
-                self.value
-            }
-        }
+impl<T: Modulus> Modular<T> {
+    pub fn inverse(&self) -> Option<Modular<T>> {
+        mod_inverse(self.value, T::modulus()).map(|x| Modular::from(x))
+    }
+}
 
-        impl Zero for $t {
-            fn zero() -> $t {
-                $t { value: 0 }
-            }
+impl<T: Modulus> From<u64> for Modular<T> {
+    fn from(value: u64) -> Modular<T> {
+        Modular { value: value % T::modulus(), modulus: PhantomData }
+    }
+}
 
-            fn is_zero(&self) -> bool {
-                self.value == 0
-            }
-        }
+impl<T: Modulus> Into<u64> for Modular<T> {
+    fn into(self) -> u64 {
+        self.value
+    }
+}
 
-        impl One for $t {
-            fn one() -> $t {
-                $t { value: 1 }
-            }
+impl<T: Modulus> Zero for Modular<T> {
+    fn zero() -> Modular<T> {
+        Modular::from(0)
+    }
 
-            fn is_one(&self) -> bool {
-                self.value == 1
-            }
-        }
+    fn is_zero(&self) -> bool {
+        self.value == 0
+    }
+}
 
-        impl Add for $t {
-            type Output = $t;
+impl<T: Modulus> One for Modular<T> {
+    fn one() -> Modular<T> {
+        Modular::from(1)
+    }
 
-            fn add(self, rhs: $t) -> $t {
-                $t { value: mod_add(self.value, rhs.value, $mod) }
-            }
-        }
+    fn is_one(&self) -> bool {
+        self.value == 1
+    }
+}
 
-        impl Sub for $t {
-            type Output = $t;
+impl<T: Modulus> Add for Modular<T> {
+    type Output = Modular<T>;
 
-            fn sub(self, rhs: $t) -> $t {
-                $t { value: mod_sub(self.value, rhs.value, $mod) }
-            }
-        }
+    fn add(self, rhs: Modular<T>) -> Modular<T> {
+        Modular::from(mod_add(self.value, rhs.value, T::modulus()))
+    }
+}
 
-        impl Mul for $t {
-            type Output = $t;
+impl<T: Modulus> Sub for Modular<T> {
+    type Output = Modular<T>;
 
-            fn mul(self, rhs: $t) -> $t {
-                $t { value: mod_mul(self.value, rhs.value, $mod) }
-            }
-        }
+    fn sub(self, rhs: Modular<T>) -> Modular<T> {
+        Modular::from(mod_sub(self.value, rhs.value, T::modulus()))
+    }
+}
+
+impl<T: Modulus> Mul for Modular<T> {
+    type Output = Modular<T>;
+
+    fn mul(self, rhs: Modular<T>) -> Modular<T> {
+        Modular::from(mod_mul(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -82,9 +99,13 @@ macro_rules! define_modulus {
 mod tests {
     use super::*;
 
-    define_modulus!(Mod2, 2);
-    define_modulus!(Mod13, 13);
-    define_modulus!(Mod101, 101);
+    define_modulus!(M2, 2);
+    define_modulus!(M13, 13);
+    define_modulus!(M101, 101);
+
+    type Mod2 = Modular<M2>;
+    type Mod13 = Modular<M13>;
+    type Mod101 = Modular<M101>;
 
     #[test]
     fn test_definition() {
