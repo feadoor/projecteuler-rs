@@ -1,6 +1,27 @@
 //! Simple functions dealing with modular arithmetic
 
+use std::cmp::Ordering;
 use std::mem::swap;
+
+/// Normalise a with respect to the given modulus.
+///
+/// # Examples
+///
+/// ```
+/// use modular_arithmetic::normalise;
+///
+/// assert_eq!(normalise(5, 7), 5);
+/// assert_eq!(normalise(7, 7), 0);
+/// assert_eq!(normalise(100, 7), 2);
+/// ```
+#[inline(always)]
+pub fn normalise(a: u64, m: u64) -> u64 {
+    match a.cmp(&m) {
+        Ordering::Greater => a % m,
+        Ordering::Equal => 0,
+        Ordering::Less => a,
+    }
+}
 
 /// Calculate a + b with respect to the given modulus.
 ///
@@ -14,8 +35,9 @@ use std::mem::swap;
 /// assert_eq!(mod_add(5, 7, 11), 1);
 /// assert_eq!(mod_add(2, 100_000_000_000_006, 100_000_000_000_007), 1);
 /// ```
+#[inline(always)]
 pub fn mod_add(a: u64, b: u64, m: u64) -> u64 {
-    (a + b) % m
+    normalise(a + b, m)
 }
 
 /// Calculate a - b with respect to the given modulus.
@@ -30,8 +52,13 @@ pub fn mod_add(a: u64, b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_sub(5, 7, 11), 9);
 /// assert_eq!(mod_sub(2, 100_000_000_000_006, 100_000_000_000_007), 3);
 /// ```
+#[inline(always)]
 pub fn mod_sub(a: u64, b: u64, m: u64) -> u64 {
-    (a + m - b) % m
+    match a.cmp(&b) {
+        Ordering::Less => a + m - b,
+        Ordering::Equal => 0,
+        Ordering::Greater => normalise(a - b, m)
+    }
 }
 
 /// Calcuate a * b with respect to the given modulus, without overflowing for large moduli. Uses
@@ -47,9 +74,10 @@ pub fn mod_sub(a: u64, b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_mul(2, 8, 15), 1);
 /// assert_eq!(mod_mul(853_467, 21_660_421_200_929, 100_000_000_000_007), 54701091976795);
 /// ```
+#[inline(always)]
 pub fn mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
     match a.checked_mul(b) {
-        Some(x) => x % m,
+        Some(x) => normalise(x, m),
         None => {
             if a > b { swap(&mut a, &mut b); }
             b = b % m;
@@ -79,9 +107,10 @@ pub fn mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_exp(2, 4, 15), 1);
 /// assert_eq!(mod_exp(73, 101, 991), 456);
 /// ```
+#[inline(always)]
 pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut answer = 1;
-    let mut worker = base % modulus;
+    let mut worker = normalise(base, modulus);
     while exp != 0 {
         if exp & 1 == 1 {
             answer = mod_mul(answer, worker, modulus);
@@ -110,6 +139,7 @@ pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
 /// assert_eq!(mod_inverse(5, 7), Some(3));
 /// assert_eq!(mod_inverse(6, 7), Some(6));
 /// ```
+#[inline(always)]
 pub fn mod_inverse(a: u64, m: u64) -> Option<u64> {
     let (mut u1, mut u3) = (1, a);
     let (mut v1, mut v3) = (0, m);

@@ -1,6 +1,6 @@
 //! A struct which behaves like a number constrained by a fixed modulus.
 
-use modular::Modular;
+use functions::{mod_add, mod_sub, mod_mul, mod_inverse, normalise};
 use numeric_traits::{Zero, One};
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -15,43 +15,37 @@ pub trait Modulus: Clone + Copy + Debug + PartialEq + Eq {
 /// A utility macro used to easily define a struct which implements `Modulus`
 #[macro_export]
 macro_rules! define_modulus {
-    ($t: ident, $mod: expr) => {
+    ($t:ident, $m:ident, $mod:expr) => {
         #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-        struct $t {}
+        struct $m {}
 
-        impl Modulus for $t {
+        impl Modulus for $m {
             fn modulus() -> u64 {
                 $mod
             }
         }
+
+        type $t = FixedModular<$m>;
     }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct FixedModular<T: Modulus> {
-    modular: Modular,
+    pub value: u64,
     modulus: PhantomData<T>,
 }
 
 impl<T: Modulus> FixedModular<T> {
 
-    pub fn value(&self) -> u64 {
-        self.modular.value()
-    }
-
-    pub fn modulus(&self) -> u64 {
-        T::modulus()
-    }
-
     pub fn inverse(&self) -> Option<FixedModular<T>> {
-        self.modular.inverse().map(|x| Self::from(x.value()))
+        mod_inverse(self.value, T::modulus()).map(|x| Self::from(x))
     }
 }
 
 impl<T: Modulus> From<u64> for FixedModular<T> {
     fn from(value: u64) -> FixedModular<T> {
         FixedModular {
-            modular: Modular::new(value, T::modulus()),
+            value: normalise(value, T::modulus()),
             modulus: PhantomData,
         }
     }
@@ -59,7 +53,7 @@ impl<T: Modulus> From<u64> for FixedModular<T> {
 
 impl<T: Modulus> Into<u64> for FixedModular<T> {
     fn into(self) -> u64 {
-        self.modular.value()
+        self.value
     }
 }
 
@@ -70,7 +64,7 @@ impl<T: Modulus> Zero for FixedModular<T> {
     }
 
     fn is_zero(&self) -> bool {
-        self.value() == 0
+        self.value == 0
     }
 }
 
@@ -81,7 +75,7 @@ impl<T: Modulus> One for FixedModular<T> {
     }
 
     fn is_one(&self) -> bool {
-        self.value() == 1
+        self.value == 1
     }
 }
 
@@ -89,7 +83,7 @@ impl<T: Modulus> Add for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn add(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from((self.modular + rhs.modular).value())
+        Self::from(mod_add(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -97,7 +91,7 @@ impl<T: Modulus> Sub for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn sub(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from((self.modular - rhs.modular).value())
+        Self::from(mod_sub(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -105,7 +99,7 @@ impl<T: Modulus> Mul for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn mul(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from((self.modular * rhs.modular).value())
+        Self::from(mod_mul(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -113,27 +107,23 @@ impl<T: Modulus> Mul for FixedModular<T> {
 mod tests {
     use super::*;
 
-    define_modulus!(M2, 2);
-    define_modulus!(M13, 13);
-    define_modulus!(M101, 101);
-
-    type Mod2 = FixedModular<M2>;
-    type Mod13 = FixedModular<M13>;
-    type Mod101 = FixedModular<M101>;
+    define_modulus!(Mod2, M2, 2);
+    define_modulus!(Mod13, M13, 13);
+    define_modulus!(Mod101, M101, 101);
 
     #[test]
     fn test_definition() {
-        assert_eq!(Mod2::from(0).value(), 0);
-        assert_eq!(Mod2::from(1).value(), 1);
-        assert_eq!(Mod2::from(7).value(), 1);
+        assert_eq!(Mod2::from(0).value, 0);
+        assert_eq!(Mod2::from(1).value, 1);
+        assert_eq!(Mod2::from(7).value, 1);
 
-        assert_eq!(Mod13::from(0).value(), 0);
-        assert_eq!(Mod13::from(6).value(), 6);
-        assert_eq!(Mod13::from(15).value(), 2);
+        assert_eq!(Mod13::from(0).value, 0);
+        assert_eq!(Mod13::from(6).value, 6);
+        assert_eq!(Mod13::from(15).value, 2);
 
-        assert_eq!(Mod101::from(0).value(), 0);
-        assert_eq!(Mod101::from(45).value(), 45);
-        assert_eq!(Mod101::from(306).value(), 3);
+        assert_eq!(Mod101::from(0).value, 0);
+        assert_eq!(Mod101::from(45).value, 45);
+        assert_eq!(Mod101::from(306).value, 3);
     }
 
     #[test]

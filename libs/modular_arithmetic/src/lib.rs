@@ -6,9 +6,7 @@ extern crate numeric_traits;
 mod crt;
 mod fixed_modular;
 mod functions;
-mod modular;
 
 pub use crt::*;
 pub use fixed_modular::*;
 pub use functions::*;
-pub use modular::*;

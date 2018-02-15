@@ -12,6 +12,7 @@ use numeric_traits::{Algebraic, DivRem, Saturating};
 /// assert_eq!(gcd(89, 55), 1);
 /// assert_eq!(gcd(1001, 770), 77);
 /// ```
+#[inline(always)]
 pub fn gcd<T: Algebraic + DivRem + Copy>(mut x: T, mut y: T) -> T {
     let mut tmp;
     while y != T::zero() {
@@ -32,6 +33,7 @@ pub fn gcd<T: Algebraic + DivRem + Copy>(mut x: T, mut y: T) -> T {
 /// assert_eq!(lcm(89, 55), 4895);
 /// assert_eq!(lcm(1001, 770), 10010);
 /// ```
+#[inline(always)]
 pub fn lcm<T: Algebraic + DivRem + Copy>(x: T, y: T) -> T {
     x * (y / gcd(x, y))
 }
@@ -50,6 +52,7 @@ pub fn lcm<T: Algebraic + DivRem + Copy>(x: T, y: T) -> T {
 /// assert_eq!(integer_sqrt(24u64), 4);
 /// assert_eq!(integer_sqrt(25u64), 5);
 /// ```
+#[inline(always)]
 pub fn integer_sqrt<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> T {
 
     let mut sqrt: T = From::from((n.into() as f64).sqrt().floor() as u64);
@@ -77,6 +80,7 @@ pub fn integer_sqrt<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From
 /// assert!(!is_square(5u64));
 /// assert!(!is_square(6u64));
 /// ```
+#[inline(always)]
 pub fn is_square<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> bool {
     let sqrt = integer_sqrt(n);
     n == sqrt * sqrt
@@ -96,6 +100,7 @@ pub fn is_square<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u6
 /// assert_eq!(binom(5, 4), 5);
 /// assert_eq!(binom(5, 5), 1);
 /// ```
+#[inline(always)]
 pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T {
     // Deal with easy cases, and make n the smaller of the two choices for n.
     if n > m { return T::zero(); }
@@ -126,6 +131,7 @@ pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T 
 ///
 /// assert_eq!(pow(13, 7), 62_748_517);
 /// ```
+#[inline(always)]
 pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
 
     // Set up somewhere to hold the final answer.

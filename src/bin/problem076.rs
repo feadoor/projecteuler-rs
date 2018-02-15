@@ -17,7 +17,7 @@ use number_theory::partition_numbers;
 
 /// Find the nth partition number.
 fn solve(n: usize) -> u64 {
-    partition_numbers().skip(n).next().unwrap() - 1
+    partition_numbers::<u64>().skip(n).next().unwrap() - 1
 }
 
 /// Solve the problem, returning the answer as a `String`
