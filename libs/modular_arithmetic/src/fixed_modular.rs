@@ -1,6 +1,6 @@
 //! A struct which behaves like a number constrained by a fixed modulus.
 
-use functions::{mod_add, mod_sub, mod_mul, mod_inverse, normalise};
+use internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
 use numeric_traits::{Zero, One};
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -38,14 +38,14 @@ pub struct FixedModular<T: Modulus> {
 impl<T: Modulus> FixedModular<T> {
 
     pub fn inverse(&self) -> Option<FixedModular<T>> {
-        mod_inverse(self.value, T::modulus()).map(|x| Self::from(x))
+        _mod_inverse(self.value, T::modulus()).map(|x| Self::from(x))
     }
 }
 
 impl<T: Modulus> From<u64> for FixedModular<T> {
     fn from(value: u64) -> FixedModular<T> {
         FixedModular {
-            value: normalise(value, T::modulus()),
+            value: _normalise(value, T::modulus()),
             modulus: PhantomData,
         }
     }
@@ -83,7 +83,7 @@ impl<T: Modulus> Add for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn add(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from(mod_add(self.value, rhs.value, T::modulus()))
+        Self::from(_mod_add(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -91,7 +91,7 @@ impl<T: Modulus> Sub for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn sub(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from(mod_sub(self.value, rhs.value, T::modulus()))
+        Self::from(_mod_sub(self.value, rhs.value, T::modulus()))
     }
 }
 
@@ -99,7 +99,7 @@ impl<T: Modulus> Mul for FixedModular<T> {
     type Output = FixedModular<T>;
 
     fn mul(self, rhs: FixedModular<T>) -> FixedModular<T> {
-        Self::from(mod_mul(self.value, rhs.value, T::modulus()))
+        Self::from(_mod_mul(self.value, rhs.value, T::modulus()))
     }
 }
 

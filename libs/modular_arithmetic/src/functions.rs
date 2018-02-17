@@ -1,27 +1,6 @@
-//! Simple functions dealing with modular arithmetic
+//! Simple functions relating to modular arithmetic.
 
-use std::cmp::Ordering;
-use std::mem::swap;
-
-/// Normalise a with respect to the given modulus.
-///
-/// # Examples
-///
-/// ```
-/// use modular_arithmetic::normalise;
-///
-/// assert_eq!(normalise(5, 7), 5);
-/// assert_eq!(normalise(7, 7), 0);
-/// assert_eq!(normalise(100, 7), 2);
-/// ```
-#[inline(always)]
-pub fn normalise(a: u64, m: u64) -> u64 {
-    match a.cmp(&m) {
-        Ordering::Greater => a % m,
-        Ordering::Equal => 0,
-        Ordering::Less => a,
-    }
-}
+use internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
 
 /// Calculate a + b with respect to the given modulus.
 ///
@@ -37,7 +16,7 @@ pub fn normalise(a: u64, m: u64) -> u64 {
 /// ```
 #[inline(always)]
 pub fn mod_add(a: u64, b: u64, m: u64) -> u64 {
-    normalise(a + b, m)
+    _mod_add(_normalise(a, m), _normalise(b, m), m)
 }
 
 /// Calculate a - b with respect to the given modulus.
@@ -54,11 +33,7 @@ pub fn mod_add(a: u64, b: u64, m: u64) -> u64 {
 /// ```
 #[inline(always)]
 pub fn mod_sub(a: u64, b: u64, m: u64) -> u64 {
-    match a.cmp(&b) {
-        Ordering::Less => a + m - b,
-        Ordering::Equal => 0,
-        Ordering::Greater => normalise(a - b, m)
-    }
+    _mod_sub(_normalise(a, m), _normalise(b, m), m)
 }
 
 /// Calcuate a * b with respect to the given modulus, without overflowing for large moduli. Uses
@@ -75,25 +50,8 @@ pub fn mod_sub(a: u64, b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_mul(853_467, 21_660_421_200_929, 100_000_000_000_007), 54701091976795);
 /// ```
 #[inline(always)]
-pub fn mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
-    match a.checked_mul(b) {
-        Some(x) => normalise(x, m),
-        None => {
-            if a > b { swap(&mut a, &mut b); }
-            b = b % m;
-            let bits_per_loop = m.leading_zeros();
-            let mask = (1 << bits_per_loop) - 1;
-            let mut result = 0;
-
-            while a > 0 {
-                if a & mask != 0 { result = (result + b * (a & mask)) % m; }
-                a >>= bits_per_loop;
-                b = (b << bits_per_loop) % m;
-            }
-
-            result
-        }
-    }
+pub fn mod_mul(a: u64, b: u64, m: u64) -> u64 {
+    _mod_mul(_normalise(a, m), _normalise(b, m), m)
 }
 
 /// Calculate `base ^ exp` with respect to the given modulus.
@@ -110,13 +68,13 @@ pub fn mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
 #[inline(always)]
 pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut answer = 1;
-    let mut worker = normalise(base, modulus);
+    let mut worker = _normalise(base, modulus);
     while exp != 0 {
         if exp & 1 == 1 {
-            answer = mod_mul(answer, worker, modulus);
+            answer = _mod_mul(answer, worker, modulus);
         }
         exp >>= 1;
-        if exp != 0 { worker = mod_mul(worker, worker, modulus) };
+        if exp != 0 { worker = _mod_mul(worker, worker, modulus) };
     }
 
     answer
@@ -141,26 +99,7 @@ pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
 /// ```
 #[inline(always)]
 pub fn mod_inverse(a: u64, m: u64) -> Option<u64> {
-    let (mut u1, mut u3) = (1, a);
-    let (mut v1, mut v3) = (0, m);
-    let mut odd_iterations = false;
-
-    while v3 != 0 {
-        let q = u3 / v3;
-
-        u1 = u1 + q * v1;
-        u3 = u3 - q * v3;
-        swap(&mut u1, &mut v1);
-        swap(&mut u3, &mut v3);
-
-        odd_iterations = !odd_iterations;
-    }
-
-    if u3 == 1 {
-        if odd_iterations { Some(m - u1) } else { Some(u1) }
-    } else {
-        None
-    }
+    _mod_inverse(a, m)
 }
 
 #[cfg(test)]

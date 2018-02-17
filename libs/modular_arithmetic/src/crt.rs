@@ -1,7 +1,7 @@
 //! A small module allowing computations based on the Chinese Remainder Theorem.
 
 use number_theory::gcd;
-use functions::{mod_inverse, mod_add, mod_sub, mod_mul};
+use internals::{_mod_inverse, _mod_add, _mod_sub, _mod_mul};
 
 /// A structure representing a CRT-style constraint.
 #[derive(PartialEq, Eq, Debug)]
@@ -59,15 +59,15 @@ pub fn crt(constraints: &[Constraint]) -> Constraint {
         // a + kgr == b (mod gs). This is k = ((b - a) / g) * r_inv (mod s)
         let mut classes = Vec::new();
         let modulus = g * r * s;
-        let r_inv = mod_inverse(r, s);
+        let r_inv = _mod_inverse(r, s);
 
         if r_inv.is_some() {
             for &res_a in &con_a.residues {
                 for &res_b in &con_b.residues {
-                    let difference = mod_sub(res_b, res_a, modulus);
+                    let difference = _mod_sub(res_b, res_a, modulus);
                     if difference % g == 0 {
-                        let coeff = mod_mul(r_inv.unwrap(), r, modulus);
-                        let class = mod_add(res_a, mod_mul(coeff, difference, modulus), modulus);
+                        let coeff = _mod_mul(r_inv.unwrap(), r, modulus);
+                        let class = _mod_add(res_a, _mod_mul(coeff, difference, modulus), modulus);
                         classes.push(class);
                     }
                 }
