@@ -9,6 +9,7 @@ interleave = "1.0.1"
 itertools = "0.5.2"
 num = "0.1.40"
 permutohedron = "0.2.2"
+petgraph = "0.4.12"
 rustc-serialize = "0.3"
 
 continued_fractions = { path = "./libs/continued_fractions" }
