@@ -54,7 +54,7 @@ fn attempt_graph(passcode_attempts: &[String]) -> Graph<u8, ()> {
     attempt_graph
 }
 
-/// Find the index of the first partition number divisible by `MODULUS`
+/// Find the shortest passcode consistent with the given attempts
 fn solve(passcode_attempts: &[String]) -> String {
 
     // Create a graph of attempts

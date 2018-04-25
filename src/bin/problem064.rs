@@ -12,7 +12,7 @@ extern crate continued_fractions;
 use continued_fractions::PeriodicContinuedFraction;
 
 /// Find the number of square roots, up to the square root of the given number,
-/// which have an off period in their continued fraction.
+/// which have an odd period in their continued fraction.
 fn solve(n: u64) -> usize {
     (2..n + 1)
         .map(PeriodicContinuedFraction::sqrt)
