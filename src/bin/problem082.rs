@@ -22,8 +22,8 @@ use std::path::Path;
 use petgraph::Graph;
 use petgraph::algo::dijkstra;
 
-/// Find the shortest path from the top-left to the bottom-right of the given grid, moving only
-/// down and to the right.
+/// Find the shortest path from the left to the right of the given grid, moving only up, down and
+/// to the right.
 fn solve(grid: &[Vec<u64>]) -> u64 {
 
     // Construct a graph with a node for each entry in the grid
