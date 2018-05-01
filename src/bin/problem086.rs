@@ -29,9 +29,9 @@ use itertools::FoldWhile::{Continue, Done};
 
 /// Find the number of pairs x, y with 1 ≤ x ≤ y ≤ lim and x + y = d
 fn pairs_with_sum(d: u64, lim: u64) -> u64 {
-    if d <= lim + 1 {
+    if d <= lim {
         d / 2
-    } else if d <= 2 * (lim + 1) {
+    } else if d <= 2 * lim {
         (2 * (lim + 1) - d) / 2
     } else {
         0
@@ -55,7 +55,7 @@ fn solve(target: u64) -> u64 {
         .enumerate()
         .fold_while(0, |acc, (idx, val)| {
             if acc >= target { Done(idx as u64) } else { Continue(acc + val) }
-        })
+        }).into_inner()
 }
 
 /// Solve the problem, returning the answer as a `String`
