@@ -4,7 +4,7 @@
 //!
 //! For an m × n grid, the number of sub-rectangles is given by T<sub>m</sub> × T<sub>n</sub>, where
 //! T<sub>k</sub> = k * (k + 1) / 2 is the kth triangular number.
-
+//!
 //! This is because there are T<sub>m</sub> choices for the projection of the rectangle onto the
 //! x-axis, similarly T<sub>n</sub> choices for the projection onto the y-axis, and these
 //! projections uniquely determing the rectangle.
