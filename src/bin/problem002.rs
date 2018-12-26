@@ -6,7 +6,7 @@
 //! sequence modulo 2. This means we can calculate the sum simply by taking every third Fibonacci
 //! number until the terms exceed four million and taking the sum as we go along.
 
-#![feature(generators, generator_trait)]
+#![feature(generators)]
 
 use generators::GeneratorIteratorAdapter;
 use itertools::Itertools;
