@@ -134,7 +134,7 @@ fn test_small_primes() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use iterator::SieveIterator;
+    use crate::iterator::SieveIterator;
 
     #[test]
     fn test_small_segmented_sieve() {
