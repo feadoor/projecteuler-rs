@@ -7,11 +7,8 @@
 //! concatenated product that has at least 9 digits, then check to see if it is pandigital or not.
 //! Then just remember the largest solution that is found during this process.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::pow;
+use projecteuler_rs::problem;
 
 /// Check whether the given number is pandigital.
 fn is_pandigital(mut num: u64) -> bool {

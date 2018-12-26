@@ -10,10 +10,7 @@
 //! by 2, then for each of those, consider all choices for the next digit which meets the condition
 //! for divisibility by 3, and so on until the whole number has been built.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate search;
-
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 /// A description of a step that can be taken in the search tree.

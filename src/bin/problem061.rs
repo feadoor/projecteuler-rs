@@ -11,10 +11,7 @@
 //! The search can be sped up by precomputing lists of four-digit polygonal numbers, so that they
 //! do not need to be recalculated every time we take a step.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate search;
-
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 fn digits_match(prev: u64, next: u64) -> bool {

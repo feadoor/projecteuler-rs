@@ -5,8 +5,7 @@
 //! There's no clever trick going on here. Just read in the names from file, sort them, calculate
 //! each name score and find the sum.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};

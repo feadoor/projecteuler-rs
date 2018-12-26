@@ -10,16 +10,11 @@
 //! many digits as the required level of accuracy, and then calculate the first decimal digits of
 //! this approximation.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate continued_fractions;
-extern crate number_theory;
-extern crate num;
-
 use continued_fractions::PeriodicContinuedFraction;
 use number_theory::is_square;
 use num::BigUint;
 use num::pow::pow;
+use projecteuler_rs::problem;
 
 /// Finds 10 to the power of `n`
 fn power_of_ten(n: usize) -> BigUint {

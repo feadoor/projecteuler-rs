@@ -8,14 +8,9 @@
 //! Use Euler's [Pentagonal number theorem](https://en.wikipedia.org/wiki/Pentagonal_number_theorem#Relation_with_partitions)
 //! to efficiently generate the sequence of partition numbers with respect to a given modulus.
 
-#[macro_use]
-extern crate projecteuler_rs;
-#[macro_use]
-extern crate modular_arithmetic;
-extern crate number_theory;
-
-use modular_arithmetic::{Modulus, FixedModular};
+use modular_arithmetic::{Modulus, FixedModular, define_modulus};
 use number_theory::partition_numbers;
+use projecteuler_rs::problem;
 
 const MODULUS: u64 = 1_000_000;
 define_modulus!(ModInt, Mod, MODULUS);

@@ -11,12 +11,8 @@
 //! Finding k is easily accomplished using a binary search, and evaluating `f(k)` is a simple
 //! combinatorial problem.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-extern crate search;
-
 use number_theory::pow;
+use projecteuler_rs::problem;
 use search::binary_search;
 
 /// Calculate the number of digits used when writing the numbers from 1 to k.

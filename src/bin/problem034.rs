@@ -18,10 +18,7 @@
 //!
 //! Finally, remember to subtract 3 at the end, since 1 and 2 are not counted as solutions.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate search;
-
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 // The factorials of single digits.

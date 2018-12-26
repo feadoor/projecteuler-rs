@@ -13,15 +13,10 @@
 //! Finally, we only need to check the values of `b` for which `f(0) = b` is itself prime - this
 //! saves some meaningless iteration over `a` for such values of `b`.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
-extern crate number_theory;
-extern crate primesieve;
-
 use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the number of primes produced by n^2 + an + b for successive values n = 0, 1, 2, ...
 fn num_primes(a: i64, b: i64, sieve: &Sieve) -> usize {

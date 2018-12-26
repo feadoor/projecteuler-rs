@@ -16,11 +16,8 @@
 //! Doing this for each triangular number, and keeping track of the best rectangle so far, we will
 //! arrive at the answer.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
-
 use itertools::Itertools;
+use projecteuler_rs::problem;
 
 /// Calculate the nth triangular number
 fn triangle(n: u64) -> u64 {

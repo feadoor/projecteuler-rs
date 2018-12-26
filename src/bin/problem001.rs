@@ -16,8 +16,7 @@
 //! [arithmetic progression](https://en.wikipedia.org/wiki/Arithmetic_progression) and can be
 //! calculated by the usual formula.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Calculate the sum of the multiples of `n` below the given limit, using the formula for the sum
 /// of an arithmetic progression.

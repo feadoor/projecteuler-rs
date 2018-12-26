@@ -6,12 +6,9 @@
 //! a primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculations and summing the digits, keeping track of the best digital sum as we go.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::BigUint;
 use num::pow::pow;
+use projecteuler_rs::problem;
 
 /// Calculate the sum of the digits (in base 10) of the given number.
 fn sum_of_digits(x: BigUint) -> u64 {

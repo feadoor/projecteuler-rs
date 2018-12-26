@@ -19,21 +19,16 @@
 //! the product of the first 9 primes with at least 500 divisors. That means that we should sieve
 //! primes up to the square root of this product.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-extern crate number_theory;
-
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the first triangle number to have more than `n` divisors.
 fn solve(n: u64) -> u64 {
 
     // Find an upper bound on how large the first `m` such that `T(m)` has `n` divisors might be.
     let k = (n as f64).log(2.0) as usize;
-    let bound = Sieve::to_n_primes(k)
-        .iter()
+    let bound = Sieve::to_n_primes(k).iter()
         .take(k)
         .fold(1u64, |prod, p| prod.saturating_mul(p));
 

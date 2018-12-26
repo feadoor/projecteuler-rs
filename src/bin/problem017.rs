@@ -6,8 +6,7 @@
 //! how to say a number out loud. Once that's done, simply add up the lengths of each number from
 //! 1 to 1000.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 // Numbers below 20 are special, so store their lengths.
 const SMALL_LENS: &'static [usize; 21] =

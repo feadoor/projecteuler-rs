@@ -5,10 +5,8 @@
 //! Another easy one - just iterate over the possible groups of four numbers, calculate the
 //! products and keep track of the largest one.
 
-#[macro_use]
-extern crate projecteuler_rs;
-#[macro_use]
-extern crate itertools;
+use itertools::iproduct;
+use projecteuler_rs::problem;
 
 /// Find the largest product of `n` consecutive numbers in the grid. The grid is given as a two
 /// dimensional vector, and it is guaranteed that it will be square.

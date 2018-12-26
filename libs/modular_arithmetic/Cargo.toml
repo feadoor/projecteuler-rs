@@ -2,6 +2,7 @@
 name = "modular_arithmetic"
 version = "0.1.0"
 authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 number_theory = { path = "../number_theory" }

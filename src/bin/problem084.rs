@@ -9,10 +9,7 @@
 //! That means that we just need to code up the rules of movement, simulate running around the board
 //! for a large (10^6 or 10^7) number of turns, and count the squares that we landed on the most.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate rand;
-
+use projecteuler_rs::problem;
 use std::collections::HashMap;
 use rand::ThreadRng;
 use rand::distributions::{IndependentSample, Range};

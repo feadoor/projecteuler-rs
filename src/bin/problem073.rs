@@ -43,11 +43,8 @@
 //! Isolated values of functions defined by this style of recurrence relation can be computed
 //! quickly using the `mertens_recurrence` crate.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate mertens_recurrence;
-
 use mertens_recurrence::Recurrence;
+use projecteuler_rs::problem;
 
 /// Find the number of reduced fractions in the range (1/3, 1/2) with denominators up to the given
 /// limit.

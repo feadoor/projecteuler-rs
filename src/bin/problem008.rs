@@ -5,16 +5,13 @@
 //! Simply iterate over all groups of thirteen consecutive digits, calculating the products and
 //! keeping track of the best.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the largest product of `n` consecutive digits in the given array of digits.
 fn solve(digits: &[u8], n: usize) -> u64 {
     let mut best = 0;
     for idx in 0..digits.len() - n {
-        let product = digits[idx..idx + n]
-            .iter()
-            .fold(1, |prod, &x| prod * x as u64);
+        let product = digits[idx..idx + n].iter().map(|&x| x as u64).product();
         if product > best {
             best = product
         }
@@ -46,8 +43,7 @@ fn answer() -> String {
         05886116467109405077541002256983155200055935729725\
         71636269561882670428252483600823257530420752963450";
 
-    let digits: Vec<u8> = digits_str.as_bytes()
-        .iter()
+    let digits: Vec<u8> = digits_str.as_bytes().iter()
         .map(|x| x - b'0')
         .collect();
     solve(&digits, 13).to_string()

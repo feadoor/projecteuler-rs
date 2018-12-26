@@ -12,11 +12,8 @@
 //! 2<sup>k</sup> ≥ 1,000,000, and calculate the product of the smallest primes until it would
 //! exceed 1,000,000.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the value of n not exceeding the given limit for which n / ϕ(n) is maximised.
 fn solve(limit: u64) -> u64 {

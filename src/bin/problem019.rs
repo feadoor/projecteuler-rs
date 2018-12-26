@@ -10,8 +10,7 @@
 //! Then simply do this over a given range of months and count how many times the day at the start
 //! of the month was Sunday.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Returns how many days were in the given month in the given year, where 0 -> January,
 /// 1 -> February and so on.

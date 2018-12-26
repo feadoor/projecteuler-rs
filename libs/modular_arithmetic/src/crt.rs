@@ -1,7 +1,7 @@
 //! A small module allowing computations based on the Chinese Remainder Theorem.
 
 use number_theory::gcd;
-use internals::{_mod_inverse, _mod_add, _mod_sub, _mod_mul};
+use crate::internals::{_mod_inverse, _mod_add, _mod_sub, _mod_mul};
 
 /// A structure representing a CRT-style constraint.
 #[derive(PartialEq, Eq, Debug)]

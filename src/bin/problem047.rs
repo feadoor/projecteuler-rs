@@ -8,11 +8,8 @@
 //! To aid factorisation, pre-sieve a number of primes, and sieve more when we encounter a number
 //! that cannot be factorised with the current list of primes.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 // Factorise the number using the given sieve, expanding to a higher limit if necessary, and
 // return whether or not the number has at least n prime factors.

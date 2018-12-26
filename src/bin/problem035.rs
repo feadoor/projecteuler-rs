@@ -10,14 +10,9 @@
 //! which holds enough pre-computed prime numbers to do primality checking for each number we might
 //! encounter.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-extern crate number_theory;
-extern crate search;
-
-use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
+use primesieve::Sieve;
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 /// A description of a step that can be taken in the search tree.

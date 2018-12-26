@@ -9,8 +9,7 @@
 //! condition exactly when `(1000 - a)(1000 - b) = 500000`.The only factorisation which leads to a
 //! valid solution is then `500000 = 800 * 625` which directly gives `(a, b, c) = (200, 375, 425)`.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the first Pythagorean triplet with a + b + c = n, returning the product abc.
 fn solve(n: u64) -> u64 {

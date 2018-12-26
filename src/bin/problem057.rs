@@ -8,11 +8,8 @@
 //! Note that the problem statement does not consider the first expansion, 1/1, to be valid, so we
 //! should skip it.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate continued_fractions;
-
 use continued_fractions::PeriodicContinuedFraction;
+use projecteuler_rs::problem;
 
 /// Find how many of the first `num_expansions` expansions of the square root of `n` have more
 /// digits in the numerator than the denominator.

@@ -12,19 +12,15 @@
 //! We then perform a topological sort on this graph, and create the passcode from the vertices in
 //! order of the topological sort.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate petgraph;
-extern crate itertools;
-
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
+use itertools::Itertools;
 use petgraph::Graph;
 use petgraph::algo::toposort;
-use itertools::Itertools;
+use projecteuler_rs::problem;
 
 /// Create a graph representing the given passcode attempts
 fn attempt_graph(passcode_attempts: &[String]) -> Graph<u8, ()> {

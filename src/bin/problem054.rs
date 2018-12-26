@@ -13,8 +13,7 @@
 //!
 //! Then lexicographic ordering of these structures corresponds to ordering of poker hands.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 use std::cmp::Ordering;
 use std::collections::HashMap;

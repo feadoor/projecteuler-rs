@@ -9,16 +9,11 @@
 //! by `b`, and store the result in a `HashSet`. The number of elements in the `HashSet` at the
 //! end of it all is the answer.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
-extern crate number_theory;
-extern crate primesieve;
-
 use std::collections::HashSet;
 use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the number of distinct values a^b for 2 ≤ a ≤ `a_lim` and 2 ≤ b ≤ `b_lim`.
 fn solve(a_lim: u64, b_lim: u64) -> usize {

@@ -11,8 +11,7 @@
 //! The second of these quantites is always larger, so just calculate them directly and take the
 //! difference.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the difference between the sum of the squares of the first `n` natural numbers and the
 /// square of the sum of the first `n` natural numbers.

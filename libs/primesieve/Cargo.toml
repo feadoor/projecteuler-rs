@@ -2,6 +2,7 @@
 name = "primesieve"
 version = "0.2.0"
 authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 modular_arithmetic = { path = "../modular_arithmetic" }

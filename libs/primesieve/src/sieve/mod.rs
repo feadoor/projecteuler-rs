@@ -3,8 +3,8 @@
 
 mod primefuncs;
 
-use iterator;
-use segsieve::segmented_sieve;
+use crate::iterator;
+use crate::segsieve::segmented_sieve;
 
 const MODULUS: u64 = 240;
 

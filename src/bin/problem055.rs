@@ -5,11 +5,8 @@
 //! Simply check each number up to 10,000 to see if it is a Lychrel number, remembering to use
 //! arbitrary-precision integers since the numbers involved can grow very large.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::{BigUint, Num};
+use projecteuler_rs::problem;
 
 /// Calculates the result of reversing the digits of the given number.
 fn reverse(x: &BigUint) -> BigUint {

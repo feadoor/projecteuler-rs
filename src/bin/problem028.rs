@@ -23,8 +23,7 @@
 //!
 //! `(4n³ + 3n² + 8n - 9) / 6`
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the sum of the numbers on the diagonals of a spiral grid of size n.
 fn solve(n: u64) -> u64 {

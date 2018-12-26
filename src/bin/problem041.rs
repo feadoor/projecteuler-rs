@@ -6,13 +6,9 @@
 //! therefore only need to check the 7-digit pandigitals and smaller. Simply iterate over them in
 //! reverse order, checking each one for primality and stopping when we find one.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate permutohedron;
-extern crate primesieve;
-
 use permutohedron::LexicalPermutation;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Convert a vector of digits into an actual number.
 fn to_int(digits: &[u64]) -> u64 {

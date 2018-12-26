@@ -1,6 +1,6 @@
 //! A struct which behaves like a number constrained by a fixed modulus.
 
-use internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
+use crate::internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
 use numeric_traits::{Zero, One};
 use std::fmt::Debug;
 use std::marker::PhantomData;

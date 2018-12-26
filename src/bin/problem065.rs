@@ -4,17 +4,12 @@
 //!
 //! Simply calculate the 100th convergent and sum its digits - nothing more clever than that!
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate continued_fractions;
-extern crate itertools;
-#[macro_use]
-extern crate interleave;
-
 use std::iter::repeat;
+
 use continued_fractions::ContinuedFractionConvergents;
 use interleave::*;
 use itertools::Itertools;
+use projecteuler_rs::problem;
 
 /// Find the sum of the digits of the numerator of the given convergent of the continued fraction
 /// expansion of e.

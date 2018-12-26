@@ -81,8 +81,7 @@
 //!
 //! This is indeed a solution, and by construction, must be the maximal solution.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Solve the problem, returning the answer as a `String`
 fn answer() -> String {

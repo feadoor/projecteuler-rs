@@ -8,15 +8,12 @@
 //! Construct a graph, with vertices the entries of the matrix, and edges the legal moves between
 //! them (weighted appropriately) and simply run Dijkstra's algorithm to find the shortest path.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate petgraph;
-
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use petgraph::Graph;
 use petgraph::algo::dijkstra;
+use projecteuler_rs::problem;
 
 /// Find the shortest path from the top-left to the bottom-right of the given grid, moving in any
 /// of the four directions.

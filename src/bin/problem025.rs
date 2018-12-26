@@ -8,8 +8,7 @@
 //!
 //! `n * log_10(ϕ) > 1000 + log_10(√5) - 1`
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the index of the first Fibonacci number with at least n digits.
 fn solve(n: u64) -> u64 {

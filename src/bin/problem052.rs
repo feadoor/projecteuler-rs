@@ -11,8 +11,7 @@
 //! We can therefore just iterate up through the possible values of <i>x</i>, and checking the
 //! multiples of each one until we find a solution.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Convert the given number into a count of how many times each digit appears.
 fn to_digit_count(mut n: u64) -> [usize; 10] {

@@ -5,11 +5,8 @@
 //! There is nothing more clever to do here than to just calculate the continued fractions for each
 //! of the square roots, and count its period directly.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate continued_fractions;
-
 use continued_fractions::PeriodicContinuedFraction;
+use projecteuler_rs::problem;
 
 /// Find the number of square roots, up to the square root of the given number,
 /// which have an odd period in their continued fraction.

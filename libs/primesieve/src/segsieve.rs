@@ -3,9 +3,9 @@
 use std::cmp::min;
 use std::slice::from_raw_parts_mut;
 
-use iterator::SieveIterator;
-use segment::set_off;
-use wheel::Wheel30;
+use crate::iterator::SieveIterator;
+use crate::segment::set_off;
+use crate::wheel::Wheel30;
 
 const MODULUS: u64 = 240;
 const SEGMENT_LEN: usize = 32768;

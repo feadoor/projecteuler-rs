@@ -13,13 +13,9 @@
 //! The abundant numbers themselves can be found by brute force, using prime factorisation to
 //! calculate the sum of divisors.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-extern crate primesieve;
-
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Check whether n is a sum of two abundant numbers.
 fn is_sum_of_abundants(n: usize, abundants: &[bool]) -> bool {

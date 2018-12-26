@@ -10,11 +10,11 @@
 //! Collatz sequence is. Then, for larger numbers, when we reach a point in the sequence where the
 //! number has gone below its original value, we will already know how many steps remain.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the number below the given limit with the longest Collatz sequence.
 fn solve(limit: usize) -> usize {
+
     // A vector in which we keep track of the lengths of previously-seen sequence.
     let mut collatz_lens = vec![0; limit];
 

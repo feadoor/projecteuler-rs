@@ -5,12 +5,8 @@
 //! This problem is simply asking for the least common multiple (LCM) of the numbers 1, 2, ..., 20.
 //! This can be computed easily as `lcm(lcm(lcm(... (((2, 3), 4), 5), ...)))`
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::lcm;
-
+use projecteuler_rs::problem;
 
 /// Find the smallest number divisible by each of 2, 3, ..., limit.
 fn solve(limit: u64) -> u64 {

@@ -10,11 +10,8 @@
 //! described [here](https://en.wikipedia.org/wiki/Tree_of_primitive_Pythagorean_triples), and
 //! multiply up to non-primitive triples as well.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::primitive_pythag_triples;
+use projecteuler_rs::problem;
 
 /// Find the number of perimeters below the given limit for which there is exactly one right-angled
 /// triangle having the given perimeter.

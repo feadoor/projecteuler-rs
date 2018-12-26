@@ -15,11 +15,8 @@
 //! have a precomputed prime sieve. If it turns out that the sieve is not large enough, then we can
 //! increase the size as we go.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Check if the given number is prime using the given prime sieve, expanding the size of the prime
 /// sieve if necessary.

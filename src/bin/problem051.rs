@@ -14,14 +14,9 @@
 //! It is then just a case of checking all templates of a given length for an 8-prime family,
 //! increasing the length until one is found.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-extern crate number_theory;
-extern crate search;
-
-use primesieve::Sieve;
 use number_theory::{integer_sqrt, pow};
+use primesieve::Sieve;
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 /// A single symbol, either a digit or a wildcard, in a template string.

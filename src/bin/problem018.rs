@@ -11,8 +11,7 @@
 //! is the number in that cell, plus the greater of the two maximums from the cells directly above
 //! it.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 use std::cmp::max;
 

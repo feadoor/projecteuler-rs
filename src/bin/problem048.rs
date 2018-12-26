@@ -8,11 +8,8 @@
 //! Since the modulus here is larger than 2<sup>32</sup>, care must be taken that no intermediate
 //! multiplication ever results in overflow.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate modular_arithmetic;
-
 use modular_arithmetic::{mod_add, mod_exp};
+use projecteuler_rs::problem;
 
 /// Find the last 10 digits of the sum 1^1 + 2^2 + ... + n^n.
 fn solve(n: u64) -> u64 {

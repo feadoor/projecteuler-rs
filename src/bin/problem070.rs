@@ -17,12 +17,9 @@
 //!  - Checking, for n = p * q for each pair p, q, whether ϕ(n) is a permutation of n
 //!  - Keeping track of the smallest ratio n / ϕ(n) for solutions as they are found.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use std::f64;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Determine whether the two given numbers are permutations of one another.
 fn are_permutations(m: u64, n: u64) -> bool {

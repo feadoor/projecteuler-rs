@@ -1,6 +1,6 @@
 //! Simple functions relating to modular arithmetic.
 
-use internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
+use crate::internals::{_mod_add, _mod_sub, _mod_mul, _mod_inverse, _normalise};
 
 /// Calculate a + b with respect to the given modulus.
 ///

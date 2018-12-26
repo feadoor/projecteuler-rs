@@ -15,8 +15,7 @@
 //! To speed up the last of these steps, we can store in the hash table not only the number of cubes
 //! having a given set of digits, but also the smallest cube having those digits.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 use std::collections::HashMap;
 

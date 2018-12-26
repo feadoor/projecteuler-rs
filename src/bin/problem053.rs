@@ -16,8 +16,7 @@
 //! relation <sup>n</sup>C<sub>r+1</sub> =
 //! <sup>n</sup>C<sub>r</sub> × (<i>n</i> - <i>r</i>) / (<i>r</i> + 1)
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// A structure which will allow iteration over binomial coefficients.
 struct BinomialCoefficientsWithNumerator {

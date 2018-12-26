@@ -6,11 +6,8 @@
 //! prime, iteratively form the sums of it with successive primes, checking if each one is prime,
 //! and keeping track of the longest sequence seen so far.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the prime below n which can be written as the sum of the most successive primes.
 fn solve(n: u64) -> u64 {

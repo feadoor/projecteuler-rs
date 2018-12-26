@@ -4,8 +4,8 @@
 use modular_arithmetic::mod_exp;
 use number_theory::{gcd, pow};
 
-use segment;
-use sieve::Sieve;
+use crate::segment;
+use crate::sieve::Sieve;
 
 impl Sieve {
     /// Uses trial division to determine if the given number is prime.

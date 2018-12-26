@@ -6,40 +6,27 @@
 //! sequence modulo 2. This means we can calculate the sum simply by taking every third Fibonacci
 //! number until the terms exceed four million and taking the sum as we go along.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
+#![feature(generators, generator_trait)]
 
+use generators::GeneratorIteratorAdapter;
 use itertools::Itertools;
-
-/// A structure which will allow iteration over Fibonacci numbers.
-struct Fibonacci {
-    curr: u64,
-    next: u64,
-}
-
-impl Iterator for Fibonacci {
-    type Item = u64;
-
-    fn next(&mut self) -> Option<u64> {
-        let new_next = self.curr + self.next;
-        self.curr = self.next;
-        self.next = new_next;
-
-        Some(self.curr)
-    }
-}
+use projecteuler_rs::problem;
 
 /// Returns a Fibonacci sequence iterator starting 1, 1, 2, 3, ...
-fn fibonacci() -> Fibonacci {
-    Fibonacci { curr: 0, next: 1 }
+fn fibonacci() -> impl Iterator<Item = u64> {
+    GeneratorIteratorAdapter::of(|| {
+        let (mut a, mut b) = (0, 1);
+        loop {
+            let new_b = a + b;
+            a = b; b = new_b;
+            yield a
+        }
+    })
 }
 
 /// Find the sum of all even Fibonacci numbers below the given limit.
 fn solve(limit: u64) -> u64 {
-    fibonacci()
-        .skip(2)
-        .step(3)
+    fibonacci().skip(2).step(3)
         .take_while(|&x| x <= limit)
         .sum()
 }

@@ -9,13 +9,9 @@
 //! To iterate over the base-10 palindromes, we can simply iterate over all possible 'first halfs'
 //! of numbers, and create palindromes from them by reversing and gluing together.
 
-#[macro_use]
-extern crate projecteuler_rs;
-#[macro_use]
-extern crate itertools;
-extern crate number_theory;
-
+use itertools::iproduct;
 use number_theory::pow;
+use projecteuler_rs::problem;
 
 /// Check whether the given number is a binary palindrome.
 fn is_binary_palindrome(mut num: u64) -> bool {

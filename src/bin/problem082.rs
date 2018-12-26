@@ -12,15 +12,12 @@
 //! we will add two dummy nodes for the start and end - the start dummy can move into any cell in
 //! the left column, and the end dummy can be hit from any cell in the right column.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate petgraph;
-
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use petgraph::Graph;
 use petgraph::algo::dijkstra;
+use projecteuler_rs::problem;
 
 /// Find the shortest path from the left to the right of the given grid, moving only up, down and
 /// to the right.

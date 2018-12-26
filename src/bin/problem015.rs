@@ -6,11 +6,8 @@
 //! down, with 20 of each. The path is uniquely determined by choosing the 20 positions of the
 //! downward steps within the path. This is equal to the binomial coefficient `40 choose 20`
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::binom;
+use projecteuler_rs::problem;
 
 /// Find the `number of paths through a square grid of size `n`.
 fn solve(n: u64) -> u64 {

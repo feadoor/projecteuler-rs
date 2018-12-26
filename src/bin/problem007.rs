@@ -5,11 +5,8 @@
 //! There's nothing more to this than just sieving for the first 10001 primes and pulling out the
 //! one we want.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the `n`th prime number.
 fn solve(n: usize) -> u64 {

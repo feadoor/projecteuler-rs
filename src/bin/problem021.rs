@@ -19,12 +19,9 @@
 //!
 //! `max(4, e^γ * log(log(10000))) * 10000`
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use std::f64::consts;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Check whether n is amicable.
 fn is_amicable(n: u64, sieve: &Sieve) -> bool {

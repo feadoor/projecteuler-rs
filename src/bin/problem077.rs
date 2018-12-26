@@ -27,11 +27,8 @@
 //! After doing this process for all primes p below our upper bound, the first index with an entry
 //! over n is the answer.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Finds the first number that can be written as a sum of primes in at least the given number of
 /// ways.

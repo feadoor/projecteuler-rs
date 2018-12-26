@@ -13,8 +13,7 @@
 //! Then, the remainder of the permutation is the nth lexicographic permutation of the reamining
 //! digits, which can be computed iteratively using the same algorithm.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the nth lexicographic permutation of [0, 1, ..., m - 1].
 fn solve(mut n: usize, m: usize) -> Vec<usize> {

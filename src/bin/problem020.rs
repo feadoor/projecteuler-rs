@@ -6,11 +6,8 @@
 //! primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculation and summing the digits.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::BigUint;
+use projecteuler_rs::problem;
 
 /// Calculate n! (factorial).
 fn factorial(n: u64) -> BigUint {

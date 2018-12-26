@@ -12,11 +12,8 @@
 //! with fewer than the requisite number of digits - this will be sufficient to have found all
 //! solutions.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::BigUint;
+use projecteuler_rs::problem;
 
 /// Find the number of nth powers which contain exactly n digits.
 fn solve() -> usize {

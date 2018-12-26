@@ -27,12 +27,9 @@
 //! It is easy to brute-force solutions to this equation by iterating over `a, b` and checking if
 //! this gives an integer value for `d`.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use std::cmp::Ordering;
 use number_theory::gcd;
+use projecteuler_rs::problem;
 
 /// Find the denominator of the product of all 2-digit cancelling fractions.
 fn solve() -> u64 {

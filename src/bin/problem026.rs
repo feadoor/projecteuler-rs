@@ -26,15 +26,10 @@
 //! 5, since other values of `d` will be equivalent to smaller values of `d` which result from
 //! dividing out the 2 and 5.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
-extern crate number_theory;
-extern crate primesieve;
-
 use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the length of the cycle of the decimal 1/d, where d is coprime to 10. Requires a prime
 /// sieve capable of factorising numbers up to d (that is, containing primes up to the square root

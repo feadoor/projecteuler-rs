@@ -6,11 +6,8 @@
 //! primitive type, so we should use `BigUint` from the crate `num` instead. Then it's just a
 //! simple case of calculating the sum and extracting the first 10 digits.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::{BigUint, Num};
+use projecteuler_rs::problem;
 
 /// Find the first `n` digits of the sum of the given iterator of `BigUint`s.
 fn solve<I>(nums: I, n: usize) -> String

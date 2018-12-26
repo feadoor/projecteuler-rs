@@ -33,8 +33,7 @@
 //!
 //! After we have done this for all the allowed coin values, the answer is in `a[n]`.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Find the number of ways of making `n` pence using English coins.
 fn solve(n: usize) -> u64 {

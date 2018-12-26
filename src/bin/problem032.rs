@@ -13,10 +13,8 @@
 //! These two cases are small enough that we can just iterate over all choices for `a, b` and
 //! check if the resulting product is pandigital.
 
-#[macro_use]
-extern crate projecteuler_rs;
-
 use std::collections::HashSet;
+use projecteuler_rs::problem;
 
 /// Check whether the given numbers are together pandigital.
 fn is_pandigital(nums: &mut [u64]) -> bool {

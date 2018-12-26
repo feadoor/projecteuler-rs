@@ -13,9 +13,6 @@
 //! (constant time), then isolated values of g(n) can be calculated in time O(n^(3/4)) and memory
 //! O(n^(1/2)).
 
-#![allow(non_snake_case)]
-extern crate number_theory;
-
 use number_theory::integer_sqrt;
 
 /// A representation of a function defined using a Mertens-style recurrence relation.

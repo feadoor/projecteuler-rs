@@ -18,10 +18,7 @@
 //!
 //! Finally, remember to subtract 1 at the end, since it is not counted as a solution.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate search;
-
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 /// Fifth powers of single digits.

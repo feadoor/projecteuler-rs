@@ -18,14 +18,10 @@
 //! If we finish processing a particular m, and the solution count is now large enough, then we have
 //! found our answer.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-extern crate itertools;
-
 use number_theory::{is_square, integer_sqrt};
 use itertools::Itertools;
 use itertools::FoldWhile::{Continue, Done};
+use projecteuler_rs::problem;
 
 /// Find the number of pairs x, y with 1 ≤ x ≤ y ≤ lim and x + y = d
 fn pairs_with_sum(d: u64, lim: u64) -> u64 {

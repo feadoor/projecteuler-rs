@@ -6,12 +6,9 @@
 //! a primitive type, so we should use `BigUint`. The rest is just a matter of doing the
 //! calculation and summing the digits.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate num;
-
 use num::BigUint;
 use num::pow::pow;
+use projecteuler_rs::problem;
 
 /// Find the sum of the digits of base ^ exp.
 fn solve(base: u64, exp: usize) -> u64 {

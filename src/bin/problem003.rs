@@ -6,13 +6,9 @@
 //! to use trial division by primes up to at most the square root of the given number. Simply sieve
 //! for those primes, factorise the number, and return the largest factor.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-extern crate primesieve;
-
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 
 /// Find the largest prime factor of n.
 fn solve(n: u64) -> u64 {

@@ -16,15 +16,10 @@
 //! We can use the above process to generate the minimal solution for each D, and then simply keep
 //! track of the largest value of x that we find.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate continued_fractions;
-extern crate num;
-extern crate number_theory;
-
 use continued_fractions::{ContinuedFractionConvergents, PeriodicContinuedFraction};
 use num::{BigUint, Zero, One};
 use number_theory::is_square;
+use projecteuler_rs::problem;
 
 /// Finds the minimal solution (x, y) to the Pell equation with the given D.
 fn minimal_solution(d: u64) -> (BigUint, BigUint) {

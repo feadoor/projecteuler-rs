@@ -13,13 +13,9 @@
 //! concatenate to form another prime, rather than having to check each pair
 //! multiple times as we go through the search.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-extern crate search;
-
 use std::collections::{HashMap, HashSet};
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
 
 /// The result of concatenating the numbers `p` and `q`.

@@ -2,8 +2,6 @@
 //!
 //! Each solved problem has a high-level description of the solution in its documentation.
 
-extern crate ansi_term;
-
 use ansi_term::Colour::{Cyan, Green};
 use ansi_term::Style;
 

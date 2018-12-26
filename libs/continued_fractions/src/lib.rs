@@ -1,8 +1,5 @@
 //! A library relating to continued fraction expansions, particularly of square roots of integers.
 
-extern crate number_theory;
-extern crate num;
-
 use num::{BigUint, Zero, One};
 use number_theory::integer_sqrt;
 use std::mem::replace;

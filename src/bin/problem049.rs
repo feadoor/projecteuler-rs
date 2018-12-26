@@ -6,13 +6,10 @@
 //! for each prime, generate all of its permutations which are prime, and check for an aritmetic
 //! progression.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate permutohedron;
-extern crate primesieve;
-
 use permutohedron::Heap;
 use primesieve::Sieve;
+use projecteuler_rs::problem;
+
 use std::collections::HashSet;
 use std::iter::Iterator;
 

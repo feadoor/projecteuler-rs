@@ -12,11 +12,8 @@
 //! check if a number m is pentagonal is to see if 24m + 1 is a square whose square root is
 //! congruent to 5 modulo 6.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::integer_sqrt;
+use projecteuler_rs::problem;
 
 /// A function to check if a given number is pentagonal.
 fn is_pentagonal(m: u64) -> bool {

@@ -12,8 +12,7 @@
 //! The rest of the problem is then simply a case of XORing each character with the key again and
 //! finding the sum of the bytes.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};

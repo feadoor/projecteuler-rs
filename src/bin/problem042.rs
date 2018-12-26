@@ -12,15 +12,13 @@
 /// Now that we have a method for deciding if a number is triangular, all that's left is to go
 /// through the names, convert them to numbers and check each one.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::str::from_utf8;
+
 use number_theory::is_square;
+use projecteuler_rs::problem;
 
 /// Decide if a given number is triangular.
 fn is_triangular(n: u64) -> bool {

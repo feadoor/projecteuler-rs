@@ -9,11 +9,8 @@
 //! Simply iterate over all choices of d, calculate the above fraction, reduce it to its lowest
 //! terms and keep track of the best fraction we have found so far.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::gcd;
+use projecteuler_rs::problem;
 
 /// Find the numerator of the largest fraction with denominator not exceeding the given limit which
 /// is less than the given fraction a / b.

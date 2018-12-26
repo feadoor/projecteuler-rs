@@ -23,11 +23,8 @@
 //! For each solution we find, we can check whether the figurate number is also hexagonal, and if
 //! so, we have a solution.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-
 use number_theory::integer_sqrt;
+use projecteuler_rs::problem;
 
 /// A function to check if a given number is hexagonal.
 ///

@@ -6,8 +6,7 @@
 //! is a palindrome. As a simple optimisation, we can consider the larger products first, and
 //! break out of loops early when all future products will be smaller than the current best.
 
-#[macro_use]
-extern crate projecteuler_rs;
+use projecteuler_rs::problem;
 
 /// Check whether the given number is a palindrome.
 fn is_palindrome(num: u64) -> bool {
@@ -23,17 +22,11 @@ fn solve(lower: u64, upper: u64) -> u64 {
     // the future products will be too small.
     let mut best = 0;
     for x in (lower..upper).rev() {
-        if x * x < best {
-            break;
-        }
+        if x * x < best { break; }
         for y in (lower..x + 1).rev() {
             let product = x * y;
-            if product < best {
-                break;
-            }
-            if is_palindrome(product) {
-                best = product;
-            }
+            if product < best { break; }
+            if is_palindrome(product) { best = product; }
         }
     }
 

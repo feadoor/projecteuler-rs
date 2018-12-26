@@ -8,12 +8,8 @@
 //! Use Euler's [Pentagonal number theorem](https://en.wikipedia.org/wiki/Pentagonal_number_theorem#Relation_with_partitions)
 //! to efficiently generate the sequence of partition numbers.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate number_theory;
-extern crate itertools;
-
 use number_theory::partition_numbers;
+use projecteuler_rs::problem;
 
 /// Find the nth partition number.
 fn solve(n: usize) -> u64 {

@@ -9,11 +9,8 @@
 //! Solving the problem is then a case of starting at a tentative limit and increasing it until
 //! the first counterexample is found.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate primesieve;
-
 use primesieve::Sieve;
+use projecteuler_rs::problem;
 use std::collections::HashSet;
 
 /// Search for numbers violating the conjecture up to the given limit. To do so, we generate a list

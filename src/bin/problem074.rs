@@ -16,10 +16,8 @@
 //! Simply perform this algorithm until all chain lengths have been calculated, and keep track of
 //! how many chains of length 60 there are.
 
-#[macro_use]
-extern crate projecteuler_rs;
-
 use std::collections::HashSet;
+use projecteuler_rs::problem;
 
 fn factorial_digit_sum(mut n: usize) -> usize {
     const DIGIT_FACTORIALS: &'static [usize] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
