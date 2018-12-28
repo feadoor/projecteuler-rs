@@ -27,8 +27,9 @@ impl <G: Generator<Return = ()>> Iterator for GeneratorIteratorAdapter<G> {
 #[macro_export]
 macro_rules! yield_from {
     ($g:expr) => {
+        let mut generator = $g;
         loop {
-            match unsafe { $g.resume() } {
+            match unsafe { generator.resume() } {
                 GeneratorState::Yielded(x) => { yield x; },
                 GeneratorState::Complete(_) => { break; }
             }
