@@ -1,4 +1,4 @@
-//! [Problem 88 (Roman numerals)](https://projecteuler.net/problem=89)
+//! [Problem 89 (Roman numerals)](https://projecteuler.net/problem=89)
 //!
 //! # Solution detail
 //!
