@@ -18,52 +18,89 @@
 
 #![feature(generators, generator_trait)]
 
-use generators::{GeneratorIteratorAdapter, yield_from};
 use itertools::Itertools;
 use projecteuler_rs::problem;
-use std::ops::{Generator, GeneratorState};
+use search::{DepthFirstTree, Pruning};
 
 /// Important data about a sequence of numbers
 struct SequenceData {
+    /// The sum of the sequence
     sum: usize,
+    /// The product of the sequence
     product: usize,
+    /// The length of the sequence
     length: usize,
 }
 
-/// Generate all non-decreasing sequences of numbers whose product is at most the given limit.
-fn increasing_sequences<'a>(product_limit: usize) -> impl Iterator <Item=SequenceData> {
+/// The information held about the current sequence during a depth-first search of all sequences
+struct SequenceTree {
+    /// The sum of the current sequence
+    sum: usize,
+    /// The product of the current sequence
+    product: usize,
+    /// The values in the current sequence
+    values: Vec<usize>,
+    /// The maximum product of sequences to find
+    maximum_product: usize,
+}
 
-    #[derive(Clone, Copy)]
-    struct SearchEnv   { product_limit: usize, }
-    struct SearchState { last_value: usize, sum: usize, product: usize, length: usize, }
+/// A description of a step that can be taken in the search tree.
+struct SequenceTreeStep {
+    /// The next number to add to the sequence
+    next_value: usize,
+}
 
-    /// The state that arises from the current state by appending a single term to the sequence
-    fn next_state(state: &SearchState, term: usize) -> SearchState {
-        SearchState {
-            last_value: term,
-            sum: state.sum + term,
-            product: state.product * term,
-            length: state.length + 1,
+impl SequenceTree {
+
+    /// Construct a new `SequenceTree`
+    fn new(maximum_product: usize) -> SequenceTree {
+        SequenceTree {
+            sum: 0,
+            product: 1,
+            values: Vec::new(),
+            maximum_product: maximum_product,
         }
     }
 
-    // An inner function that facilitates the search by recursively calling itself with one more
-    // term added to the sequence each time.
-    fn nodes_beneath(state: SearchState, env: SearchEnv) -> Box<dyn Generator<Yield=SequenceData, Return=()>> {
-        Box::new(move || {
-            yield SequenceData { product: state.product, sum: state.sum, length: state.length };
-            for next_value in state.last_value.. {
-                let next_product = state.product * next_value;
-                if next_product <= env.product_limit {
-                    yield_from!(nodes_beneath(next_state(&state, next_value), env));
-                } else { break; }
-            }
-        })
+    fn last_value(&self) -> usize {
+        self.values.last().map(|x| *x).unwrap_or(2)
+    }
+}
+
+impl DepthFirstTree for SequenceTree {
+    type Step = SequenceTreeStep;
+    type Output = SequenceData;
+
+    /// Return all possible choices for the next value to add to the current sequence.
+    fn next_steps(&mut self) -> Vec<Self::Step> {
+        (self.last_value()..self.maximum_product / self.product + 1).map(|next_value| Self::Step {
+            next_value: next_value
+        }).collect()
     }
 
-    let initial_state = SearchState { last_value: 2, sum: 0, product: 1, length: 0 };
-    let env = SearchEnv { product_limit: product_limit };
-    GeneratorIteratorAdapter::of(nodes_beneath(initial_state, env))
+    /// Never prune this tree
+    fn should_prune(&mut self) -> Pruning {
+        Pruning::None
+    }
+
+    /// Add the next digit to the sequence
+    fn apply_step(&mut self, step: &Self::Step) {
+        self.sum += step.next_value;
+        self.product *= step.next_value;
+        self.values.push(step.next_value);
+    }
+
+    /// Remove the last digit from the sequence
+    fn revert_step(&mut self, step: &Self::Step) {
+        self.sum -= step.next_value;
+        self.product /= step.next_value;
+        self.values.pop();
+    }
+
+    /// Output the key stats of the current sequence
+    fn output(&mut self) -> Option<Self::Output> {
+        Some(SequenceData { sum: self.sum, product: self.product, length: self.values.len() })
+    }
 }
 
 /// Find the sum of the minimal product-sum numbers for 2 ≤ k ≤ `limit`
@@ -71,7 +108,7 @@ fn solve(limit: usize) -> usize {
 
     let mut minimal_products: Vec<_> = (0..limit + 1).map(|k| 2 * k).collect();
 
-    for data in increasing_sequences(2 * limit) {
+    for data in SequenceTree::new(2 * limit).into_iter() {
         let ones_to_add = data.product - data.sum;
         let k = data.length + ones_to_add;
         if k <= limit && minimal_products[k] > data.product {
