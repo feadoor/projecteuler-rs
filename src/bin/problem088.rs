@@ -16,8 +16,6 @@
 //! sequence, we don't actually need to generate the sequences themselves - just the sums, products
 //! and lengths will suffice.
 
-#![feature(generators, generator_trait)]
-
 use itertools::Itertools;
 use projecteuler_rs::problem;
 use search::{DepthFirstTree, Pruning};
