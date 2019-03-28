@@ -23,7 +23,8 @@
 //!
 //! So to solve the problem, simply generate all solutions to this Pell equation iteratively, find
 //! the corresponding perimeters, and stop when the solutions get too large. Remember not to count
-//! the solution that comes from `(x, y) = (2, 1)` - this is `(1, 1, 0)` which is not a real triangle.
+//! the solution that comes from `(x, y) = (2, 1)` - this is `(1, 1, 0)` which is not a real
+//! triangle.
 
 use itertools::iterate;
 use projecteuler_rs::problem;
