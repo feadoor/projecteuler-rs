@@ -7,8 +7,7 @@ Solutions to [Project Euler](https://projecteuler.net) problems in Rust.
 Build and run with the following command to run the solution to a particular problem:
 
 ```
-cargo build --release
-target/release/projecteuler-rs run <problem_number>
+cargo run --release --bin problemXXX
 ```
 
 There is a single test for each problem, simply checking that the answer is correct. To run the tests:
