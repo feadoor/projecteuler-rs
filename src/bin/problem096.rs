@@ -85,7 +85,7 @@ impl DepthFirstTree for SudokuTree {
     type Step = SudokuTreeStep;
     type Output = Grid;
 
-    /// Return all possible choices for the next value to add to the current sequence.
+    /// Return all possible choices for the next value to place in the grid.
     fn next_steps(&mut self) -> Vec<Self::Step> {
         self.empty_cell()
             .map(|cell| self.allowed_values(cell).iter().map(|&value| SudokuTreeStep { cell, value }).collect())
