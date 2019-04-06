@@ -16,7 +16,7 @@
 //! Specifically, since for large `k` it is true that `Fₖ` is approximately equal to `ϕᵏ / √5`,
 //! where `ϕ` is the golden ratio, we have the relationship:
 //!
-//! `First 9 digits of Fₖ ≈ 10^({k * log₁₀(ϕ) - log₁₀(√5)) * 10⁸`
+//! `First 9 digits of Fₖ ≈ 10^({k * log₁₀(ϕ) - log₁₀(√5)}) * 10⁸`
 //!
 //! In the above, the braces `{}` represent the fractional part. This is fast and accurate enough
 //! for our purposes.
