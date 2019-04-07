@@ -11,6 +11,10 @@ version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "combinatorics"
+version = "0.1.0"
+
+[[package]]
 name = "continued_fractions"
 version = "0.1.0"
 dependencies = [
@@ -46,10 +50,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "interleave"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "iterators"
-version = "0.1.0"
 
 [[package]]
 name = "itertools"
@@ -189,9 +189,9 @@ name = "projecteuler-rs"
 version = "0.1.0"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "combinatorics 0.1.0",
  "continued_fractions 0.1.0",
  "interleave 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "iterators 0.1.0",
  "itertools 0.7.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "mertens_recurrence 0.1.0",
  "modular_arithmetic 0.1.0",

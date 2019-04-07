@@ -7,7 +7,7 @@
 //! `d`. Among all such numbers, find the sum of all the primes - if that sum is non-zero, then add
 //! it to a running total and break; otherwise, move onto the next `k`.
 
-use iterators::{CombinationsWithReplacement, Permutations};
+use combinatorics::{CombinationsWithReplacement, each_permutation};
 use number_theory::{integer_sqrt, pow};
 use primesieve::Sieve;
 use projecteuler_rs::problem;
@@ -24,10 +24,12 @@ fn repeated_digit_prime_sum(n: usize, d: usize, k: usize, sieve: &Sieve) -> usiz
     let other_digits = (0..10).filter(|&x| x != d);
     for spares in other_digits.combinations_with_replacement(n - k) {
         let mut digits = vec![d; k]; digits.extend(spares);
-        for perm in digits.iter().map(|x| *x).permutations().filter(|ds| ds[0] != 0) {
-            let number = to_integer(&perm);
-            if sieve.is_prime(number as u64).unwrap() { result += number; }
-        }
+        each_permutation(&mut digits, |perm| {
+            if perm[0] != 0 {
+                let number = to_integer(&perm);
+                if sieve.is_prime(number as u64).unwrap() { result += number; }
+            }
+        });
     }
 
     result

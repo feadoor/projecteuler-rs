@@ -1,8 +1,10 @@
-//! Extra iterator adaptors and utility methods
+//! Utility methods and iterator adaptors of a combinatorial nature.
 
 mod combinations_with_replacement;
 mod lazy_buffer;
 mod permutations;
+
+pub use permutations::each_permutation;
 
 pub trait CombinationsWithReplacement : Iterator {
 
@@ -15,7 +17,7 @@ pub trait CombinationsWithReplacement : Iterator {
     /// # Examples
     ///
     /// ```
-    /// use iterators::CombinationsWithReplacement;
+    /// use combinatorics::CombinationsWithReplacement;
     ///
     /// let mut it = (1..5).combinations_with_replacement(3);
     ///
@@ -58,7 +60,7 @@ pub trait Permutations : Iterator {
     /// # Examples
     ///
     /// ```
-    /// use iterators::Permutations;
+    /// use combinatorics::Permutations;
     ///
     /// let numbers = vec![1, 1, 2, 3];
     /// let mut it = numbers.iter().map(|x| *x).permutations();

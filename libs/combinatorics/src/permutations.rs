@@ -23,25 +23,56 @@ impl<I: Iterator> Iterator for Permutations<I> where I::Item: Clone + Ord {
     fn next(&mut self) -> Option<Self::Item> {
         if self.first { self.first = false; }
         else if self.items.len() == 0 { return None; }
-        else {
-
-            // Find the smallest `j` such that all permutations beginning with `a₁, ... , aⱼ` have
-            // already been visited.
-            let mut j = self.items.len() - 2;
-            while j > 0 && self.items[j] >= self.items[j + 1] { j -= 1; }
-            if self.items[j] >= self.items[j + 1] { return None; }
-
-            // Find the index `k` so that `aₖ` goes immediately to the right of `aⱼ` and swap them
-            let mut k = self.items.len() - 1;
-            while self.items[j] >= self.items[k] { k -= 1; }
-            self.items.swap(j, k);
-
-            // Reverse the suffix of the resulting permutation
-            self.items[j + 1..].reverse()
-        }
-
+        else if !next_permutation(&mut self.items) { return None; }
         Some(self.items.clone())
     }
+}
+
+/// Execute the given function on each permutation of the input data.
+///
+/// # Examples
+///
+/// ```
+/// use combinatorics::each_permutation;
+///
+/// let mut perms: Vec<Vec<usize>> = vec![];
+/// let mut data = vec![1, 2, 3];
+///
+/// each_permutation(&mut data, |perm| perms.push(perm.to_vec()));
+///
+/// assert_eq!(perms, vec![
+///     vec![1, 2, 3],
+///     vec![1, 3, 2],
+///     vec![2, 1, 3],
+///     vec![2, 3, 1],
+///     vec![3, 1, 2],
+///     vec![3, 2, 1],
+/// ]);
+/// ```
+pub fn each_permutation<T: Ord, F: FnMut(&[T])>(data: &mut [T], mut f: F) {
+    data.sort(); f(data);
+    while next_permutation(data) {
+        f(data);
+    }
+}
+
+/// Advance the input slice to the next lexicographical permutation.
+fn next_permutation<T: Ord>(data: &mut [T]) -> bool {
+
+    // Find the smallest `j` such that all permutations beginning with `a₁, ... , aⱼ` have
+    // already been visited.
+    let mut j = data.len() - 2;
+    while j > 0 && data[j] >= data[j + 1] { j -= 1; }
+    if data[j] >= data[j + 1] { return false; }
+
+    // Find the index `k` so that `aₖ` goes immediately to the right of `aⱼ` and swap them
+    let mut k = data.len() - 1;
+    while data[j] >= data[k] { k -= 1; }
+    data.swap(j, k);
+
+    // Reverse the suffix of the resulting permutation
+    data[j + 1..].reverse();
+    true
 }
 
 #[cfg(test)]

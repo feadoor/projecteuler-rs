@@ -16,12 +16,12 @@ before_script:
 script:
 - |
   travis-cargo build -- --release &&
-  travis-cargo test -- --release -p projecteuler-rs -p primesieve -p number_theory -p search -p continued_fractions -p iterators -p mertens_recurrence -p modular_arithmetic -p numeric_traits
+  travis-cargo test -- --release -p projecteuler-rs -p primesieve -p number_theory -p search -p continued_fractions -p combinatorics -p mertens_recurrence -p modular_arithmetic -p numeric_traits
 after_success: |
   [ $TRAVIS_RUST_VERSION = nightly ] &&
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc --no-deps -p projecteuler-rs -p primesieve -p number_theory -p search -p continued_fractions -p iterators -p mertens_recurrence -p modular_arithmetic -p numeric_traits &&
+  cargo doc --no-deps -p projecteuler-rs -p primesieve -p number_theory -p search -p continued_fractions -p combinatorics -p mertens_recurrence -p modular_arithmetic -p numeric_traits &&
   echo "<meta http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | sed s/-/_/g | cut -d '/' -f 2`/index.html>" > target/doc/index.html &&
   git clone https://github.com/davisp/ghp-import &&
   ./ghp-import/ghp_import.py -n -m "Documentation for $TRAVIS_REPO_SLUG" target/doc &&

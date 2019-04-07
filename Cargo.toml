@@ -14,8 +14,8 @@ petgraph = "0.4.13"
 rand = "0.4"
 rustc-serialize = "0.3"
 
+combinatorics = { path = "./libs/combinatorics" }
 continued_fractions = { path = "./libs/continued_fractions" }
-iterators = { path = "./libs/iterators" }
 mertens_recurrence = { path = "./libs/mertens_recurrence" }
 modular_arithmetic = { path = "./libs/modular_arithmetic" }
 number_theory = { path = "./libs/number_theory" }
