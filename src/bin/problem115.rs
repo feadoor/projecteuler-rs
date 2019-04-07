@@ -23,7 +23,8 @@ use std::collections::VecDeque;
 
 use projecteuler_rs::problem;
 
-/// A structure capable of iterating over the recurrence relation used in this solution.
+/// A structure capable of iterating over the number of ways of tiling a row of length `n` with
+/// bricks of length at least `m`.
 struct BricksRecurrenceIterator {
     m: usize,
     values: VecDeque<usize>,
