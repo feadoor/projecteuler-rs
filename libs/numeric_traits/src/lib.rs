@@ -114,3 +114,35 @@ macro_rules! saturating_impl {
 }
 
 saturating_impl!(Saturating for isize usize i8 u8 i16 u16 i32 u32 i64 u64);
+
+/// A trait for numeric types which support checked operations.
+pub trait Checked: Sized {
+    /// Checked addition operator
+    fn checked_add(self, v: Self) -> Option<Self>;
+
+    /// Checked subtraction operator
+    fn checked_sub(self, v: Self) -> Option<Self>;
+
+    /// Checked multiplication operator
+    fn checked_mul(self, v: Self) -> Option<Self>;
+}
+
+macro_rules! checked_impl {
+    ($trait_name:ident for $($t:ty)*) => {$(
+        impl $trait_name for $t {
+            fn checked_add(self, v: Self) -> Option<Self> {
+                Self::checked_add(self, v)
+            }
+
+            fn checked_sub(self, v: Self) -> Option<Self> {
+                Self::checked_sub(self, v)
+            }
+
+            fn checked_mul(self, v: Self) -> Option<Self> {
+                Self::checked_mul(self, v)
+            }
+        }
+    )*}
+}
+
+checked_impl!(Checked for isize usize i8 u8 i16 u16 i32 u32 i64 u64);

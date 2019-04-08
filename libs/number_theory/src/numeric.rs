@@ -1,6 +1,6 @@
 //! Functions relating to basic numeric operations.
 
-use numeric_traits::{Algebraic, DivRem, Saturating};
+use numeric_traits::{Algebraic, DivRem, Saturating, Checked};
 
 /// Returns the greatest common divisor of two positive integers, computed with Euclid's algorithm.
 ///
@@ -149,6 +149,43 @@ pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
     ans
 }
 
+/// Returns the value of `x` to the power of `y`, using exponentiation by repeated squaring.
+/// Returns `None` if overflow occurs.
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::checked_pow;
+///
+/// assert_eq!(checked_pow(2u32, 4), Some(16));
+/// assert_eq!(checked_pow(2u32, 33), None);
+/// ```
+#[inline(always)]
+pub fn checked_pow<T: Algebraic + Checked + Copy>(x: T, mut y: u64) -> Option<T> {
+
+    // Set up somewhere to hold the final answer.
+    let mut ans = T::one();
+    let mut worker = Some(x);
+
+    // Use the repeated squaring algorithm.
+    while y != 0 {
+        if y & 1 == 1 {
+            if let Some(w) = worker {
+                match ans.checked_mul(w) {
+                    Some(res) => { ans = res; },
+                    None => { return None; },
+                }
+            } else {
+                return None;
+            }
+        }
+        y >>= 1;
+        if y != 0 { worker = worker.and_then(|x| x.checked_mul(x)); }
+    }
+
+    Some(ans)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -261,6 +298,21 @@ mod tests {
 
         for (x, y, result) in test_cases {
             assert_eq!(pow(x, y), result);
+        }
+    }
+
+    #[test]
+    fn test_checked_pow() {
+        let test_cases: Vec<(u64, u64, Option<u64>)> = vec![(1, 0, Some(1)),
+                                                            (1, 283764, Some(1)),
+                                                            (2, 10, Some(1024)),
+                                                            (5, 20, Some(95367431640625)),
+                                                            (10, 10, Some(10000000000)),
+                                                            (2, 65, None),
+                                                            (3, 50, None)];
+
+        for (x, y, result) in test_cases {
+            assert_eq!(checked_pow(x, y), result);
         }
     }
 }
