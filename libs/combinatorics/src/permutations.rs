@@ -21,7 +21,7 @@ impl<I: Iterator> Iterator for Permutations<I> where I::Item: Clone + Ord {
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.first { self.first = false; }
-        else if self.items.len() == 0 { return None; }
+        else if self.items.len() <= 1 { return None; }
         else if !next_permutation(&mut self.items) { return None; }
         Some(self.items.clone())
     }
@@ -83,6 +83,13 @@ mod tests {
     fn test_trivial_permutations() {
         let mut it = permutations(0..0);
         assert_eq!(it.next(), Some(vec![]));
+        assert_eq!(it.next(), None);
+    }
+
+    #[test]
+    fn test_singleton_permutations() {
+        let mut it = permutations(0..1);
+        assert_eq!(it.next(), Some(vec![0]));
         assert_eq!(it.next(), None);
     }
 

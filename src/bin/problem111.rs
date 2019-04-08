@@ -12,7 +12,7 @@ use number_theory::{integer_sqrt, pow};
 use primesieve::Sieve;
 use projecteuler_rs::problem;
 
-/// Turn the given `Vec` of digits into a number
+/// Turn the given digits into a number
 fn to_integer(digits: &[usize]) -> usize {
     digits.iter().fold(0, |acc, d| 10 * acc + d)
 }

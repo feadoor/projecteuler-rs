@@ -34,7 +34,7 @@ struct PartitionsTree<T: Clone> {
 }
 
 /// A step that can be taken in the search tree for partitions.
-struct ParitionsTreeStep<T: Clone> {
+struct PartitionsTreeStep<T: Clone> {
     /// The index of the set within the partition to add the element to
     index: usize,
     /// The value of the element to add
@@ -55,13 +55,13 @@ impl<T: Clone> PartitionsTree<T> {
 }
 
 impl<T: Clone> DepthFirstTree for PartitionsTree<T> {
-    type Step = ParitionsTreeStep<T>;
+    type Step = PartitionsTreeStep<T>;
     type Output = Vec<Vec<T>>;
 
     /// Return all possible choices for the position of the next element in the partition
     fn next_steps(&mut self) -> Vec<Self::Step> {
         (0..self.partition.len() + 1).map(|index|
-            ParitionsTreeStep { index, value: self.elements[self.depth].clone()
+            PartitionsTreeStep { index, value: self.elements[self.depth].clone()
         }).collect()
     }
 

@@ -8,7 +8,7 @@ mod subsets;
 
 pub use partitions::all_partitions;
 pub use permutations::each_permutation;
-pub use subsets::each_subset;
+pub use subsets::all_subsets;
 
 pub trait CombinationsWithReplacement : Iterator {
 
