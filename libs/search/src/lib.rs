@@ -221,7 +221,9 @@ impl<T: DepthFirstTree> Iterator for DepthFirstSearcher<T> {
             match step {
                 StartSearch => {
                     self.steps.push(EndSearch);
-                    self.add_child_steps();
+                    if let Pruning::None = self.tree.should_prune() {
+                        self.add_child_steps();
+                    }
                 },
                 EndSearch => {
                     if let Some(value) = self.tree.output() {

@@ -2,9 +2,13 @@
 
 mod combinations_with_replacement;
 mod lazy_buffer;
+mod partitions;
 mod permutations;
+mod subsets;
 
+pub use partitions::all_partitions;
 pub use permutations::each_permutation;
+pub use subsets::each_subset;
 
 pub trait CombinationsWithReplacement : Iterator {
 

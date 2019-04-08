@@ -13,6 +13,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "combinatorics"
 version = "0.1.0"
+dependencies = [
+ "search 0.1.0",
+]
 
 [[package]]
 name = "continued_fractions"

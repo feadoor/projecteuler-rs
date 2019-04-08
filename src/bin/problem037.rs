@@ -83,7 +83,7 @@ impl DepthFirstTree for TruncatablePrimeTree {
     /// right-truncatable primes when traversing the tree.
     fn should_prune(&mut self) -> Pruning {
         let value = self.value;
-        if !self.is_prime(value) {
+        if value > 0 && !self.is_prime(value) {
             Pruning::Above
         } else {
             Pruning::None

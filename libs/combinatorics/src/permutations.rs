@@ -1,8 +1,7 @@
-//! An iterator adaptor that provides all permutations of the elements of the input iterator, taking
-//! into account that there may be repeated elements in the input iterator.
+//! Functions and iterator adaptors relating to permutations.
 
-/// An iterator through the permutations of an input iterator, taking into account that elements
-/// may be equal.
+/// An iterator through the lexicographic permutations of an input iterator, taking into account
+/// that elements may be equal.
 pub struct Permutations<I: Iterator> {
     items: Vec<I::Item>,
     first: bool,
