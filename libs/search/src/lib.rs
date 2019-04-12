@@ -163,6 +163,13 @@ pub trait DepthFirstTree where Self: Sized {
     fn into_iter(self) -> DepthFirstSearcher<Self> {
         DepthFirstSearcher::new(self)
     }
+
+    /// Run this tree's complete search syncrhonously
+    fn run_search(self) -> Self {
+        let mut searcher = DepthFirstSearcher::new(self);
+        while let Some(_) = searcher.next() {}
+        searcher.return_ownership()
+    }
 }
 
 /// An enum for the different types of pruning that can be applied at a given point in the tree.
@@ -208,6 +215,11 @@ impl<T: DepthFirstTree> DepthFirstSearcher<T> {
     /// Add all steps required to reach the children of the current state.
     fn add_child_steps(&mut self) {
         self.steps.extend(self.tree.next_steps().into_iter().rev().map(|step| Step::Apply(step)));
+    }
+
+    /// Return ownership of the tree contained within to the caller
+    fn return_ownership(self) -> T {
+        self.tree
     }
 }
 
