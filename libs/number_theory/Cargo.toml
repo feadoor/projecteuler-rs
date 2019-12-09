@@ -5,6 +5,4 @@ authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-rand = "0.3"
-
 numeric_traits = { path = "../numeric_traits" }

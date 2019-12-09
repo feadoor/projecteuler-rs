@@ -26,7 +26,6 @@
 //! 5, since other values of `d` will be equivalent to smaller values of `d` which result from
 //! dividing out the 2 and 5.
 
-use itertools::Itertools;
 use number_theory::integer_sqrt;
 use primesieve::Sieve;
 use projecteuler_rs::problem;
@@ -46,7 +45,7 @@ fn solve(lim: u64) -> u64 {
     // For numbers down from the limit, calculate the cycle lengths and find the longest one.
     let mut best_length = 0u64;
     let mut best_d = 0;
-    for d in (1..lim).rev().skip((lim % 2) as usize).step(2) {
+    for d in (1..lim).rev().skip((lim % 2) as usize).step_by(2) {
         // Break early if following values of d are too small to have a long enough cycle.
         if (d as u64) < best_length {
             break;

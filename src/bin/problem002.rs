@@ -10,8 +10,6 @@
 extern crate projecteuler_rs;
 extern crate itertools;
 
-use itertools::Itertools;
-
 /// A structure which will allow iteration over Fibonacci numbers.
 struct Fibonacci {
     curr: u64,
@@ -37,7 +35,7 @@ fn fibonacci() -> Fibonacci {
 
 /// Find the sum of all even Fibonacci numbers below the given limit.
 fn solve(limit: u64) -> u64 {
-    fibonacci().skip(2).step(3)
+    fibonacci().skip(2).step_by(3)
         .take_while(|&x| x <= limit)
         .sum()
 }

@@ -17,7 +17,7 @@ fn number_of_letters_below_100(n: usize) -> usize {
     assert!(1 <= n && n <= 100);
 
     match n {
-        1...20 => SMALL_LENS[n],
+        1..=20 => SMALL_LENS[n],
         _ => {
             let prefix = match n / 10 {
                 2 => "twenty".len(),
@@ -43,7 +43,7 @@ fn number_of_letters_below_1000(n: usize) -> usize {
     // If n is equal to 1000, just return the answer straight away.
     match n {
         1000 => "onethousand".len(),
-        100...999 => {
+        100..=999 => {
             let prefix = "hundred".len() + SMALL_LENS[n / 100];
             if n % 100 == 0 {
                 prefix
@@ -51,7 +51,7 @@ fn number_of_letters_below_1000(n: usize) -> usize {
                 prefix + "and".len() + number_of_letters_below_100(n % 100)
             }
         }
-        1...99 => number_of_letters_below_100(n),
+        1..=99 => number_of_letters_below_100(n),
         _ => unreachable!(),
     }
 }

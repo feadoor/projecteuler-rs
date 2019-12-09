@@ -19,7 +19,7 @@ enum SmallPrime {
 /// [Wikipedia](https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number)
 fn upper_bound(n: usize) -> u64 {
     match n {
-        0...5 => 12,
+        0..=5 => 12,
         _ => {
             let f = n as f64;
             (f * (f.ln() + f.ln().ln())) as u64

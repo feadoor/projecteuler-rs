@@ -2,7 +2,7 @@
 //!
 //! # Solution detail
 //!
-//! An approximate answer will do! THe exact probabilities can be calculated using Markov chain
+//! An approximate answer will do! The exact probabilities can be calculated using Markov chain
 //! techniques, but since we are only interested in the relative order of the squares, not the exact
 //! probabilities, some Monte Carlo simulation will suffice.
 //!
@@ -11,8 +11,9 @@
 
 use projecteuler_rs::problem;
 use std::collections::HashMap;
-use rand::ThreadRng;
-use rand::distributions::{IndependentSample, Range};
+use rand::thread_rng;
+use rand::rngs::ThreadRng;
+use rand::distributions::{Distribution, Uniform};
 
 struct MonopolyBoard<'a> {
     squares: Vec<&'a str>,
@@ -70,20 +71,20 @@ impl <'a> MonopolyBoard<'a> {
 
 struct Roller {
     rng: ThreadRng,
-    range: Range<usize>,
+    range: Uniform<usize>,
 }
 
 impl Roller {
 
     pub fn new(range_size: usize) -> Roller {
         Roller {
-            rng: rand::thread_rng(),
-            range: Range::new(1, range_size + 1),
+            rng: thread_rng(),
+            range: Uniform::new(1, range_size + 1),
         }
     }
 
     pub fn next_roll(&mut self) -> usize {
-        self.range.ind_sample(&mut self.rng)
+        self.range.sample(&mut self.rng)
     }
 }
 
@@ -187,7 +188,7 @@ impl <'a> MonopolySimulator<'a> {
                 4 => self.current_position = self.board.get_position("E3"),
                 5 => self.current_position = self.board.get_position("H2"),
                 6 => self.current_position = self.board.get_position("R1"),
-                7...8 => while !self.board.is_rail(self.current_position) {
+                7..=8 => while !self.board.is_rail(self.current_position) {
                     self.current_position = (self.current_position + 1) % self.board.size();
                 },
                 9 => while !self.board.is_utility(self.current_position) {

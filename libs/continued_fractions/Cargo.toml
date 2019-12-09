@@ -5,5 +5,5 @@ authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-num = "0.1.40"
+num = "0.2"
 number_theory = { path = "../number_theory" }

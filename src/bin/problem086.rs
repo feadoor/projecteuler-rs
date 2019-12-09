@@ -19,8 +19,6 @@
 //! found our answer.
 
 use number_theory::{is_square, integer_sqrt};
-use itertools::Itertools;
-use itertools::FoldWhile::{Continue, Done};
 use projecteuler_rs::problem;
 
 /// Find the number of pairs x, y with 1 ≤ x ≤ y ≤ lim and x + y = d
@@ -46,12 +44,11 @@ fn cuboids_with_longest_side(m: u64) -> u64 {
 
 /// Find the least value of m such that there are at least the given number of cuboids, with longest
 /// side not exceeding m, with an integer shortest path.
-fn solve(target: u64) -> u64 {
-    (1..).map(|m| cuboids_with_longest_side(m as u64))
-        .enumerate()
-        .fold_while(0, |acc, (idx, val)| {
-            if acc >= target { Done(idx as u64) } else { Continue(acc + val) }
-        }).into_inner()
+fn solve(target: u64) -> usize {
+    (0..).map(|m| cuboids_with_longest_side(m as u64))
+        .scan(0, |sum, val| { *sum += val; Some(*sum) })
+        .take_while(|&cnt| cnt < target)
+        .count()
 }
 
 /// Solve the problem, returning the answer as a `String`

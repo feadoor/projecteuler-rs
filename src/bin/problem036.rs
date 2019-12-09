@@ -50,7 +50,7 @@ fn odd_palindromise(mut n: u64, d: u64) -> u64 {
 }
 
 /// An iterator over all palindromes with up to the given number of digits in base 10.
-fn palindromes(digits: u64) -> Box<Iterator<Item = u64>> {
+fn palindromes(digits: u64) -> Box<dyn Iterator<Item = u64>> {
 
     // Even-length palindromes.
     let max_length = digits / 2;

@@ -8,14 +8,13 @@ use std::iter::repeat;
 
 use continued_fractions::ContinuedFractionConvergents;
 use interleave::*;
-use itertools::Itertools;
 use projecteuler_rs::problem;
 
 /// Find the sum of the digits of the numerator of the given convergent of the continued fraction
 /// expansion of e.
 fn solve(n: usize) -> u64 {
     let e_continued_fraction = Some(2).into_iter().chain(
-        interleave!(repeat(1), (2..).step(2), repeat(1))
+        interleave!(repeat(1), (2..).step_by(2), repeat(1))
     );
 
     ContinuedFractionConvergents::new(e_continued_fraction)
