@@ -5,5 +5,4 @@ authors = ["Sam Cappleman-Lynes <sam.capplemanlynes@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-number_theory = { path = "../number_theory" }
 numeric_traits = { path = "../numeric_traits" }

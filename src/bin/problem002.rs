@@ -6,9 +6,7 @@
 //! sequence modulo 2. This means we can calculate the sum simply by taking every third Fibonacci
 //! number until the terms exceed four million and taking the sum as we go along.
 
-#[macro_use]
-extern crate projecteuler_rs;
-extern crate itertools;
+use projecteuler_rs::problem;
 
 /// A structure which will allow iteration over Fibonacci numbers.
 struct Fibonacci {

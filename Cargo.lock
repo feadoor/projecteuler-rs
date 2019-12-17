@@ -90,7 +90,6 @@ dependencies = [
 name = "modular_arithmetic"
 version = "0.1.0"
 dependencies = [
- "number_theory 0.1.0",
  "numeric_traits 0.1.0",
 ]
 
@@ -168,6 +167,7 @@ dependencies = [
 name = "number_theory"
 version = "0.1.0"
 dependencies = [
+ "modular_arithmetic 0.1.0",
  "numeric_traits 0.1.0",
 ]
 

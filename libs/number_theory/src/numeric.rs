@@ -1,5 +1,6 @@
 //! Functions relating to basic numeric operations.
 
+use modular_arithmetic::{mod_mul, mod_exp};
 use numeric_traits::{Algebraic, DivRem, Saturating, Checked};
 
 /// Returns the greatest common divisor of two positive integers, computed with Euclid's algorithm.
@@ -12,7 +13,6 @@ use numeric_traits::{Algebraic, DivRem, Saturating, Checked};
 /// assert_eq!(gcd(89, 55), 1);
 /// assert_eq!(gcd(1001, 770), 77);
 /// ```
-#[inline(always)]
 pub fn gcd<T: Algebraic + DivRem + Copy>(mut x: T, mut y: T) -> T {
     let mut tmp;
     while y != T::zero() {
@@ -33,7 +33,6 @@ pub fn gcd<T: Algebraic + DivRem + Copy>(mut x: T, mut y: T) -> T {
 /// assert_eq!(lcm(89, 55), 4895);
 /// assert_eq!(lcm(1001, 770), 10010);
 /// ```
-#[inline(always)]
 pub fn lcm<T: Algebraic + DivRem + Copy>(x: T, y: T) -> T {
     x * (y / gcd(x, y))
 }
@@ -52,7 +51,6 @@ pub fn lcm<T: Algebraic + DivRem + Copy>(x: T, y: T) -> T {
 /// assert_eq!(integer_sqrt(24u64), 4);
 /// assert_eq!(integer_sqrt(25u64), 5);
 /// ```
-#[inline(always)]
 pub fn integer_sqrt<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> T {
 
     let mut sqrt: T = From::from((n.into() as f64).sqrt().floor() as u64);
@@ -80,7 +78,6 @@ pub fn integer_sqrt<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From
 /// assert!(!is_square(5u64));
 /// assert!(!is_square(6u64));
 /// ```
-#[inline(always)]
 pub fn is_square<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u64> + Copy>(n: T) -> bool {
     let sqrt = integer_sqrt(n);
     n == sqrt * sqrt
@@ -100,7 +97,6 @@ pub fn is_square<T: Algebraic + Saturating + PartialOrd<T> + Into<u64> + From<u6
 /// assert_eq!(binom(5, 4), 5);
 /// assert_eq!(binom(5, 5), 1);
 /// ```
-#[inline(always)]
 pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T {
     // Deal with easy cases, and make n the smaller of the two choices for n.
     if n > m { return T::zero(); }
@@ -131,7 +127,6 @@ pub fn binom<T: Algebraic + DivRem + PartialOrd<T> + Copy>(m: T, mut n: T) -> T 
 ///
 /// assert_eq!(pow(13, 7), 62_748_517);
 /// ```
-#[inline(always)]
 pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
 
     // Set up somewhere to hold the final answer.
@@ -160,7 +155,6 @@ pub fn pow<T: Algebraic + Copy>(mut x: T, mut y: u64) -> T {
 /// assert_eq!(checked_pow(2u32, 4), Some(16));
 /// assert_eq!(checked_pow(2u32, 33), None);
 /// ```
-#[inline(always)]
 pub fn checked_pow<T: Algebraic + Checked + Copy>(x: T, mut y: u64) -> Option<T> {
 
     // Set up somewhere to hold the final answer.
@@ -184,6 +178,67 @@ pub fn checked_pow<T: Algebraic + Checked + Copy>(x: T, mut y: u64) -> Option<T>
     }
 
     Some(ans)
+}
+
+/// Test if `n` is prime, using the deterministic version of the Miller-Rabin primality test.
+///
+/// # Examples
+///
+/// ```
+/// use number_theory::is_prime;
+///
+/// assert_eq!(is_prime(1), false);
+/// assert_eq!(is_prime(2), true);
+/// assert_eq!(is_prime(3), true);
+/// assert_eq!(is_prime(4), false);
+/// assert_eq!(is_prime(5), true);
+///
+/// assert_eq!(is_prime(22_801_763_487), false);
+/// assert_eq!(is_prime(22_801_763_489), true);
+/// assert_eq!(is_prime(22_801_763_491), false);
+/// ```
+pub fn is_prime(n: u64) -> bool {
+
+    // Use a small set of known-good-enough witnesses for each `n`.
+    const WITNESSES: &'static [(u64, &'static [u64])] = &[
+        (2_046, &[2]),
+        (1_373_652, &[2, 3]),
+        (9_080_190, &[31, 73]),
+        (25_326_000, &[2, 3, 5]),
+        (4_759_123_140, &[2, 7, 61]),
+        (1_112_004_669_632, &[2, 13, 23, 1662803]),
+        (2_152_302_898_746, &[2, 3, 5, 7, 11]),
+        (3_474_749_660_382, &[2, 3, 5, 7, 11, 13]),
+        (341_550_071_728_320, &[2, 3, 5, 7, 11, 13, 17]),
+        (3_825_123_056_546_413_051, &[2, 3, 5, 7, 11, 13, 17, 19, 23]),
+        (0xFFFF_FFFF_FFFF_FFFF, &[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]),
+    ];
+
+    // Deal with special cases first
+    if n == 1 { return false; }
+    if n % 2 == 0 { return n == 2; }
+
+    // Decompose n into a power of 2 and an odd part.
+    let (mut d, mut s) = (n - 1, 0);
+    while d % 2 == 0 { d /= 2; s += 1; }
+
+    // Decide which witnesses to use for this `n`
+    let witnesses = WITNESSES.iter().find(|&&(hi, _)| n <= hi).map(|&(_, ws)| ws).unwrap();
+
+    // Loop over all witnesses are test primality
+    'outer: for &w in witnesses.iter() {
+        let mut power = mod_exp(w, d, n);
+        if power == 1 || power == n - 1 { continue 'outer; }
+        for _ in 0..s {
+            power = mod_mul(power, power, n);
+            if power == 1 { return false; }
+            else if power == n - 1 { continue 'outer; }
+        }
+        return false;
+    }
+
+    // If nothing witnesses to the compositeness of n, then it is prime.
+    true
 }
 
 #[cfg(test)]

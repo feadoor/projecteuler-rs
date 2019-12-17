@@ -65,7 +65,6 @@ pub fn mod_mul(a: u64, b: u64, m: u64) -> u64 {
 /// assert_eq!(mod_exp(2, 4, 15), 1);
 /// assert_eq!(mod_exp(73, 101, 991), 456);
 /// ```
-#[inline(always)]
 pub fn mod_exp(base: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut answer = 1;
     let mut worker = _normalise(base, modulus);

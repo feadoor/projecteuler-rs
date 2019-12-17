@@ -48,7 +48,6 @@ pub fn _mod_mul(mut a: u64, mut b: u64, m: u64) -> u64 {
     }
 }
 
-#[inline(always)]
 pub fn _mod_inverse(a: u64, m: u64) -> Option<u64> {
     let (mut u1, mut u3) = (1, a);
     let (mut v1, mut v3) = (0, m);
