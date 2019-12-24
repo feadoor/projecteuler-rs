@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_pentagonal","A function to check if a given number is pentagonal."],["main",""],["solve","Find the smallest difference between a pair of pentagonal numbers whose sum and difference are also pentagonal."]]});

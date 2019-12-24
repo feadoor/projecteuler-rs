@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the number of perimeters below the given limit for which there is exactly one right-angled triangle having the given perimeter."]]});

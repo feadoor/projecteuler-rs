@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the prime below n which can be written as the sum of the most successive primes."]]});

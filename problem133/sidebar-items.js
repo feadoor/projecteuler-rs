@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["divisible_only_by_2_and_5","Determine if `n` is divisible by the primes 2 and 5 and no others."],["main",""],["solve","Find the sum of the first `k` prime factors of R(n)"]]});

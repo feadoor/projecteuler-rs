@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the number of non-bouncy numbers with at most the given number of digits."]]});

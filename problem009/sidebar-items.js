@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the first Pythagorean triplet with a + b + c = n, returning the product abc."]]});

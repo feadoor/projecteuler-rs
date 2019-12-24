@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the number of ways of tiling a row of length `n` with red, green and blue bricks."]],"struct":[["BricksRecurrenceIterator","A structure capable of iterating over the number of ways of tiling a row of length `n` with tiles of length at most `m`."]]});

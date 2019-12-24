@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_pandigital","Check whether the given numbers are together pandigital."],["main",""],["solve","Find the sum of all pandigital products."]]});

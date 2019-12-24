@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["prime_permutations","Find the number of permutations of the given digits which are prime, using the given sieve for primality testing."],["solve","Find the number of pandigital prime sets."],["to_integer","Turn the given digits into a number"]]});

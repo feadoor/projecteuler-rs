@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the largest product of `n` consecutive numbers in the grid. The grid is given as a two dimensional vector, and it is guaranteed that it will be square."]]});

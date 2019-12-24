@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the maximum sum of a path through the given triangular grid, given as a vector of vectors and guaranteed to be of valid dimensions."]]});

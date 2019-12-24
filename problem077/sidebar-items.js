@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Finds the first number that can be written as a sum of primes in at least the given number of ways."]]});

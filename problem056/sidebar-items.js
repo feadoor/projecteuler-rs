@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the largest digital sum among numbers of the form a^b, with a, b less than the given limit."],["sum_of_digits","Calculate the sum of the digits (in base 10) of the given number."]]});

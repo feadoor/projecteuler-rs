@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the index (1-indexed) of the tuple `(a, b)` for which `aᵇ` is largest."]]});

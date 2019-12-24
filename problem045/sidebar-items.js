@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_hexagonal","A function to check if a given number is hexagonal."],["main",""],["solve","Find the kth number which is simultaneously triangular, pentagonal and hexagonal."]]});

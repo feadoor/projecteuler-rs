@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["first_digits_sqrt_sum","Find the sum of the first digits of the square root of the given number."],["main",""],["power_of_ten","Finds 10 to the power of `n`"],["solve","Find the sum of the first decimal digits of approximations to square roots of the first integers"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the sum of all multiples of 3 or 5 below the given limit."],["sum_of_multiples","Calculate the sum of the multiples of `n` below the given limit, using the formula for the sum of an arithmetic progression."]]});

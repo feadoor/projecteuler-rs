@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["are_permutations","Determine whether the two given numbers are permutations of one another."],["main",""],["solve","Find the value of n not exceeding the given limit for which ϕ(n) is a permutation of n and the ratio n / ϕ(n) is minimised."]]});

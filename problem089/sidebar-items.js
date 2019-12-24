@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["numeral_value",""],["read_numeral","Read the given numeral as an integer."],["solve","Find the number of characters saved when the given numerals are all rewritten in minimal form."],["write_numeral","Write the given integer as a Roman numeral."]]});

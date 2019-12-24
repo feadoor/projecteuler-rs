@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `problem098` crate."><meta name="keywords" content="rust, rustlang, rust-lang, problem098"><title>problem098 - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../problem098/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate problem098</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all problem098's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'problem098', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/problem098/problem098.rs.html#1-176' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>problem098</a></span></h1><div class='docblock'><p><a href="https://projecteuler.net/problem=98">Problem 98 (Anagramic squares)</a></p>
+<h1 id="solution-detail" class="section-header"><a href="#solution-detail">Solution detail</a></h1>
+<p>This is not a conceptually difficult problem, just one that requires a careful implementation.
+The following process is one way of approaching it:</p>
+<ol>
+<li>
+<p>For each word in the list, sort its letters into increasing order and use that as a key
+into a <code>HashMap</code> to store this word (and all its anagrams).</p>
+</li>
+<li>
+<p>Cast out all keys that only contain one word (they have no anagrams, so are useless).</p>
+</li>
+<li>
+<p>Do the same for the string representations of all square numbers having length at most
+the length of the longest anagram word.</p>
+</li>
+<li>
+<p>For each key (in both maps) compute the 'signature' of the word - the counts of how many
+times each letter appears, sorted in decreasing order. Also store all the words and
+squares in maps keyed by their signatures.</p>
+</li>
+<li>
+<p>For each word signature, and for each word key and square key having that signature, loop
+over the words and squares that have those keys. If a mapping is found between the letters
+of the word and the digits of the square, then for each word which is an anagram of the
+given word, turn it into a number using the same correspondence, and if that number is
+square, bingo!</p>
+</li>
+</ol>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.SignaturedHashMaps.html" title='problem098::SignaturedHashMaps struct'>SignaturedHashMaps</a></td><td class='docblock-short'><p>A struct that represents anagrams from a given set of words, keyed in two ways. First, by the
+set of letters appearing in each word, and second, by the 'signature' of each word, where the
+signature is the counts of the distinct letters in a word, in decreasing order.</p>
+</td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.alphabetical_string.html" title='problem098::alphabetical_string fn'>alphabetical_string</a></td><td class='docblock-short'><p>Sort the letters of the given word into alphabetical order.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.answer.html" title='problem098::answer fn'>answer</a></td><td class='docblock-short'><p>Solve the problem, returning the answer as a <code>String</code></p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.main.html" title='problem098::main fn'>main</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="fn" href="fn.mapping.html" title='problem098::mapping fn'>mapping</a></td><td class='docblock-short'><p>Find, if it exists, a mapping between the two given words, assumed to be of the same length</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.signature.html" title='problem098::signature fn'>signature</a></td><td class='docblock-short'><p>Get the signature of the given word.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.solve.html" title='problem098::solve fn'>solve</a></td><td class='docblock-short'><p>Find the largest square number which is part of an anagramic square pair from the given words.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "problem098";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

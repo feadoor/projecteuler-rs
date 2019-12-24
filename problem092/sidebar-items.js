@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the count of unhappy numbers below the given limit."],["sum_of_squares","Find the sum of the squares of the digits of the given number."]]});

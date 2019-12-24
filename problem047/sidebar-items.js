@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["has_at_least_n_prime_factors",""],["main",""],["solve","Find the first n consecutive numbers to have at least n prime factors."]]});

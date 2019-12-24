@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/bin/problem120.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>problem120.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../problem120/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! [Problem 120 (Square remainders)](https://projecteuler.net/problem=120)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Solution detail</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This is a problem with a clever solution.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! First note that, carrying out a simple binomial expansion, the remainder of</span>
+<span class="doccomment">//! `(a - 1)ⁿ + (a + 1)ⁿ` when divided by `a²` is:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `(-1)ⁿ + (-1)ⁿ⁻¹ * na + 1 + na`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When `n` is even, this is equal to `2`, and when `n` is odd, it is equal to `2na`. So the</span>
+<span class="doccomment">//! maximum remainder, for fixed `a` and as `n` varies is simply the largest value attained by the</span>
+<span class="doccomment">//! expression `2na (mod a²)` as `n` ranges over all odd integers.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For odd `a`, this maximum is attained at `n = (a - 1) / 2` or `n = (3a - 1) / 2`, whichever</span>
+<span class="doccomment">//! happens to be odd - giving a remainder of `a² - a`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For even `a`, the maximum comes at `n = (a - 2) / 2` or `n = (2a - 2) / 2`, whichever is odd,</span>
+<span class="doccomment">//! this time giving a remainder of `a² - 2a`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The sum over all `a` can therefore be calculated by calculating the sum of `a² - a` for all `a`</span>
+<span class="doccomment">//! in the range, and subtracting on top of that the sum of all even `a` in the range. This can</span>
+<span class="doccomment">//! be done in constant time using the well-known formulae for the triangular and pyramidal numbers.</span>
+
+<span class="kw">use</span> <span class="ident">projecteuler_rs</span>::<span class="ident">problem</span>;
+
+<span class="doccomment">/// Find the sum of r_max over all 3 ≤ a ≤ lim.</span>
+<span class="kw">fn</span> <span class="ident">solve</span>(<span class="ident">lim</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">let</span> <span class="ident">sum_of_squares</span> <span class="op">=</span> <span class="ident">lim</span> <span class="op">*</span> (<span class="ident">lim</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> (<span class="number">2</span> <span class="op">*</span> <span class="ident">lim</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">6</span> <span class="op">-</span> <span class="number">5</span>;
+    <span class="kw">let</span> <span class="ident">sum_of_a</span> <span class="op">=</span> <span class="ident">lim</span> <span class="op">*</span> (<span class="ident">lim</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">2</span> <span class="op">-</span> <span class="number">3</span>;
+    <span class="kw">let</span> <span class="ident">sum_of_even_a</span> <span class="op">=</span> ((<span class="ident">lim</span> <span class="op">/</span> <span class="number">2</span>) <span class="op">*</span> (<span class="ident">lim</span> <span class="op">/</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>)) <span class="op">-</span> <span class="number">2</span>;
+
+    <span class="ident">sum_of_squares</span> <span class="op">-</span> <span class="ident">sum_of_a</span> <span class="op">-</span> <span class="ident">sum_of_even_a</span>
+}
+
+<span class="doccomment">/// Solve the problem, returning the answer as a `String`</span>
+<span class="kw">fn</span> <span class="ident">answer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="ident">solve</span>(<span class="number">1000</span>).<span class="ident">to_string</span>()
+}
+
+<span class="macro">problem</span><span class="macro">!</span>(<span class="ident">answer</span>, <span class="string">&quot;333082500&quot;</span>);
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "problem120";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

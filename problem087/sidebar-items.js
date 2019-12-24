@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["power","Raises n to the given power"],["solve","Find the number of values less than the given limit which are the sum of a square, a cube and a fourth power of a prime."]]});

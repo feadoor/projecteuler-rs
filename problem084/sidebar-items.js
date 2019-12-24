@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["StepResult",""]],"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the three most common squares in a simulation using a dice with the given number of sides."]],"struct":[["MonopolyBoard",""],["MonopolySimulator",""],["Roller",""]]});

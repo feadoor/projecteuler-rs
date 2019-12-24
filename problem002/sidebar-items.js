@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["fibonacci","Returns a Fibonacci sequence iterator starting 1, 1, 2, 3, ..."],["main",""],["solve","Find the sum of all even Fibonacci numbers below the given limit."]],"struct":[["Fibonacci","A structure which will allow iteration over Fibonacci numbers."]]});

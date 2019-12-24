@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_palindrome","Check whether the given number is a palindrome."],["main",""],["solve","Find the largest palindrome which is the product of two numbers between lower (inclusive) and upper (exclusive)."]]});

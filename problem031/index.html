@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `problem031` crate."><meta name="keywords" content="rust, rustlang, rust-lang, problem031"><title>problem031 - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../problem031/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate problem031</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all problem031's items</p></a><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'problem031', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/problem031/problem031.rs.html#1-61' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>problem031</a></span></h1><div class='docblock'><p><a href="https://projecteuler.net/problem=31">Problem 31 (Coin sums)</a></p>
+<h1 id="solution-detail" class="section-header"><a href="#solution-detail">Solution detail</a></h1>
+<p>Ignoring the story about the money, we are trying to solve the problem of figuring out how
+many ways we can write a given number <code>n</code> (in this case, 200) as a sum of terms taken from a
+particular set of values (in this case, 1,2,5,10,20,50,100,200).</p>
+<p>A very fast way of solving this problem, at the cost of <code>O(n)</code> memory, is to begin with an
+array <code>a</code> initially equal to the following:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="ident">a</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">1</span>
+<span class="ident">a</span>[<span class="number">1</span>] <span class="op">=</span> <span class="number">0</span>
+<span class="ident">a</span>[<span class="number">2</span>] <span class="op">=</span> <span class="number">0</span>
+...
+<span class="ident">a</span>[<span class="ident">n</span>] <span class="op">=</span> <span class="number">0</span></pre></div>
+<p>Note that this initial assignment means that <code>a[i]</code> is the number of ways of writing <code>i</code> as a
+sum of terms belonging to the empty set.</p>
+<p>We can then consider the values we are allowed to use in the sum (i.e. coin values) one at a
+time, and update the values of the array <code>a</code> for each coin - at all times it should hold the
+number of ways of making the values <code>0, 1, 2, ..., n</code> using the current set of coins.</p>
+<p>In pseudocode, this update is:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">for</span> <span class="ident">j</span> <span class="op">=</span> <span class="ident">coin_val</span> <span class="ident">to</span> <span class="ident">n</span>:
+    <span class="ident">a</span>[<span class="ident">j</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">a</span>[<span class="ident">j</span> <span class="op">-</span> <span class="ident">coin_val</span>]</pre></div>
+<p>After we have done this for all the allowed coin values, the answer is in <code>a[n]</code>.</p>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.answer.html" title='problem031::answer fn'>answer</a></td><td class='docblock-short'><p>Solve the problem, returning the answer as a <code>String</code></p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.main.html" title='problem031::main fn'>main</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="fn" href="fn.solve.html" title='problem031::solve fn'>solve</a></td><td class='docblock-short'><p>Find the number of ways of making <code>n</code> pence using English coins.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "problem031";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

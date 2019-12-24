@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the number of square roots, up to the square root of the given number, which have an odd period in their continued fraction."]]});

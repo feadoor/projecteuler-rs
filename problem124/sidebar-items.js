@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["radicals","Find the radicals of each number in the range 1 ≤ `n` ≤ `limit`, using a sieve-based algorithm."],["solve","Find the `k`th element when all numbers 1 ≤ `n` ≤ `limit` are sorted by radical."]]});

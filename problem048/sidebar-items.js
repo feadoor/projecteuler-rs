@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the last 10 digits of the sum 1^1 + 2^2 + ... + n^n."]]});

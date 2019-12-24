@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_triangular","Decide if a given number is triangular."],["main",""],["solve","Find how many of the given words are triangle words."]]});

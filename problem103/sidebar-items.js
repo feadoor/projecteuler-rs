@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find an optimum special sum set containing the given number of elements."]],"struct":[["SpecialSumSet","A structure representing a special sum set"],["SpecialSumSetIterator","A structure capable of iterating over `SpecialSumSet`s using a priority queue."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["attempt_graph","Create a graph representing the given passcode attempts"],["main",""],["solve","Find the shortest passcode consistent with the given attempts"]]});

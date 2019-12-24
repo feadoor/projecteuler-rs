@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["MODULUS",""]],"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the index of the first partition number divisible by `MODULUS`"]],"struct":[["Mod",""]],"type":[["ModInt",""]]});

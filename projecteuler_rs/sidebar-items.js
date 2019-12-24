@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["exec","Run a particular problem, printing its solution to the terminal."]],"macro":[["problem",""]]});

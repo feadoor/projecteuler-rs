@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the sum of the first `k` composite values of `n` for which A(n) divides n - 1"]]});

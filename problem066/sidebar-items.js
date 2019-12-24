@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["minimal_solution","Finds the minimal solution (x, y) to the Pell equation with the given D."],["solve","Find the value of D, not exceeding the given limit, for which the Pell equation in D D has the largest value of x in its minimal solution."]]});

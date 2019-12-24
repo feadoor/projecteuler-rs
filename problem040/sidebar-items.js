@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["digits_used","Calculate the number of digits used when writing the numbers from 1 to k."],["find_digit","Find the digit at the specified index of CHampernowne's constant."],["main",""],["solve","Find the product of the digits at the specified positions in Champernowne's constant."]]});

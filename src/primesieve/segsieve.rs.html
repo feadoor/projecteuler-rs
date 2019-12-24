@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `libs/primesieve/src/segsieve.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>segsieve.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../primesieve/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! An implementation of the segmented sieve of Eratosthenes.</span>
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">min</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">iterator</span>::<span class="ident">SieveIterator</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">segment</span>::<span class="ident">set_off</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">wheel</span>::<span class="ident">Wheel30</span>;
+
+<span class="kw">const</span> <span class="ident">MODULUS</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">240</span>;
+<span class="kw">const</span> <span class="ident">SEGMENT_LEN</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">32768</span>;
+<span class="kw">const</span> <span class="ident">SEGMENT_SIZE</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">MODULUS</span> <span class="op">*</span> <span class="ident">SEGMENT_LEN</span> <span class="kw">as</span> <span class="ident">u64</span>;
+
+<span class="doccomment">/// Returns a sequence of `u64`s encoding the primes up to the square root of the given limit, but</span>
+<span class="doccomment">/// excluding 2, 3 and 5.</span>
+<span class="kw">fn</span> <span class="ident">small_primes</span>(<span class="ident">limit</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="comment">// Start by allocating enough `u64`s to hold information about the numbers up to the required</span>
+    <span class="comment">// square root.</span>
+    <span class="kw">let</span> <span class="ident">sqrt</span> <span class="op">=</span> (<span class="ident">limit</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">sqrt</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sieve</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="op">!</span><span class="number">0</span>; (<span class="ident">sqrt</span> <span class="op">/</span> <span class="ident">MODULUS</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>];
+    <span class="kw">let</span> <span class="ident">small_limit</span> <span class="op">=</span> <span class="number">240</span> <span class="op">*</span> <span class="ident">sieve</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+
+    <span class="comment">// Correct the first entry of the sieve to only contain 1&#39;s in positions corresponding to true</span>
+    <span class="comment">// prime numbers - this just speeds things up a little as it prevents the iterator from</span>
+    <span class="comment">// accidentally considering non-primes early in its life.</span>
+    <span class="ident">sieve</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">0b1111100100111101110110111011011001111110111011111101111111111110</span>;
+
+    <span class="comment">// Iterate over the prime numbers held in the sieve and cross of multiples of each one.</span>
+    <span class="comment">// Since we cannot usually have a mutable borrow and an immutable borrow to the sieve at the</span>
+    <span class="comment">// same time, there&#39;s some unsafe code here to do just that, and we&#39;ll make a promise to the</span>
+    <span class="comment">// compiler that we&#39;re not doing anything nasty 😮</span>
+    <span class="kw">unsafe</span> {
+        <span class="kw">let</span> <span class="ident">sieve_mut</span> <span class="op">=</span> <span class="ident">from_raw_parts_mut</span>(<span class="ident">sieve</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">sieve</span>.<span class="ident">len</span>());
+        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">SieveIterator</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sieve</span>);
+        <span class="kw">for</span> <span class="ident">prime</span> <span class="kw">in</span> <span class="ident">iter</span> {
+            <span class="comment">// For each prime p, we cross off the multiples of it larger than p^2 which are not</span>
+            <span class="comment">// multiples of 2, 3 or 5.</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wheel</span> <span class="op">=</span> <span class="ident">Wheel30</span>::<span class="ident">new</span>(<span class="ident">prime</span>, <span class="ident">prime</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">multiple</span> <span class="op">=</span> <span class="ident">prime</span> <span class="op">*</span> <span class="ident">prime</span>;
+            <span class="kw">if</span> <span class="ident">multiple</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">small_limit</span> {
+                <span class="kw">break</span>;
+            }
+            <span class="kw">while</span> <span class="ident">multiple</span> <span class="op">&lt;</span> <span class="ident">small_limit</span> {
+                <span class="ident">set_off</span>(<span class="ident">sieve_mut</span>, <span class="ident">multiple</span>);
+                <span class="ident">multiple</span> <span class="op">+</span><span class="op">=</span> <span class="ident">wheel</span>.<span class="ident">next_diff</span>();
+            }
+        }
+    }
+
+    <span class="ident">sieve</span>
+}
+
+<span class="doccomment">/// Sieve primes up to the given limit using a segmented sieve of Eratosthenes, and return a</span>
+<span class="doccomment">/// vector of `u64`s encoding the primes.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">segmented_sieve</span>(<span class="ident">limit</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="comment">// First, we need to sieve the primes up to the square root of the given limit - these will be</span>
+    <span class="comment">// the primes whose multiples are crossed off the sieve.</span>
+    <span class="kw">let</span> <span class="ident">lim</span> <span class="op">=</span> <span class="ident">limit</span> <span class="op">+</span> <span class="ident">MODULUS</span> <span class="op">-</span> (<span class="ident">limit</span> <span class="op">%</span> <span class="ident">MODULUS</span>);
+    <span class="kw">let</span> <span class="ident">small_primes</span> <span class="op">=</span> <span class="ident">small_primes</span>(<span class="ident">lim</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">small_primes_iter</span> <span class="op">=</span> <span class="ident">SieveIterator</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">small_primes</span>);
+
+    <span class="comment">// Here&#39;s the array in which we&#39;ll do our sieving of the segments, and a vector in which we&#39;ll</span>
+    <span class="comment">// store the final results.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">segment</span> <span class="op">=</span> [<span class="op">!</span><span class="number">0</span>; <span class="ident">SEGMENT_LEN</span>];
+    <span class="ident">segment</span>[<span class="number">0</span>] <span class="op">^</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">segments</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>((<span class="ident">lim</span> <span class="op">/</span> <span class="ident">MODULUS</span>) <span class="kw">as</span> <span class="ident">usize</span>);
+
+    <span class="comment">// Here are the indices into the segment for the next multiple of each prime whose multiples</span>
+    <span class="comment">// are being crossed off - the first entry is the index, and the second entry is a wheel which</span>
+    <span class="comment">// generates the differences between successive indices.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_indices</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">Wheel30</span>)<span class="op">&gt;</span>::<span class="ident">new</span>();
+
+    <span class="comment">// Iterate over segments for as long as we still have more sieving to do.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">low</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">while</span> <span class="ident">low</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">lim</span> {
+
+        <span class="comment">// Now, add the new sieving primes which we will need for this segment.</span>
+        <span class="kw">let</span> <span class="ident">high</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">low</span> <span class="op">+</span> <span class="ident">SEGMENT_SIZE</span>, <span class="ident">lim</span>);
+        <span class="kw">let</span> <span class="ident">segment_size</span> <span class="op">=</span> <span class="ident">high</span> <span class="op">-</span> <span class="ident">low</span>;
+
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prime</span>) <span class="op">=</span> <span class="ident">small_primes_iter</span>.<span class="ident">next</span>() {
+            <span class="ident">next_indices</span>.<span class="ident">push</span>((<span class="ident">prime</span> <span class="op">*</span> <span class="ident">prime</span> <span class="op">-</span> <span class="ident">low</span>, <span class="ident">Wheel30</span>::<span class="ident">new</span>(<span class="ident">prime</span>, <span class="ident">prime</span>)));
+            <span class="kw">if</span> <span class="ident">prime</span> <span class="op">*</span> <span class="ident">prime</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">high</span> {
+                <span class="kw">break</span>;
+            }
+        }
+
+        <span class="comment">// Sieve the current segment</span>
+        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">index</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">wheel</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">next_indices</span> {
+            <span class="kw">while</span> <span class="kw-2">*</span><span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">segment_size</span> {
+                <span class="ident">set_off</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">segment</span>, <span class="kw-2">*</span><span class="ident">index</span>);
+                <span class="kw-2">*</span><span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">wheel</span>.<span class="ident">next_diff</span>();
+            }
+            <span class="kw-2">*</span><span class="ident">index</span> <span class="op">-</span><span class="op">=</span> <span class="ident">segment_size</span>;
+        }
+
+        <span class="comment">// Store the result of this pass and prepare for the next pass.</span>
+        <span class="ident">segments</span>.<span class="ident">extend_from_slice</span>(
+            <span class="kw">if</span> <span class="ident">segment_size</span> <span class="op">&lt;</span> <span class="ident">SEGMENT_SIZE</span> {
+                <span class="kw-2">&amp;</span><span class="ident">segment</span>[..(<span class="ident">segment_size</span> <span class="op">/</span> <span class="ident">MODULUS</span>) <span class="kw">as</span> <span class="ident">usize</span>]
+            } <span class="kw">else</span> {
+                <span class="kw-2">&amp;</span><span class="ident">segment</span>
+            }
+        );
+
+        <span class="ident">low</span> <span class="op">+</span><span class="op">=</span> <span class="ident">SEGMENT_SIZE</span>;
+        <span class="ident">segment</span> <span class="op">=</span> [<span class="op">!</span><span class="number">0</span>; <span class="ident">SEGMENT_LEN</span>];
+    }
+
+    <span class="ident">segments</span>
+}
+
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_small_primes</span>() {
+    <span class="kw">let</span> <span class="ident">sieve</span> <span class="op">=</span> <span class="ident">small_primes</span>(<span class="number">1000000</span>);
+    <span class="kw">let</span> <span class="ident">primes</span> <span class="op">=</span> <span class="ident">SieveIterator</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sieve</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">primes</span>,
+               <span class="macro">vec</span><span class="macro">!</span>[<span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">17</span>, <span class="number">19</span>, <span class="number">23</span>, <span class="number">29</span>, <span class="number">31</span>, <span class="number">37</span>, <span class="number">41</span>, <span class="number">43</span>, <span class="number">47</span>, <span class="number">53</span>, <span class="number">59</span>, <span class="number">61</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">73</span>, <span class="number">79</span>,
+                    <span class="number">83</span>, <span class="number">89</span>, <span class="number">97</span>, <span class="number">101</span>, <span class="number">103</span>, <span class="number">107</span>, <span class="number">109</span>, <span class="number">113</span>, <span class="number">127</span>, <span class="number">131</span>, <span class="number">137</span>, <span class="number">139</span>, <span class="number">149</span>, <span class="number">151</span>, <span class="number">157</span>,
+                    <span class="number">163</span>, <span class="number">167</span>, <span class="number">173</span>, <span class="number">179</span>, <span class="number">181</span>, <span class="number">191</span>, <span class="number">193</span>, <span class="number">197</span>, <span class="number">199</span>, <span class="number">211</span>, <span class="number">223</span>, <span class="number">227</span>, <span class="number">229</span>, <span class="number">233</span>, <span class="number">239</span>,
+                    <span class="number">241</span>, <span class="number">251</span>, <span class="number">257</span>, <span class="number">263</span>, <span class="number">269</span>, <span class="number">271</span>, <span class="number">277</span>, <span class="number">281</span>, <span class="number">283</span>, <span class="number">293</span>, <span class="number">307</span>, <span class="number">311</span>, <span class="number">313</span>, <span class="number">317</span>, <span class="number">331</span>,
+                    <span class="number">337</span>, <span class="number">347</span>, <span class="number">349</span>, <span class="number">353</span>, <span class="number">359</span>, <span class="number">367</span>, <span class="number">373</span>, <span class="number">379</span>, <span class="number">383</span>, <span class="number">389</span>, <span class="number">397</span>, <span class="number">401</span>, <span class="number">409</span>, <span class="number">419</span>, <span class="number">421</span>,
+                    <span class="number">431</span>, <span class="number">433</span>, <span class="number">439</span>, <span class="number">443</span>, <span class="number">449</span>, <span class="number">457</span>, <span class="number">461</span>, <span class="number">463</span>, <span class="number">467</span>, <span class="number">479</span>, <span class="number">487</span>, <span class="number">491</span>, <span class="number">499</span>, <span class="number">503</span>, <span class="number">509</span>,
+                    <span class="number">521</span>, <span class="number">523</span>, <span class="number">541</span>, <span class="number">547</span>, <span class="number">557</span>, <span class="number">563</span>, <span class="number">569</span>, <span class="number">571</span>, <span class="number">577</span>, <span class="number">587</span>, <span class="number">593</span>, <span class="number">599</span>, <span class="number">601</span>, <span class="number">607</span>, <span class="number">613</span>,
+                    <span class="number">617</span>, <span class="number">619</span>, <span class="number">631</span>, <span class="number">641</span>, <span class="number">643</span>, <span class="number">647</span>, <span class="number">653</span>, <span class="number">659</span>, <span class="number">661</span>, <span class="number">673</span>, <span class="number">677</span>, <span class="number">683</span>, <span class="number">691</span>, <span class="number">701</span>, <span class="number">709</span>,
+                    <span class="number">719</span>, <span class="number">727</span>, <span class="number">733</span>, <span class="number">739</span>, <span class="number">743</span>, <span class="number">751</span>, <span class="number">757</span>, <span class="number">761</span>, <span class="number">769</span>, <span class="number">773</span>, <span class="number">787</span>, <span class="number">797</span>, <span class="number">809</span>, <span class="number">811</span>, <span class="number">821</span>,
+                    <span class="number">823</span>, <span class="number">827</span>, <span class="number">829</span>, <span class="number">839</span>, <span class="number">853</span>, <span class="number">857</span>, <span class="number">859</span>, <span class="number">863</span>, <span class="number">877</span>, <span class="number">881</span>, <span class="number">883</span>, <span class="number">887</span>, <span class="number">907</span>, <span class="number">911</span>, <span class="number">919</span>,
+                    <span class="number">929</span>, <span class="number">937</span>, <span class="number">941</span>, <span class="number">947</span>, <span class="number">953</span>, <span class="number">967</span>, <span class="number">971</span>, <span class="number">977</span>, <span class="number">983</span>, <span class="number">991</span>, <span class="number">997</span>, <span class="number">1009</span>, <span class="number">1013</span>, <span class="number">1019</span>,
+                    <span class="number">1021</span>, <span class="number">1031</span>, <span class="number">1033</span>, <span class="number">1039</span>, <span class="number">1049</span>, <span class="number">1051</span>, <span class="number">1061</span>, <span class="number">1063</span>, <span class="number">1069</span>, <span class="number">1087</span>, <span class="number">1091</span>, <span class="number">1093</span>,
+                    <span class="number">1097</span>, <span class="number">1103</span>, <span class="number">1109</span>, <span class="number">1117</span>, <span class="number">1123</span>, <span class="number">1129</span>, <span class="number">1151</span>, <span class="number">1153</span>, <span class="number">1163</span>, <span class="number">1171</span>, <span class="number">1181</span>, <span class="number">1187</span>,
+                    <span class="number">1193</span>]);
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">iterator</span>::<span class="ident">SieveIterator</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_small_segmented_sieve</span>() {
+        <span class="kw">let</span> <span class="ident">sieve</span> <span class="op">=</span> <span class="ident">segmented_sieve</span>(<span class="number">1000</span>);
+        <span class="kw">let</span> <span class="ident">primes</span> <span class="op">=</span> <span class="ident">SieveIterator</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sieve</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">primes</span>,
+                   <span class="macro">vec</span><span class="macro">!</span>[<span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">17</span>, <span class="number">19</span>, <span class="number">23</span>, <span class="number">29</span>, <span class="number">31</span>, <span class="number">37</span>, <span class="number">41</span>, <span class="number">43</span>, <span class="number">47</span>, <span class="number">53</span>, <span class="number">59</span>, <span class="number">61</span>, <span class="number">67</span>, <span class="number">71</span>, <span class="number">73</span>, <span class="number">79</span>,
+                        <span class="number">83</span>, <span class="number">89</span>, <span class="number">97</span>, <span class="number">101</span>, <span class="number">103</span>, <span class="number">107</span>, <span class="number">109</span>, <span class="number">113</span>, <span class="number">127</span>, <span class="number">131</span>, <span class="number">137</span>, <span class="number">139</span>, <span class="number">149</span>, <span class="number">151</span>, <span class="number">157</span>,
+                        <span class="number">163</span>, <span class="number">167</span>, <span class="number">173</span>, <span class="number">179</span>, <span class="number">181</span>, <span class="number">191</span>, <span class="number">193</span>, <span class="number">197</span>, <span class="number">199</span>, <span class="number">211</span>, <span class="number">223</span>, <span class="number">227</span>, <span class="number">229</span>, <span class="number">233</span>, <span class="number">239</span>,
+                        <span class="number">241</span>, <span class="number">251</span>, <span class="number">257</span>, <span class="number">263</span>, <span class="number">269</span>, <span class="number">271</span>, <span class="number">277</span>, <span class="number">281</span>, <span class="number">283</span>, <span class="number">293</span>, <span class="number">307</span>, <span class="number">311</span>, <span class="number">313</span>, <span class="number">317</span>, <span class="number">331</span>,
+                        <span class="number">337</span>, <span class="number">347</span>, <span class="number">349</span>, <span class="number">353</span>, <span class="number">359</span>, <span class="number">367</span>, <span class="number">373</span>, <span class="number">379</span>, <span class="number">383</span>, <span class="number">389</span>, <span class="number">397</span>, <span class="number">401</span>, <span class="number">409</span>, <span class="number">419</span>, <span class="number">421</span>,
+                        <span class="number">431</span>, <span class="number">433</span>, <span class="number">439</span>, <span class="number">443</span>, <span class="number">449</span>, <span class="number">457</span>, <span class="number">461</span>, <span class="number">463</span>, <span class="number">467</span>, <span class="number">479</span>, <span class="number">487</span>, <span class="number">491</span>, <span class="number">499</span>, <span class="number">503</span>, <span class="number">509</span>,
+                        <span class="number">521</span>, <span class="number">523</span>, <span class="number">541</span>, <span class="number">547</span>, <span class="number">557</span>, <span class="number">563</span>, <span class="number">569</span>, <span class="number">571</span>, <span class="number">577</span>, <span class="number">587</span>, <span class="number">593</span>, <span class="number">599</span>, <span class="number">601</span>, <span class="number">607</span>, <span class="number">613</span>,
+                        <span class="number">617</span>, <span class="number">619</span>, <span class="number">631</span>, <span class="number">641</span>, <span class="number">643</span>, <span class="number">647</span>, <span class="number">653</span>, <span class="number">659</span>, <span class="number">661</span>, <span class="number">673</span>, <span class="number">677</span>, <span class="number">683</span>, <span class="number">691</span>, <span class="number">701</span>, <span class="number">709</span>,
+                        <span class="number">719</span>, <span class="number">727</span>, <span class="number">733</span>, <span class="number">739</span>, <span class="number">743</span>, <span class="number">751</span>, <span class="number">757</span>, <span class="number">761</span>, <span class="number">769</span>, <span class="number">773</span>, <span class="number">787</span>, <span class="number">797</span>, <span class="number">809</span>, <span class="number">811</span>, <span class="number">821</span>,
+                        <span class="number">823</span>, <span class="number">827</span>, <span class="number">829</span>, <span class="number">839</span>, <span class="number">853</span>, <span class="number">857</span>, <span class="number">859</span>, <span class="number">863</span>, <span class="number">877</span>, <span class="number">881</span>, <span class="number">883</span>, <span class="number">887</span>, <span class="number">907</span>, <span class="number">911</span>, <span class="number">919</span>,
+                        <span class="number">929</span>, <span class="number">937</span>, <span class="number">941</span>, <span class="number">947</span>, <span class="number">953</span>, <span class="number">967</span>, <span class="number">971</span>, <span class="number">977</span>, <span class="number">983</span>, <span class="number">991</span>, <span class="number">997</span>, <span class="number">1009</span>, <span class="number">1013</span>, <span class="number">1019</span>,
+                        <span class="number">1021</span>, <span class="number">1031</span>, <span class="number">1033</span>, <span class="number">1039</span>, <span class="number">1049</span>, <span class="number">1051</span>, <span class="number">1061</span>, <span class="number">1063</span>, <span class="number">1069</span>, <span class="number">1087</span>, <span class="number">1091</span>, <span class="number">1093</span>,
+                        <span class="number">1097</span>, <span class="number">1103</span>, <span class="number">1109</span>, <span class="number">1117</span>, <span class="number">1123</span>, <span class="number">1129</span>, <span class="number">1151</span>, <span class="number">1153</span>, <span class="number">1163</span>, <span class="number">1171</span>, <span class="number">1181</span>, <span class="number">1187</span>,
+                        <span class="number">1193</span>]);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_large_segmented_sieve</span>() {
+        <span class="kw">let</span> <span class="ident">sieve</span> <span class="op">=</span> <span class="ident">segmented_sieve</span>(<span class="number">50000000</span>);
+        <span class="kw">let</span> <span class="ident">primes</span> <span class="op">=</span> <span class="ident">SieveIterator</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sieve</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">primes</span>[<span class="ident">primes</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">100</span>..].<span class="ident">to_vec</span>(),
+                   <span class="macro">vec</span><span class="macro">!</span>[<span class="number">49998539</span>, <span class="number">49998563</span>, <span class="number">49998587</span>, <span class="number">49998593</span>, <span class="number">49998601</span>, <span class="number">49998617</span>, <span class="number">49998623</span>,
+                        <span class="number">49998653</span>, <span class="number">49998659</span>, <span class="number">49998661</span>, <span class="number">49998727</span>, <span class="number">49998743</span>, <span class="number">49998749</span>, <span class="number">49998763</span>,
+                        <span class="number">49998779</span>, <span class="number">49998791</span>, <span class="number">49998811</span>, <span class="number">49998821</span>, <span class="number">49998827</span>, <span class="number">49998841</span>, <span class="number">49998857</span>,
+                        <span class="number">49998869</span>, <span class="number">49998911</span>, <span class="number">49998913</span>, <span class="number">49998917</span>, <span class="number">49998919</span>, <span class="number">49998931</span>, <span class="number">49998947</span>,
+                        <span class="number">49998953</span>, <span class="number">49998983</span>, <span class="number">49999031</span>, <span class="number">49999069</span>, <span class="number">49999111</span>, <span class="number">49999121</span>, <span class="number">49999133</span>,
+                        <span class="number">49999151</span>, <span class="number">49999177</span>, <span class="number">49999207</span>, <span class="number">49999231</span>, <span class="number">49999253</span>, <span class="number">49999267</span>, <span class="number">49999289</span>,
+                        <span class="number">49999291</span>, <span class="number">49999297</span>, <span class="number">49999307</span>, <span class="number">49999349</span>, <span class="number">49999351</span>, <span class="number">49999361</span>, <span class="number">49999387</span>,
+                        <span class="number">49999403</span>, <span class="number">49999409</span>, <span class="number">49999423</span>, <span class="number">49999427</span>, <span class="number">49999441</span>, <span class="number">49999463</span>, <span class="number">49999471</span>,
+                        <span class="number">49999489</span>, <span class="number">49999529</span>, <span class="number">49999553</span>, <span class="number">49999561</span>, <span class="number">49999589</span>, <span class="number">49999597</span>, <span class="number">49999603</span>,
+                        <span class="number">49999613</span>, <span class="number">49999619</span>, <span class="number">49999627</span>, <span class="number">49999637</span>, <span class="number">49999639</span>, <span class="number">49999643</span>, <span class="number">49999667</span>,
+                        <span class="number">49999673</span>, <span class="number">49999693</span>, <span class="number">49999699</span>, <span class="number">49999711</span>, <span class="number">49999739</span>, <span class="number">49999751</span>, <span class="number">49999753</span>,
+                        <span class="number">49999757</span>, <span class="number">49999759</span>, <span class="number">49999777</span>, <span class="number">49999783</span>, <span class="number">49999801</span>, <span class="number">49999819</span>, <span class="number">49999843</span>,
+                        <span class="number">49999847</span>, <span class="number">49999853</span>, <span class="number">49999877</span>, <span class="number">49999883</span>, <span class="number">49999897</span>, <span class="number">49999903</span>, <span class="number">49999921</span>,
+                        <span class="number">49999991</span>, <span class="number">50000017</span>, <span class="number">50000021</span>, <span class="number">50000047</span>, <span class="number">50000059</span>, <span class="number">50000063</span>, <span class="number">50000101</span>,
+                        <span class="number">50000131</span>, <span class="number">50000141</span>]);
+    }
+}</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "primesieve";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

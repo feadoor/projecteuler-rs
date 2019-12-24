@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Recurrence","A representation of a function defined using a Mertens-style recurrence relation."]]});

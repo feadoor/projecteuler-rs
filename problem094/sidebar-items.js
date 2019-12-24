@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the sum of perimeters of all almost-equilateral triangles with integer area, where the perimeters of said triangles do not exceed the given limit."]]});

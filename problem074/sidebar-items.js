@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["factorial_digit_sum",""],["find_chain_length",""],["main",""],["solve","Find how many numbers below the given limit form a chain of the given number of terms before repeating themselves."]]});

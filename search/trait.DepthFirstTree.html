@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `DepthFirstTree` trait in crate `search`."><meta name="keywords" content="rust, rustlang, rust-lang, DepthFirstTree"><title>search::DepthFirstTree - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc trait"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../search/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Trait DepthFirstTree</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Step">Step</a><a href="#associatedtype.Output">Output</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.apply_step">apply_step</a><a href="#tymethod.next_steps">next_steps</a><a href="#tymethod.output">output</a><a href="#tymethod.revert_step">revert_step</a><a href="#tymethod.should_prune">should_prune</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.into_iter">into_iter</a><a href="#method.run_search">run_search</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>search</a></p><script>window.sidebarCurrent = {name: 'DepthFirstTree', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/search/lib.rs.html#145-173' title='goto source code'>[src]</a></span><span class='in-band'>Trait <a href='index.html'>search</a>::<wbr><a class="trait" href=''>DepthFirstTree</a></span></h1><div class="docblock type-decl hidden-by-usual-hider"><pre class='rust trait'>pub trait DepthFirstTree <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span>{
+    type <a href='#associatedtype.Step' class="type">Step</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>;
+    type <a href='#associatedtype.Output' class="type">Output</a>;
+    fn <a href='#tymethod.next_steps' class='fnname'>next_steps</a>(&amp;mut self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.should_prune' class='fnname'>should_prune</a>(&amp;mut self) -&gt; <a class="enum" href="../search/enum.Pruning.html" title="enum search::Pruning">Pruning</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.apply_step' class='fnname'>apply_step</a>(&amp;mut self, node: &amp;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>);
+<div class='item-spacer'></div>    fn <a href='#tymethod.revert_step' class='fnname'>revert_step</a>(&amp;mut self, node: &amp;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>);
+<div class='item-spacer'></div>    fn <a href='#tymethod.output' class='fnname'>output</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Output" title="type search::DepthFirstTree::Output">Output</a>&gt;;
+
+    fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class="struct" href="../search/struct.DepthFirstSearcher.html" title="struct search::DepthFirstSearcher">DepthFirstSearcher</a>&lt;Self&gt; { ... }
+<div class='item-spacer'></div>    fn <a href='#method.run_search' class='fnname'>run_search</a>(self) -&gt; Self { ... }
+}</pre></div><div class='docblock'><p>A trait for a tree which is to be traversed, depth-first, in the pursuit of nodes which
+satisfy a particular condition.</p>
+<h1 id="concepts" class="section-header"><a href="#concepts">Concepts</a></h1>
+<p>There are two concepts that are important in understanding how to use this trait - that of
+tree &quot;state&quot;, and that of tree &quot;steps&quot;.</p>
+<p>The &quot;state&quot; of a tree is an umbrella term encompassing all the information held about a
+particular position in the tree - including any values associated with the position and any
+internal variables that are used to aid the search.</p>
+<p>A tree &quot;step&quot; is a small structure - ideally one that can be constructed very cheaply - which
+contains instructions about how to move between parent/child tree states.</p>
+<h1 id="usage" class="section-header"><a href="#usage">Usage</a></h1>
+<p>To define a tree, you must provide the following:</p>
+<ul>
+<li>A structure holding the tree state, which you will implement <code>DepthFirstTree</code> for</li>
+<li>An associated type <code>Step</code> which represents the tree &quot;steps&quot;</li>
+<li>An associated type <code>Output</code> which represents the outputs of the search</li>
+<li>Implementations of the required methods of this trait:
+<ul>
+<li><code>next_steps</code> must return the steps that it is valid to take from the current state</li>
+<li><code>should_prune</code> must decide whether to prune the tree at the current state</li>
+<li><code>apply_step</code> must define how to use a step to go from parent to child state</li>
+<li><code>revert_step</code> must define how to use a step to go from child back to parent state</li>
+<li><code>output</code> must take the current state of the tree, and return <code>Some(value)</code> if the current
+state meets the condition.</li>
+</ul>
+</li>
+</ul>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
+<p>In this example, we will search for all numbers having at most 3 digits, with all digits being
+odd, and the whole number being divisible by 13.</p>
+<p>We will utilise a tree search, with child states coming from the parent by appending a single
+digit to the parent state.</p>
+<p>Our tree state will be the current number being examined, the current number of digits,
+and the maximum number of digits that a solution should have (in this case, 3).</p>
+<p>Our steps will simply contain the digit to be appended when going from parent to child.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">search</span>::{<span class="ident">DepthFirstTree</span>, <span class="ident">Pruning</span>};
+
+<span class="kw">struct</span> <span class="ident">Step</span> {
+    <span class="ident">next_digit</span>: <span class="ident">u32</span>,
+}
+
+<span class="kw">struct</span> <span class="ident">Tree</span> {
+    <span class="ident">value</span>: <span class="ident">u32</span>,
+    <span class="ident">number_of_digits</span>: <span class="ident">usize</span>,
+    <span class="ident">max_digits</span>: <span class="ident">usize</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">DepthFirstTree</span> <span class="kw">for</span> <span class="ident">Tree</span> {
+    <span class="kw">type</span> <span class="ident">Step</span> <span class="op">=</span> <span class="ident">Step</span>;
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">u32</span>;
+
+    <span class="doccomment">/// All possible choices for the next digit, which must be odd, as per our constraints.</span>
+    <span class="kw">fn</span> <span class="ident">next_steps</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Step</span><span class="op">&gt;</span> {
+        [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>].<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">digit</span><span class="op">|</span> { <span class="ident">Step</span> { <span class="ident">next_digit</span>: <span class="ident">digit</span> } }).<span class="ident">collect</span>()
+    }
+
+    <span class="doccomment">/// Prune the tree if we have reached the maximum number of digits.</span>
+    <span class="kw">fn</span> <span class="ident">should_prune</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pruning</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">number_of_digits</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max_digits</span> {
+            <span class="ident">Pruning</span>::<span class="ident">Below</span>
+        } <span class="kw">else</span> {
+            <span class="ident">Pruning</span>::<span class="prelude-val">None</span>
+        }
+    }
+
+    <span class="doccomment">/// Append the next digit to the end of the current value.</span>
+    <span class="kw">fn</span> <span class="ident">apply_step</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">step</span>: <span class="kw-2">&amp;</span><span class="ident">Step</span>) {
+        <span class="self">self</span>.<span class="ident">value</span> <span class="op">=</span> <span class="number">10</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">value</span> <span class="op">+</span> <span class="ident">step</span>.<span class="ident">next_digit</span>;
+        <span class="self">self</span>.<span class="ident">number_of_digits</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    }
+
+    <span class="doccomment">/// Remove the last digit from the end of the current value.</span>
+    <span class="kw">fn</span> <span class="ident">revert_step</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">step</span>: <span class="kw-2">&amp;</span><span class="ident">Step</span>) {
+        <span class="self">self</span>.<span class="ident">value</span> <span class="op">/</span><span class="op">=</span> <span class="number">10</span>;
+        <span class="self">self</span>.<span class="ident">number_of_digits</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+    }
+
+    <span class="doccomment">/// Check if the value is divisible by 13,and output it if so.</span>
+    <span class="kw">fn</span> <span class="ident">output</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">value</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">value</span> <span class="op">%</span> <span class="number">13</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">value</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Tree</span> {
+    <span class="kw">fn</span> <span class="ident">with_max_digits</span>(<span class="ident">max_digits</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Tree</span> {
+        <span class="ident">Tree</span> { <span class="ident">value</span>: <span class="number">0</span>, <span class="ident">number_of_digits</span>: <span class="number">0</span>, <span class="ident">max_digits</span>: <span class="ident">max_digits</span> }
+    }
+}
+
+<span class="kw">let</span> <span class="ident">numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Tree</span>::<span class="ident">with_max_digits</span>(<span class="number">3</span>).<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">numbers</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">117</span>, <span class="number">13</span>, <span class="number">195</span>, <span class="number">351</span>, <span class="number">377</span>, <span class="number">39</span>, <span class="number">533</span>, <span class="number">559</span>, <span class="number">715</span>, <span class="number">793</span>, <span class="number">91</span>, <span class="number">975</span>]);</pre></div>
+</div>
+            <h2 id='associated-types' class='small-section-header'>Associated Types<a href='#associated-types' class='anchor'></a></h2><div class='methods'><h3 id='associatedtype.Step' class='method'><code id='Step.t'>type <a href='#associatedtype.Step' class="type">Step</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></code></h3><h3 id='associatedtype.Output' class='method'><code id='Output.t'>type <a href='#associatedtype.Output' class="type">Output</a></code></h3></div><span class='loading-content'>Loading content...</span>
+            <h2 id='required-methods' class='small-section-header'>Required methods<a href='#required-methods' class='anchor'></a></h2><div class='methods'><h3 id='tymethod.next_steps' class='method'><code id='next_steps.v'>fn <a href='#tymethod.next_steps' class='fnname'>next_steps</a>(&amp;mut self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>&gt;</code></h3><div class='docblock'><p>Returns the steps that can be taken from the current state of the tree.</p>
+</div><h3 id='tymethod.should_prune' class='method'><code id='should_prune.v'>fn <a href='#tymethod.should_prune' class='fnname'>should_prune</a>(&amp;mut self) -&gt; <a class="enum" href="../search/enum.Pruning.html" title="enum search::Pruning">Pruning</a></code></h3><div class='docblock'><p>Returns whether to prune the tree at the current state.</p>
+</div><h3 id='tymethod.apply_step' class='method'><code id='apply_step.v'>fn <a href='#tymethod.apply_step' class='fnname'>apply_step</a>(&amp;mut self, node: &amp;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>)</code></h3><div class='docblock'><p>Update the tree-wide state as a result of applying the given step.</p>
+</div><h3 id='tymethod.revert_step' class='method'><code id='revert_step.v'>fn <a href='#tymethod.revert_step' class='fnname'>revert_step</a>(&amp;mut self, node: &amp;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Step" title="type search::DepthFirstTree::Step">Step</a>)</code></h3><div class='docblock'><p>Update any tree-wide state by reverting the given step.</p>
+</div><h3 id='tymethod.output' class='method'><code id='output.v'>fn <a href='#tymethod.output' class='fnname'>output</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Output" title="type search::DepthFirstTree::Output">Output</a>&gt;</code></h3><div class='docblock'><p>Maps the internal state of the tree to the actual form required for output.</p>
+<p>Returns <code>Some(value)</code> if the current state satisfies the condition, and <code>None</code> otherwise.</p>
+</div></div><span class='loading-content'>Loading content...</span>
+            <h2 id='provided-methods' class='small-section-header'>Provided methods<a href='#provided-methods' class='anchor'></a></h2><div class='methods'><h3 id='method.into_iter' class='method'><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="../search/struct.DepthFirstSearcher.html" title="struct search::DepthFirstSearcher">DepthFirstSearcher</a>&lt;T&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="../search/struct.DepthFirstSearcher.html" title="struct search::DepthFirstSearcher">DepthFirstSearcher</a>&lt;T&gt;</h3><code class="content"><span class="where fmt-newline">impl&lt;T:&nbsp;<a class="trait" href="../search/trait.DepthFirstTree.html" title="trait search::DepthFirstTree">DepthFirstTree</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html" title="trait core::iter::traits::iterator::Iterator">Iterator</a> for <a class="struct" href="../search/struct.DepthFirstSearcher.html" title="struct search::DepthFirstSearcher">DepthFirstSearcher</a>&lt;T&gt;</span><span class="where fmt-newline">    type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#associatedtype.Item' class="type">Item</a> = T::<a class="type" href="../search/trait.DepthFirstTree.html#associatedtype.Output" title="type search::DepthFirstTree::Output">Output</a>;</span></code></div></div><code id='into_iter.v'>fn <a href='#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class="struct" href="../search/struct.DepthFirstSearcher.html" title="struct search::DepthFirstSearcher">DepthFirstSearcher</a>&lt;Self&gt;</code></h3><div class='docblock'><p>An iterator over the nodes of the tree which meet the condition.</p>
+</div><h3 id='method.run_search' class='method'><code id='run_search.v'>fn <a href='#method.run_search' class='fnname'>run_search</a>(self) -&gt; Self</code></h3><div class='docblock'><p>Run this tree's complete search syncrhonously</p>
+</div></div><span class='loading-content'>Loading content...</span>
+            <h2 id='implementors' class='small-section-header'>Implementors<a href='#implementors' class='anchor'></a></h2><div class='item-list' id='implementors-list'></div><span class='loading-content'>Loading content...</span><script type="text/javascript">window.inlined_types=new Set([]);</script><script type="text/javascript" async
+                         src="../implementors/search/trait.DepthFirstTree.js">
+                 </script></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "search";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

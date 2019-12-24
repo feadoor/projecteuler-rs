@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["factorial","Calculate n! (factorial)."],["main",""],["solve","Find the sum of the digits of n! (factorial)."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Sieve","A structure which sieves for primes up to a given limit and stores the results for later iteration and querying."],["SieveIterator","A structure capable of iterating over the primes held in a `Sieve`."]]});

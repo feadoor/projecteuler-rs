@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the maximum prize fund that should be allocated for a game lasting `n` turns."]]});

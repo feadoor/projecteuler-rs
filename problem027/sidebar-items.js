@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["num_primes","Find the number of primes produced by n^2 + an + b for successive values n = 0, 1, 2, ..."],["solve","Find the product of the values of a, b below the given limits which produce the longest sequence of successive primes."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the sum of the bytes in a plaintext, given the ciphertext and the length of the key that has been used to encrypt the text using and XOR cipher."]]});

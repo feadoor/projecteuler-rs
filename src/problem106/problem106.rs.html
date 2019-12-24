@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/bin/problem106.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>problem106.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../problem106/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! [Problem 106 (Special subset sums: meta-testing)](https://projecteuler.net/problem=106)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Solution detail</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! We will first consider the question: given a set of size n, containing elements</span>
+<span class="doccomment">//! `a₁ &lt; a₂ &lt; ... &lt; aₙ`, and given `s` with `2s ≤ n`, how many pairs of subsets of size `s` are</span>
+<span class="doccomment">//! there for which we can guarantee that one will be smaller than the other?</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For example, with `s = 2`, we know for sure that `a₁ + a₃ &lt; a₂ + a₄` because the elements on</span>
+<span class="doccomment">//! each side can be paired up in such a way that everything on the left is less than its</span>
+<span class="doccomment">//! corresponding element on the right.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This question can be answered easily by first imagining the choice of `2s` elements to be fixed,</span>
+<span class="doccomment">//! and asking how many ways there are of splitting them up such that this pairing is possible.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The assignment of each element `a₁, a₂, ...` in turn to either the left or right hand side can</span>
+<span class="doccomment">//! be viewed as a journey from the top-left corner to the bottom-right corner on a square grid of</span>
+<span class="doccomment">//! size `s`. Taking an element to the left is a step down, and an element to the right is a step</span>
+<span class="doccomment">//! right.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The pairing is possible if we never cross the diagonal - that is, at no point are there more</span>
+<span class="doccomment">//! elements on the right than on the left. The number of ways of doing this is well-known to be the</span>
+<span class="doccomment">//! Catalan number Cₛ.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! It follows that the number of pairs of subsets of size `s` which do _not_ need to be tested is</span>
+<span class="doccomment">//! given by the expression `binom(n, 2s) * Cₛ`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! We can therefore calculate how many pairs _do_ need to be tested by summing this expression for</span>
+<span class="doccomment">//! each value of `s`, and subtracting from the total number of subset pairs.</span>
+
+<span class="kw">use</span> <span class="ident">number_theory</span>::<span class="ident">binom</span>;
+<span class="kw">use</span> <span class="ident">projecteuler_rs</span>::<span class="ident">problem</span>;
+
+<span class="doccomment">/// Find the Catalan number `Cₛ`</span>
+<span class="kw">fn</span> <span class="ident">catalan</span>(<span class="ident">s</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">binom</span>(<span class="number">2</span> <span class="op">*</span> <span class="ident">s</span>, <span class="ident">s</span>) <span class="op">/</span> (<span class="ident">s</span> <span class="op">+</span> <span class="number">1</span>)
+}
+
+<span class="doccomment">/// Find the number of pairs of subsets of size `s`, from a set of size `n`, that do _not_ need to</span>
+<span class="doccomment">/// be tested for equality.</span>
+<span class="kw">fn</span> <span class="ident">trivial_pairs</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">s</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">binom</span>(<span class="ident">n</span>, <span class="number">2</span> <span class="op">*</span> <span class="ident">s</span>) <span class="op">*</span> <span class="ident">catalan</span>(<span class="ident">s</span>)
+}
+
+<span class="doccomment">/// Find the total number of pairs of subsets of size `s` from a set of size `n`</span>
+<span class="kw">fn</span> <span class="ident">total_pairs</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">s</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="ident">binom</span>(<span class="ident">n</span>, <span class="ident">s</span>) <span class="op">*</span> <span class="ident">binom</span>(<span class="ident">n</span> <span class="op">-</span> <span class="ident">s</span>, <span class="ident">s</span>) <span class="op">/</span> <span class="number">2</span>
+}
+
+<span class="doccomment">/// Find the number of pairs of subsets that must be tested when checking for a special sum set of</span>
+<span class="doccomment">/// size `n`.</span>
+<span class="kw">fn</span> <span class="ident">solve</span>(<span class="ident">n</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    (<span class="number">1</span>..<span class="ident">n</span> <span class="op">/</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">total_pairs</span>(<span class="ident">n</span>, <span class="ident">s</span>) <span class="op">-</span> <span class="ident">trivial_pairs</span>(<span class="ident">n</span>, <span class="ident">s</span>)).<span class="ident">sum</span>()
+}
+
+<span class="doccomment">/// Solve the problem, returning the answer as a `String`</span>
+<span class="kw">fn</span> <span class="ident">answer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="ident">solve</span>(<span class="number">12</span>).<span class="ident">to_string</span>()
+}
+
+<span class="macro">problem</span><span class="macro">!</span>(<span class="ident">answer</span>, <span class="string">&quot;21384&quot;</span>);
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "problem106";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["is_factor_of_rn","Determine if p is a factor of R(n)"],["main",""],["solve","Find the sum of the first `k` prime factors of R(n)"]]});

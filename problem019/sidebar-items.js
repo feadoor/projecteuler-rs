@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["days_in_month","Returns how many days were in the given month in the given year, where 0 -> January, 1 -> February and so on."],["main",""],["solve","Find the number of months from 1901 to the given year which began on the given day, where 0 -> Monday, 1 -> Tuesday and so on."]]});

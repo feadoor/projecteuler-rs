@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["get_sorted_digits","Get the digits of the given number, in sorted order."],["main",""],["solve","Find the smallest cube having exactly the given number of permutations of its digits which are themselves cubes."]]});

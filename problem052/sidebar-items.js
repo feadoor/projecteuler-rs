@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the smallest number x for which 2x, 3x..., 6x all contain the same digits as x."],["to_digit_count","Convert the given number into a count of how many times each digit appears."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["main",""],["solve","Find the nth lexicographic permutation of [0, 1, ..., m - 1]."]]});

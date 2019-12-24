@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["answer","Solve the problem, returning the answer as a `String`"],["contains_origin","Check if the given triangle contains the origin."],["main",""],["solve","Find the count of the given triangles which contain (strictly) the origin."]],"type":[["Point",""],["Triangle",""]]});
